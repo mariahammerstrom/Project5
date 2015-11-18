@@ -5,9 +5,11 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     star.cpp \
-    galaxy.cpp
+    galaxy.cpp \
+    solver.cpp
 
 HEADERS += \
     star.h \
-    galaxy.h
+    galaxy.h \
+    solver.h
 
