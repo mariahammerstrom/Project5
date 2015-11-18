@@ -1,4 +1,5 @@
 #include "star.h"
+#include <cmath>
 
 star::star()
 {
@@ -40,7 +41,7 @@ double star::GravitationalForce(star star1, star star2)
 {
     double force[3];
     double r = distance(star1,star2);
-    for(i=0;i<3;i++)
+    for(int i=0;i<3;i++)
         force[i] = -G*star1.mass*star2.mass/(r*r);
 }
 

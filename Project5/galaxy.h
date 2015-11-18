@@ -6,7 +6,7 @@ class galaxy
 {
 public:
     galaxy();
-    void add(Star newstar);
+    //void add(star newstar);
 };
 
 #endif // GALAXY_H

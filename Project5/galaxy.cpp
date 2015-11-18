@@ -6,8 +6,9 @@ galaxy::galaxy()
 
 }
 
-galaxy::add(Star newstar)
+/*
+void galaxy::add(star newstar)
 {
     // do something
-}
+}*/
 

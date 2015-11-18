@@ -7,7 +7,7 @@ solver::solver()
 
 }
 
-
+/*
 double solver::derivatives(star object1, star object2)
 {
     double r,dv1dt[3],dv2dt[3],dx1dt[3],dx2dt[3];
@@ -60,4 +60,4 @@ solver::VelocityVerlet(double h,int N,double x, double vx) // not finished
                 x += h + vx;
     }
 }
-
+*/
