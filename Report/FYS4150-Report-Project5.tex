@@ -59,26 +59,90 @@ Open clusters are usually found in the arms of spiral galaxies or in irregular g
 
 (Images which shows an open cluster, and a galaxy with visible clusters - HII regions.)
 
-In this project we looked at a simple model for how an open cluster is made from a gravitational collapse and for the interactions among a large number of stars. We have simulated a "cold collapse", meaning the particles will have little or no initial velocity. 
-
-
+In this project we looked at a simple model for how an open cluster is made from a gravitational collapse and for the interactions among a large number of stars. We have simulated a "cold collapse", meaning the particles will have little or no initial velocity.
 
 ...
+
+First we study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem in three dimensions. The time evolution of the system is described through \textbf{Newton's law}, given by:
+
+\begin{equation}\label{eq:ODE}
+	\frac{\mathrm{d}^2 x}{\mathrm{d}t^2} = \frac{F_{G,x}}{M}
+\end{equation}
+where $F_{G,x}$ is the \textbf{gravitational force} in the $x$ direction, given by 
+
+\begin{equation}\label{eq:force_comp}
+	F_{G,x} = - \frac{G M_1 M_2}{r^3}x,
+\end{equation}
+where $M_1$ and $M_2$ are the masses of the two objects and $r$ is the distance between them. In three dimensions, $r = \sqrt{x^2 + y^2 + z^2}$. We have similar expressions for the $y$ and $z$ direction.
+
+Eq. (\ref{eq:ODE}) is a second-order differential equation, which we can rewrite as a set of coupled first-order differential equations:
+
+\begin{equation}
+	\frac{\mathrm{d}x}{\mathrm{d}t} = v_x  \quad \mathrm{and} \quad \frac{\mathrm{d}v_x}{\mathrm{d}t} = F_{G,x}.
+\end{equation}
+These equations can be used to determine the position and velocity of an object.
+
+When solving this problem we will convert the units of mass and length to dimensionless variables using solar masses $M_{\odot}$ and light years. 
+
+... (describe this and introduce new equations)
+
+When setting up the $N$-body problem we will let the particle start at rest with masses randomly distributed by a Gaussian distribution around 10$M_{\odot}$ with a standard deviation of 1$M_{\odot}$. The particles will start with uniformly randomly distributed positions within a sphere of a given radius $R_0$. 
 
 
 
 
 \section{Methods}
 
-The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method.
+The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. 
 
-...
 
+\subsection{4th order Runge-Kutta method}
+Using the 4th order Runge-Kutta method (RK4), we can estimate the next value $x_{i+1}$ (and similarly $y_{i+1}$ and $z_{i+1}$) through the formula
+
+\begin{equation}
+	x_{i+1} \approx x_i + \frac{h}{6} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}
+\end{equation}
+where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $h/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $h$ denotes the time step, defined as $h = (t_f + t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!).
+
+The algorithm goes as follows:
+
+\begin{itemize}
+	\item Compute $K_1 = h \, v_x(t_i,x_i)$, which gives the slope at $t_i$.
+	\item Compute the slope at the midpoint using Euler's method, which gives $K_2 = h \, v_x(t_i + h/2, x_i + K_1/2)$.
+	\item The estimate of the slope at the midpoint is then further improved by $K_3 = h \, v_x(t_i + h/2, x_i + K_2/2)$.
+	\item Finally compute the end-point through: \\ $x_{i+1} = x_i + \frac{1}{6}(K_1 + 2K_2 + 2K_3 + K4)$.
+\end{itemize}
+These equations must be deployed for all three dimensions $x,y$ and $z$.
+
+Using this method gives a global truncating error which goes like $O(h^4)$. 
+
+
+
+
+\subsection{Velocity-Verlet method}
+This method is derived by performing a Taylor expansion of $x(t+h)$ and $x(t-h)$, and add the two equations. This results in the formula
+
+\begin{equation}\label{eq:verlet}
+	x_{i+1} = 2x_i - x_{i-1} + a_x(t_i,x_i)h^2 \quad i = 1, 2, \dots
+\end{equation}
+where $a_x$ is the acceleration, which is the second derivative of $x$. Velocity is not included in the equation, but can be computed using the well-known formula
+
+\begin{equation}\label{eq:verlet_velocity}
+	v_{i,x} = \frac{x_{i+1} - x_{i-1}}{2h} + O(h^2)
+\end{equation}
+where $x_{i+1}$ has been estimated by Eq. (\ref{eq:verlet}). 
+
+We see from both Eq. (\ref{eq:verlet}) and Eq. (\ref{eq:verlet_velocity}) that this algorithm is not self-starting as it depends on $x_{i-1}$. The first time we calculate Eq. (\ref{eq:verlet}), meaning $x_2$, we need to know both $x_0$ and $x_1$. The known initial position gives us $x_0$ and we have to use a different algorithm to make an estimate for $x_1$. The simplest solution is to use Euler's method, which approximates $x_1$ by:
+
+\begin{equation}
+	x_1 = x_0 + v_{0,x} h^2
+\end{equation}
 
 
 
 \section{Results}
 
+\subsection{Stability of methods}
 ...
 
 
