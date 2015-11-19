@@ -31,38 +31,47 @@ def plot_time(time_step):
     # compared with the analytical solution.
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Verlet_%.1f.txt' % time_step
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Verlet_%.1f.txt' % time_step
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/VV.txt'
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/RK.txt'
     t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
+    t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
+    #print len(t_verlet),len(t_RK4)
     
     E_verlet = 0.5*np.array(v_verlet)**2 + 0.5*np.array(x_verlet)**2
+    E_RK4 = 0.5*np.array(v_RK4)**2 + 0.5*np.array(x_RK4)**2
+    E_analytic = 0.5*np.array(-np.sin(t_verlet))**2 + 0.5*np.array(np.cos(t_verlet))**2
     
     # Make plots
     plt.figure(1)
-    plt.title('Comparing methods (position), time step = %.1f' % time_step,size=12)
+    plt.title('Comparing methods (position), time step = %.2f' % time_step,size=12)
     plt.plot(t_verlet,np.cos(t_verlet),label='Analytic')
     plt.plot(t_verlet,x_verlet,label='Verlet')
-    #plt.plot(t_RK4,x_RK4,label='RK4')
+    plt.plot(t_RK4,x_RK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$x$',size=14)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
     
     plt.figure(2)
-    plt.title('Comparing methods (velocity), time step = %.1f' % time_step,size=12)
+    plt.title('Comparing methods (velocity), time step = %.2f' % time_step,size=12)
     plt.plot(t_verlet,-np.sin(t_verlet),label='Analytic')
     plt.plot(t_verlet,v_verlet,label='Verlet')
-    #plt.plot(t_RK4,v_RK4,label='RK4')
+    plt.plot(t_RK4,v_RK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$v_x$',size=14)
     plt.legend(loc=2,prop={'size':12})
     plt.show()
     
-    #plt.figure(3)
-    #plt.title('Total energy',size=12)
-    #plt.plot(t_verlet,E_verlet)
-    #plt.xlabel(r'$t$',size=14)
-    #plt.ylabel(r'$E$',size=14)
-    #plt.show()
+    plt.figure(3)
+    plt.title('Total energy, time step = %.2f' % time_step,size=12)
+    plt.plot(t_verlet,np.array(E_analytic)-0.5,label='Analytic')
+    plt.plot(t_verlet,np.array(E_verlet)-0.5,label='Verlet')
+    plt.plot(t_RK4,np.array(E_RK4)-0.5,label='RK4')
+    plt.xlabel(r'$t$',size=14)
+    plt.ylabel(r'$E$',size=14)
+    plt.legend(loc=1,prop={'size':12})
+    plt.show()
     
     return
 
