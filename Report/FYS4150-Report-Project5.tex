@@ -27,7 +27,7 @@
 \titleformat{\subsubsection}{\fontfamily{phv}\fontsize{9}{15}\bfseries}{\thesubsubsection}{1em}{}
 
 
-\title{\textbf{FYS4150 Project 5: \\$N$-body simulation of an open galactic cluster}}
+\title{\textbf{FYS4150 Project 5: \\$N$-body simulation of an open cluster}}
 \author{Marie Foss (\# 56), Maria Hammerstr{{\o}}m (\# 59)}
 \date{}
 
@@ -49,13 +49,10 @@
 
 \section{Introduction}
 
-An open cluster is a group of up to a few thousand stars that are gravitationally bound to each other. These stars are created from the same giant molecular cloud, 
+An open cluster is a group of up to a few thousand stars that are gravitationally bound to each other. These stars are created from the same giant molecular cloud, making the age and composition of the stars similar, which in turn makes the properties of the stars, such as distance, age, metallicity and extinction, more easy to determine. 
 
-These stars have roughly the same age and are created from the same giant molecular cloud. Open clusters are interesting subjects in the study of stellar evolution, because of the member's similar age and composition, making their properties such as distance, age, metallicity and extinction more easy to determine. 
+Open clusters are usually found in the arms of spiral galaxies or in irregular galaxies. Once an open cluster has formed, it will gradually dissipate as its members gets ejected from the cluster due to random collisions, lasting only a few hundred million years. 
 
-Once an open cluster has been formed, it will gradually dissipate as its members get ejected from the cluster due to random collisions, lasting only a few hundred million years.
-
-Open clusters are usually found in the arms of spiral galaxies or in irregular galaxies. 
 
 (Images which shows an open cluster, and a galaxy with visible clusters - HII regions.)
 
@@ -88,10 +85,41 @@ When solving this problem we will convert the units of mass and length to dimens
 
 When setting up the $N$-body problem we will let the particle start at rest with masses randomly distributed by a Gaussian distribution around 10$M_{\odot}$ with a standard deviation of 1$M_{\odot}$. The particles will start with uniformly randomly distributed positions within a sphere of a given radius $R_0$. 
 
+In the case where $N \rightarrow \infty$ and keeping the mean density $\rho_0$ constant, the system will collapse into a singularity at a finite \textbf{collapse time} 
+
+\begin{equation}\label{eq:t_crunch}
+\tau_{\mathrm{crunch}} = \sqrt{\frac{3 \pi}{32G\rho_0}}.
+\end{equation} 
+This will however not be the case in our model for a finite value of $N$. EXPLAIN.
+
+Eq. (\ref{eq:t_crunch}) can be derived ... DERIVATION!
+
+Next we want to find $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$. DERIVATION.
+
+After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we will introduce a smoothing function that will take care of any numerical instability that arises when two of the particles come very close. We modify the Newtonian gravitational force as
+
+\begin{equation}\label{eq:force_mod}
+	F_{G,\mathrm{mod}} = - \frac{G M_1 M_2}{r^2 + \epsilon^2},
+\end{equation}
+where $\epsilon$ is a small real constant. We will try out different values for $\epsilon$.
+
+The \textbf{virial theorem} says that for a bound gravitational system in equilibrium we have
+
+\begin{equation}\label{eq:vir}
+	2 \langle K \rangle = - \langle V \rangle,
+\end{equation}
+where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. The virial theorem deploys the ergodic hypothesis, which states that we can take an ensemble average instead of a time average. By calculating the kinetic and potential energy of our system, we can check if our results are consistent with Eq. (\ref{eq:vir}).
+
+Finally we wish to study the \textbf{radial density} of the particles in the equilibrium state. This can be calculated from our computations and be fitted with the simple expression
+
+\begin{equation}
+	n(r) = \frac{n_0}{1 + (\frac{r}{r_0})^4}
+\end{equation}
+where $n_0$ and $r_0$ are scaling constants.
 
 
 
-\section{Methods}
+\section{Methods}\label{sec:methods}
 
 The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. 
 
@@ -102,7 +130,7 @@ Using the 4th order Runge-Kutta method (RK4), we can estimate the next value $x_
 \begin{equation}
 	x_{i+1} \approx x_i + \frac{h}{6} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}
 \end{equation}
-where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $h/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $h$ denotes the time step, defined as $h = (t_f + t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!).
+where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $h/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $h$ denotes the time step, defined as $h = (t_f - t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!).
 
 The algorithm goes as follows:
 
@@ -123,9 +151,9 @@ Using this method gives a global truncating error which goes like $O(h^4)$.
 This method is derived by performing a Taylor expansion of $x(t+h)$ and $x(t-h)$, and add the two equations. This results in the formula
 
 \begin{equation}\label{eq:verlet}
-	x_{i+1} = 2x_i - x_{i-1} + a_x(t_i,x_i)h^2 \quad i = 1, 2, \dots
+	x_{i+1} = 2x_i - x_{i-1} + a_x(t_i,x_i)h^2 + O(h^4) \quad i = 1, 2, \dots
 \end{equation}
-where $a_x$ is the acceleration, which is the second derivative of $x$. Velocity is not included in the equation, but can be computed using the well-known formula
+where $a_x$ is the acceleration, which is the second derivative of $x$, or the first derivative of $v_x$. Velocity is not included in the equation, but can be computed using the well-known formula
 
 \begin{equation}\label{eq:verlet_velocity}
 	v_{i,x} = \frac{x_{i+1} - x_{i-1}}{2h} + O(h^2)
@@ -134,16 +162,88 @@ where $x_{i+1}$ has been estimated by Eq. (\ref{eq:verlet}).
 
 We see from both Eq. (\ref{eq:verlet}) and Eq. (\ref{eq:verlet_velocity}) that this algorithm is not self-starting as it depends on $x_{i-1}$. The first time we calculate Eq. (\ref{eq:verlet}), meaning $x_2$, we need to know both $x_0$ and $x_1$. The known initial position gives us $x_0$ and we have to use a different algorithm to make an estimate for $x_1$. The simplest solution is to use Euler's method, which approximates $x_1$ by:
 
-\begin{equation}
+\begin{equation}\label{eq:euler}
 	x_1 = x_0 + v_{0,x} h^2
 \end{equation}
+The algorithm can be summed up as:
+
+\begin{itemize}
+	\item Given the initial position $x_0$ and velocity $v_0$, calculate the next position $x_1$ using Eq. (\ref{eq:euler}).
+	\item Calculating all subsequent positions $x_{i+1}$ using Eq. (\ref{eq:verlet}).
+	\item Calculate all velocities $v_{i,x}$ using Eq. (\ref{eq:verlet_velocity}).
+\end{itemize}
+The same algorithm follows for all dimensions $(x,y,z)$.
+
+Using this method gives a global truncating error which goes like $O(h^4)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
+
 
 
 
 \section{Results}
 
+\subsection{Testing the numerical methods}
+
+We test our implementation of the numerical methods described in Sec.~\ref{sec:methods} by running the code for a case where the analytical solution is known. In the case of a second-order differential equation like the one we have in Eq. (\ref{eq:ODE}), we can test our algorithm by considering a box on a spring. In this case the equation to be solved is:
+
+\begin{equation}
+	F = -kx \quad \Rightarrow \quad \frac{\mathrm{d}^2 x}{\mathrm{d}t^2} = - \frac{k}{m}x = - \omega_0^2 x,
+\end{equation}
+which has the known analytical solution $x(t) = A \, \mathrm{cos}(\omega_0 t + \nu)$, where $\nu$ is the phase constant. The coupled first-order differential equations can in this case be written as
+
+\begin{equation}
+	\frac{\mathrm{d}x}{\mathrm{d}t} = v_x  \quad \mathrm{and} \quad \frac{\mathrm{d}v_x}{\mathrm{d}t} = - \frac{k}{m} x.
+\end{equation}
+where we can set $k = m = 1$ for simplicity when checking the validity of our numerical methods. Then the analytical solution is simply $x(t) = \mathrm{cos}(t)$, with $v(t) = - \mathrm{sin}(t)$.
+
+A visualization of our test is shown in Fig.~\ref{fig:analytical}a-b, here for a time step of $\Delta t = 0.2$. We see that the numerical algorithms reproduce the result of the analytical expression very well. Here we have chosen a time step large enough for it to be possible to distinguish the different methods. At a time step of a factor of 10 smaller, $\Delta t = 0.02$, it is impossible to tell the methods apart. \\
+
+\begin{figure*}[t!]
+\begin{center}
+\begin{tabular}{cc}
+  	\includegraphics[width=90mm]{Images/comparison_x.png}
+	& \includegraphics[width=90mm]{Images/comparison_v.png} \\
+	(a) Position $x$					& (b) Velocity $v_x$  \\[6pt]
+\end{tabular}
+\caption{Comparison of our numerical algorithms, Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) in the case of the box on a spring. Here for a time step of $\Delta t = 0.2$.}\label{fig:analytical}
+\end{center}
+\end{figure*}
+
+\noindent Another test we can make is to check for \textbf{energy conservation}. With initial conditions $x_0$ and $v_0$, we can calculate
+
+\begin{equation}
+	\begin{aligned}
+		E(t = 0) = E_0 &= \frac{1}{2}mv_0^2 + \frac{1}{2}kx_0^2, \\
+		E(t = t_i) = E_i &= \frac{1}{2}mv_i^2 + \frac{1}{2}kx_i^2,
+	\end{aligned}
+\end{equation}
+and check that $E_0 = E_i$ for every period $T$. It is however easier to just plot $E_i$ as a function of time for the different methods and inspect the result. If the energy is conserved, the plot should be a straight line, as the energy should not change over time. As shown in Fig.~\ref{fig:analytical_energy} this is indeed the case in the analytical case. If we look closely at the $y$-axis we see that this really is the case for all the methods, with the numerical methods deviating from the expected result in the fifth decimal place. \\
+
+\begin{figure*}[t!]
+\begin{center}
+  	\includegraphics[width=130mm]{Images/energy_conservation.png}
+\caption{The total energy $E$ as a function of time $t$ of our numerical algorithms, Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) in the case of the box on a spring. Here for a time step of $\Delta t = 0.2$.}\label{fig:analytical_energy}
+\end{center}
+\end{figure*}
+
+\noindent Now that we have verified our numerical methods, we can go on to solve the problem at hand.
+
+
+
 \subsection{Stability of methods}
+
+The stability of the two methods described in Sec.~\ref{sec:methods} can be compared by running the two algorithms over a very long time period. 
+
 ...
+
+We also check how the two methods work for large time steps.
+
+...
+
+What is also interesting is to compare the time used to advance one time step for the two different methods, to see which one is the most efficient.
+
+...
+
+Based on our study of the stability and time usage of the two methods, we can say that ... COMMENT.
 
 
 \section{Conclusions}
