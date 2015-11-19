@@ -16,7 +16,6 @@ void VV(double dt, double final_time, double &x, double &v, double mass1, double
 
 int main()
 {
-
     double Msun,Mearth;
     Msun = 1.;
     Mearth = 1./332946;
@@ -44,8 +43,6 @@ int main()
     VV(time_step,final_time,x,v,Mearth,Msun);
     cout << "Final position = " << x << "; final velocity = " << v << endl;
 
-
-
     return 0;
 }
 
@@ -56,18 +53,18 @@ double dvdt(double x, double v, double mass1, double mass2){
     return -G*mass1*mass2*x/(r*r*r);
 }
 
-void RK4(double dt, double final_time, double &x, double &v, double mass1, double mass2){
+void RK4(double h, double final_time, double &x, double &v, double mass1, double mass2){
     // 4th order Runge-Kutta solver for two coupeled first ordered ODE
     double k1,k2,k3,k4,l1,l2,l3,l4;
-    for(int t=0;t<final_time;t+=dt){
-        k1 = dt*v;
-        l1 = dt*dvdt(x,v,mass1,mass2);
-        k2 = dt*(v+l1/2.);
-        l2 = dt*dvdt(x+k1/2.,v+l1/2.,mass1,mass2);
-        k3 = dt*(v+l2/2.);
-        l3 = dt*dvdt(x+k2/2.,v+l2/2.,mass1,mass2);
-        k4 = dt*(v+l3);
-        l4 = dt*dvdt(x+k3,v+l3,mass1,mass2);
+    for(int t=0;t<final_time;t+=h){
+        k1 = h*v;
+        l1 = h*dvdt(x,v,mass1,mass2);
+        k2 = h*(v+l1/2.);
+        l2 = h*dvdt(x+k1/2.,v+l1/2.,mass1,mass2);
+        k3 = h*(v+l2/2.);
+        l3 = h*dvdt(x+k2/2.,v+l2/2.,mass1,mass2);
+        k4 = h*(v+l3);
+        l4 = h*dvdt(x+k3,v+l3,mass1,mass2);
 
         // Update new position and velocity
         x += (k1 + 2.*(k2 + k3) + k4)/6.;
@@ -76,15 +73,15 @@ void RK4(double dt, double final_time, double &x, double &v, double mass1, doubl
 }
 
 
-void VV(double dt, double final_time, double &x,double &v, double mass1, double mass2){
+void VV(double h, double final_time, double &x,double &v, double mass1, double mass2){
     // Velocity-Verlet
-    double xmin = 1;
+    double xmin = 1; // x1
     double temp;
-    for(int t=0;t<final_time;t+=dt){
-        temp = x;
-        x = 2*x - xmin + dt*dt*dvdt(x,v,mass1,mass2);
-        v = (x-xmin)/(2*dt);
-        xmin = temp;
+    for(int t=0;t<final_time;t+=h){
+        temp = x; // xi
+        x = 2*x - xmin + h*h*dvdt(x,v,mass1,mass2); // xi+1
+        v = (x-xmin)/(2*h);
+        xmin = temp; // xi-1
     }
 }
 
