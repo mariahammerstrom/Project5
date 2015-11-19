@@ -10,13 +10,13 @@ public:
 
     // Properties
     star();
-    star(double mas,double radi,double x,double y,double z,double vx, double vy,double vz);
+    star(double mas,double x,double y,double z,double vx, double vy,double vz);
     double mass;
-    double radius;
     double position[3];
     double velocity[3];
     double distance(star star1,star star2);
     double GravitationalForce(star star1, star star2);
+    //star merge(star star1,star star2);
 
 };
 

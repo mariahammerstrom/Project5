@@ -3,13 +3,18 @@
 
 star::star()
 {
-
+    mass = 1;
+    position[0] = 0;
+    position[1] = 0;
+    position[2] = 0;
+    velocity[0] = 0;
+    velocity[1] = 0;
+    velocity[2] = 0;
 }
 
-star::star(double mas, double radi, double x, double y, double z, double vx, double vy, double vz)
+star::star(double mas, double x, double y, double z, double vx, double vy, double vz)
 {
     mass = mas;
-    radius = radi;
     position[0] = x;
     position[1] = y;
     position[2] = z;
@@ -43,5 +48,6 @@ double star::GravitationalForce(star star1, star star2)
     double r = distance(star1,star2);
     for(int i=0;i<3;i++)
         force[i] = -G*star1.mass*star2.mass/(r*r);
+    return force;
 }
 
