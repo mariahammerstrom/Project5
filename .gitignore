@@ -6,3 +6,8 @@
 build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Makefile
 
 build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Project5
+*.txt
+build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/Makefile.Release
+*.Debug
+build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/Makefile
+*.exe
