@@ -2,6 +2,8 @@
 #define STAR_H
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <vector>
+using std::vector;
 
 
 class star
@@ -20,6 +22,7 @@ public:
     double velocity[3];
 
     // Functions
+    //void manyStars(int number);
     double distance(star otherStar);
     double GravitationalForce(star otherStar);
     double GravitationalForce_r3(star otherStar);

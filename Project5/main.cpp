@@ -4,6 +4,7 @@
 #include <cstring>
 #include <fstream>
 #include <random>
+#include <chrono>
 //#include <mpi.h>
 #include "star.h"
 #include "galaxy.h"
@@ -15,6 +16,8 @@ void RK4(int dimension, int N, double final_time, double *x, double *v, double m
 void VV(int dimension, int N, double final_time, double *x_initial, double *v_initial, double mass1, double mass2, ofstream &file);
 void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial);
 void print_final(int dimension, double *x_final, double *v_final);
+void randomUniformSphere(double R0,double &x,double &y,double &z);
+void Gaussian_distribution(double mean,double stddev,double &mass);
 
 int main()
 {
@@ -35,6 +38,7 @@ int main()
         x_RK4[i] = x_VV[i]= 0.3;
     }
 
+    /*
     // Run algorithms
     if (dimension==1){
         cout << dimension << " DIMENSION:" << endl << endl;
@@ -121,19 +125,30 @@ int main()
         // Close file
         file_VV.close();
     }
+    */
 
     // GALAXY MODEL
     double R0 = 20; // Radius of galaxy
     int objects = 100; // Number of stars to be added in galaxy
+    double m,x,y,z; // randomly distributed mass and position
+    m = x = y = z = 0.0;
+    double mean = 10.;
+    double deviation = 1.;
     galaxy MM15(R0);
-    /*for(int i=0;i<objects;i++){
-        star star_name(m,x,y,z,0,0,0); // m,x,y,z randomly distributed
-        MM15.add(star_name);
-    }*/
-    star solar(1,0,0,0,0,0,0);
-    MM15.add(solar);
-
+    for(int i=0;i<objects;i++){
+        Gaussian_distribution(mean,deviation,m);
+        cout << i << " " << m << endl;
+        randomUniformSphere(R0,x,y,z);
+        star stari(m,x,y,z,0,0,0);
+        MM15.add(stari);
+    }
     cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
+
+    char filename_galaxy[100];
+    sprintf(filename_galaxy, "galaxy_%d_%.1f.txt",objects,R0);
+    ofstream file_galaxy(filename_galaxy);
+    MM15.print_position(file_galaxy,MM15.all_stars,dimension); // need vector<star> stars
+    file_galaxy.close();
 
     return 0;
 }
@@ -257,4 +272,36 @@ void print_final(int dimension,double *x_final,double *v_final){
     cout << "Final velocity = ";
     for(int j=0; j<dimension; j++) cout << v_final[j] << " ";
     cout << endl;
+}
+
+void randomUniformSphere(double R0,double &x,double &y,double &z){
+    // Random uniform number distribution that returns coordinates (x,y,z) in a sphere of radius R0.
+
+    // Set up the uniform number generator
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+    uniform_real_distribution<double> uniform_sphere(0.0,1.0);
+
+    // Spherical coordinates
+    double phi = M_PI*uniform_sphere(generator);
+    double theta = acos(1 -2*uniform_sphere(generator));
+    double r = R0*pow(uniform_sphere(generator),1./3);
+
+    // Convert to cartesian coordinates
+    x = r*sin(theta)*cos(phi);
+    y = r*sin(theta)*sin(phi);
+    z = r*cos(theta);
+
+}
+
+void Gaussian_distribution(double mean,double stddev,double &mass){
+    // Gaussian random number distribution that returns a mass around a mean with a given standard deviation.
+
+    // Set up the uniform number generator
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+    normal_distribution<double> normal_dist(mean,stddev);
+
+    // Generate the mass
+    mass = normal_dist(generator);
 }

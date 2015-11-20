@@ -1,5 +1,7 @@
 #include "star.h"
-#include <cmath>
+//#include <cmath>
+//#include <vector>
+//using std::vector;
 
 star::star()
 {
@@ -22,6 +24,16 @@ star::star(double M, double x, double y, double z, double vx, double vy, double 
     velocity[1] = vy;
     velocity[2] = vz;
 }
+
+/*
+void star::manyStars(int number)
+{
+    vector<star> many;
+    for(int i=0;i<number;i++){
+        star newStar;
+        many.push_back(newStar);
+    }
+}*/
 
 double star::distance(star otherStar)
 {

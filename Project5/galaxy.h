@@ -2,6 +2,7 @@
 #define GALAXY_H
 #include "star.h"
 #include <vector>
+#include <fstream>
 using std::vector;
 
 class galaxy
@@ -20,6 +21,7 @@ public:
 
     // functions
     void add(star newstar);
+    void print_position(std::ofstream &output, vector<star> vec, int n);
 };
 
 #endif // GALAXY_H
