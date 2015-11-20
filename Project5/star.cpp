@@ -1,7 +1,4 @@
 #include "star.h"
-//#include <cmath>
-//#include <vector>
-//using std::vector;
 
 star::star()
 {
@@ -25,15 +22,6 @@ star::star(double M, double x, double y, double z, double vx, double vy, double 
     velocity[2] = vz;
 }
 
-/*
-void star::manyStars(int number)
-{
-    vector<star> many;
-    for(int i=0;i<number;i++){
-        star newStar;
-        many.push_back(newStar);
-    }
-}*/
 
 double star::distance(star otherStar)
 {
@@ -63,13 +51,14 @@ double star::GravitationalForce(star otherStar)
 double star::GravitationalForce_r3(star otherStar)
 {
     double r = this->distance(otherStar);
-    return -G*this->mass*otherStar.mass/(r*r*r);
+    if(r!=0) return -G*this->mass*otherStar.mass/(r*r*r);
+    else return 0;
 }
 
 /*
-void star::merge(star star1, star star2)
+void star::merge(star star2)
 {
-    mass = star1.mass+star2.mass;
+    mass = this->mass+star2.mass;
     star new_star(mass,x,y,z,vx,vy,vz);
 
 }

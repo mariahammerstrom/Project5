@@ -10,18 +10,20 @@ class galaxy
 public:
     friend class star;
 
-    // initializers
-    galaxy();
-    galaxy(double radi);
-
     // properties
     double radius;
     int total_stars;
     vector<star> all_stars;
 
+    // initializers
+    galaxy();
+    galaxy(double radi);
+
     // functions
     void add(star newstar);
-    void print_position(std::ofstream &output, vector<star> vec, int n);
+    void print_position(std::ofstream &output, vector<star> vec, int n, double time);
+    void RungeKutta4(int dimension, int N, double t_crunch);
+    void VelocityVerlet(int N, double t_crunch);
 };
 
 #endif // GALAXY_H

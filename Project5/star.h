@@ -12,17 +12,16 @@ public:
     // Astrophysical constants in units of Msun, years, and lightyears
     double G = 4*M_PI*M_PI; // in AU
 
-    // Initializers
-    star();
-    star(double mas,double x,double y,double z,double vx, double vy,double vz);
-
     // Properties
     double mass;
     double position[3];
     double velocity[3];
 
+    // Initializers
+    star();
+    star(double mas,double x,double y,double z,double vx, double vy,double vz);
+
     // Functions
-    //void manyStars(int number);
     double distance(star otherStar);
     double GravitationalForce(star otherStar);
     double GravitationalForce_r3(star otherStar);
