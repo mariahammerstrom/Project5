@@ -105,8 +105,8 @@ def plot_timestep(N,time_step_list):
         plt.legend(loc=1,prop={'size':12})
         
         plt.figure(2)
-        plt.plot(t_verlet,v_verlet,label='Verlet, dt = %.1f' % time_step_list[i])
-        #plt.plot(t_RK4,v_RK4,label='RK4')
+        plt.plot(t_verlet,v_x_verlet,label='Verlet, dt = %.1f' % time_step_list[i])
+        #plt.plot(t_RK4,v_x_RK4,label='RK4')
         plt.legend(loc=2,prop={'size':12})
     
     plt.show()

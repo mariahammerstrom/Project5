@@ -13,25 +13,26 @@ rc('font',**{'family':'serif'})
 
 
 def read_file(filename):
-    # Input: filename for file with structure [t,x,v_x,y,v_y,z,v_z]
+    # Input: filename for file with structure [t,index,x,v_x,y,v_y,z,v_z]
     # Output: arrays of data values
     
     data = np.loadtxt(filename,unpack=True) # Read data
     
-    index = data[0]        # index
-    m = data[1]            # mass
+    t = data[0]            # time
+    index = data[1]        # index
+    m = data[2]            # mass
     
     # Positions
-    x = data[2]            # position, x-direction
-    y = data[3]            # position, y-direction
-    z = data[4]            # position, z-direction
+    x = data[3]            # position, x-direction
+    y = data[4]            # position, y-direction
+    z = data[5]            # position, z-direction
     
     # Velocities
-    v_x = data[5]          # velocity, x-direction
-    v_y = data[6]          # velocity, y-direction
-    v_z = data[7]          # velocity, z-direction
+    v_x = data[6]          # velocity, x-direction
+    v_y = data[7]          # velocity, y-direction
+    v_z = data[8]          # velocity, z-direction
     
-    return index,m,x,y,z,v_x,v_y,v_z
+    return t,index,m,x,y,z,v_x,v_y,v_z
     
 
 def plot_scatter(N,x,y,z,mass,title):
@@ -59,8 +60,8 @@ def plot_scatter(N,x,y,z,mass,title):
     ax.set_ylabel(r'$y$',size=14)
     ax.set_zlabel(r'$z$',size=14)
     
-    plt.xlim(-20,20)
-    plt.ylim(-20,20)
+    #plt.xlim(-20,20)
+    #plt.ylim(-20,20)
     
     ax.set_title(title,size=12)
 
@@ -72,15 +73,16 @@ def main(argv):
     N = 100 # Number of stars
 
     # Read data
-    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
-    index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
+    #filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
+    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_10.00.txt'
+    t,index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
     
     # Initial configuration
-    plot_scatter(N,x[0:100],y[0:100],z[0:100],m[0:100],'Initial condition, t = 0')
+    #plot_scatter(N,x[0:100],y[0:100],z[0:100],m[0:100],'Initial condition, t = 0')
 
     # Final configuration
     #print index[-100:]
-    #plot_scatter(N,x[-100:],y[-100:],z[-100:],m[-100:],'Final condition, t = %.2f' % index[-1])
+    plot_scatter(N,x[-100:],y[-100:],z[-100:],m[-100:],'Final condition, t = %.2f' % t[-1])
     
 	
 if __name__ == "__main__":
