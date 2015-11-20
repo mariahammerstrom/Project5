@@ -86,7 +86,7 @@ In the case where $N \rightarrow \infty$ and keeping the mean density $\rho_0$ c
 derived in Appendix~\ref{sec:t_crunch_derive}. We can write $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$, which gives
 
 \begin{equation}
-	G = ?,
+	SOMETHING
 \end{equation}
 which is derived in the Appendix~\ref{sec:G_derive}.
 
@@ -106,11 +106,15 @@ where $\langle K \rangle$ is the time-averaged kinetic energy of the system and 
 
 Finally we wish to study the \textbf{radial density} of the particles in the equilibrium state. This can be calculated from our computations and be fitted with the simple expression
 
-\begin{equation}
+\begin{equation}\label{eq:simple_fit}
 	n(r) = \frac{n_0}{1 + (\frac{r}{r_0})^4}
 \end{equation}
-where $n_0$ and $r_0$ are scaling constants.
+where $n_0$ and $r_0$ are scaling constants. The result can also be compared with the well-known Navarro-Frenk-White profile
 
+\begin{equation}\label{eq:NFW}
+	\rho(r) = \frac{\rho_0}{  \frac{r}{r_0} (1 + \frac{r}{r_0})^2  },
+\end{equation}
+where $\rho_0$ and $r_0$ are scaling constants. 
 
 
 \section{Methods}\label{sec:methods}
@@ -118,7 +122,7 @@ where $n_0$ and $r_0$ are scaling constants.
 The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. 
 
 
-\subsection{4th order Runge-Kutta method}
+\subsection{4th order Runge-Kutta method}\label{sec:RK4}
 Using the 4th order Runge-Kutta method (RK4), we can estimate the next value $x_{i+1}$ (and similarly $y_{i+1}$ and $z_{i+1}$) through the formula
 
 \begin{equation}
@@ -141,7 +145,7 @@ Using this method gives a global truncating error which goes like $O(h^4)$.
 
 
 
-\subsection{Velocity-Verlet method}
+\subsection{Velocity-Verlet method}\label{sec:VV}
 This method is derived by performing a Taylor expansion of $x(t+h)$ and $x(t-h)$, and add the two equations. This results in the formula
 
 \begin{equation}\label{eq:verlet}
@@ -202,15 +206,18 @@ The particles will be assigned a randomly distributed mass from a \textbf{Gaussi
 
 
 \subsection{Nondimensionalization}\label{sec:nondim}
-We use solar masses $M_{\odot}$ and light years as units of mass and length to make our equations dimensionless.
+We use solar masses $M_{\odot}$ and light years as units of mass and length to make our equations dimensionless. This results in
 
-...
+\begin{equation}
+	SOMETHING
+\end{equation}
+which is derived in Appendix~\ref{sec:nondim_deriv}.
 
 
 
 \section{Results}
 
-\subsection{Testing the numerical methods}
+\subsection{Testing the numerical methods}\label{sec:analytical_test}
 
 We test our implementation of the numerical methods described in Sec.~\ref{sec:methods} by running the code for a case where the analytical solution is known. In the case of a second-order differential equation like the one we have in Eq. (\ref{eq:ODE}), we can test our algorithm by considering a box on a spring. In this case the equation to be solved is:
 
@@ -231,7 +238,7 @@ A visualization of our test is shown in Fig.~\ref{fig:analytical}a-b, here for a
 \begin{tabular}{cc}
   	\includegraphics[width=90mm]{Images/comparison_x.png}
 	& \includegraphics[width=90mm]{Images/comparison_v.png} \\
-	(a) Position $x$					& (b) Velocity $v_x$  \\[6pt]
+	(a) Position				& (b) Velocity  \\[6pt]
 \end{tabular}
 \caption{Comparison of our numerical algorithms, Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) in the case of the box on a spring. Here for a time step of $\Delta t = 0.2$.}\label{fig:analytical}
 \end{center}
@@ -260,7 +267,7 @@ and check that $E_0 = E_i$ for every period $T$. It is however easier to just pl
 
 \subsection{Stability of methods}
 
-The stability of the two methods described in Sec.~\ref{sec:methods} can be compared by running the two algorithms over a very long time period. 
+First we consider the Newtonian two-body problem in three dimensions to study the stability of the two methods described in Sec.~\ref{sec:methods}. This is done by running the two algorithms over a very long time period. 
 
 ...
 
@@ -272,7 +279,15 @@ What is also interesting is to compare the time used to advance one time step fo
 
 ...
 
-Based on our study of the stability and time usage of the two methods, we can say that ... COMMENT.
+Based on our study of the stability and time usage of the two methods, we can say that ... COMMENT. \\
+
+
+\noindent We go on to look at the $N$-body system. For a system with $N = 100$ and a radius $R_0$ = 20 ly, a time step of XXXX is required.
+
+We run the calculations for both methods in Sec.~\ref{sec:methods}. XXX
+
+
+
 
 
 \section{Conclusions}
@@ -284,15 +299,29 @@ Based on our study of the stability and time usage of the two methods, we can sa
 
 \section{List of codes}
 
-The codes developed and used for this project are: \\
-
-\noindent \verb@main.cpp@ -- main program (C++).
-
-\noindent \verb@plotting_analytical.py@ -- plotting program to compare the one-dimensional 2-body problem with an analytical solution (Python).
+The codes developed and used in this project are: 
 
 
+\subsection{Running calculations (C++)}
 
-\end{multicols}
+\begin{itemize}
+	\item \verb@main.cpp@ -- main program where the calculations are run, calling on the classes listed below. 
+	\item \verb@solver.cpp@ -- class containing the numerical methods.
+	\item \verb@star.cpp@ -- class collecting various properties of the stars.
+	\item \verb@galaxy.cpp@ -- class containing all the stars in the galaxy.
+\end{itemize}
+
+
+\subsection{Plotting (Python)}
+
+\begin{itemize}
+	\item \verb@plotting_analytical.py@ -- program to graphically compare the one-dimensional 2-body problem with an analytical solution, described in Sec.~\ref{sec:analytical_test}.
+	\item \verb@plotting_method.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV}.
+	\item \verb@plotting_scatter.py@ -- plotting program to visualize the $N$-body system in 3D. 
+	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profiles in Eq. (\ref{eq:simple_fit}) and Eq. (\ref{eq:NFW}).
+\end{itemize}
+
+%\end{multicols}
 
 
 
@@ -300,9 +329,15 @@ The codes developed and used for this project are: \\
 
 \clearpage
 \appendix
-\onecolumn 
+%\onecolumn 
  
 \section{Appendix}
+
+\subsection{Nondimensionalization}\label{sec:nondim_deriv}
+
+...
+
+
 
 \subsection{Derivation of $t_{\mathrm{crunch}}$}\label{sec:t_crunch_derive}
  
@@ -310,7 +345,23 @@ The codes developed and used for this project are: \\
  
 \subsection{Rewriting of $t_{\mathrm{crunch}}$}\label{sec:G_derive}
 
-We want to write $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$. DERIVATION.
+We want to write $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$. Inverting Eq. (\ref{eq:t_crunch}) with respect to $G$, gives
 
+\begin{equation}\label{eq:G}
+	G = \frac{3\pi}{32 \rho_0} \frac{1}{\tau_{\mathrm{crunch}}^2},
+\end{equation}
+where we can replace $\rho_0$ by using that
+
+\begin{equation}
+	\mu = \frac{\bar{M}}{M_{\odot}} = \frac{\rho_0}{N M_{\odot}} \quad \Rightarrow \quad \rho_0 = \mu N M_{\odot},
+\end{equation}
+where $N$ is the total number of particles and $\bar{M}$ is the average mass of the system. Then we can rewrite Eq. (\ref{eq:G}) as 
+
+\begin{equation}
+	G = \frac{3\pi}{32 \mu N M_{\odot}} \frac{1}{\tau_{\mathrm{crunch}}^2}.
+\end{equation}
+
+
+\end{multicols}
 
 \end{document}
