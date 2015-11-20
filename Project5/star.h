@@ -14,9 +14,10 @@ public:
     double mass;
     double position[3];
     double velocity[3];
-    double distance(star star1,star star2);
-    double GravitationalForce(star star1, star star2);
-    //star merge(star star1,star star2);
+    double distance(star otherStar);
+    double GravitationalForce(star otherStar);
+    double GravitationalForce_r3(star otherStar);
+    //void merge(star star1,star star2);
 
 };
 

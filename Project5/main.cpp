@@ -5,14 +5,16 @@
 #include <fstream>
 #include <random>
 //#include <mpi.h>
-//#include "star.h"
-//#include "galaxy.h"
+#include "star.h"
+#include "galaxy.h"
+#include "solver.h"
 
 using namespace std;
 
-double dvdt(double x, double mass1, double mass2);
-void RK4(int dimension, double dt, double final_time, double *x, double *v, double mass1, double mass2, ofstream &file);
-void VV(int N, int dimension, double final_time, double *x_initial, double *v_initial, double mass1, double mass2, ofstream &file);
+void RK4(int dimension, int N, double final_time, double *x, double *v, double mass1, double mass2, ofstream &file);
+void VV(int dimension, int N, double final_time, double *x_initial, double *v_initial, double mass1, double mass2, ofstream &file);
+void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial);
+void print_final(int dimension, double *x_final, double *v_final);
 
 int main()
 {
@@ -20,88 +22,131 @@ int main()
     Msun = 1.;
     Mearth = 1./332946;
 
-    //double x = 1.; // initial position in AU
-    //double v = 0.; // initial velocity in AU/yr
+    int N = 40;                     // No. of integration points
+    double final_time = 10;         // End time of calculation
+    double h = final_time/N;        // Time step
+
+    // Set up initial conditions for each dimension
     int dimension = 3;
-    double x[dimension],v[dimension];
-    for(int i=0;i<dimension;i++){
-        v[i] = 0.;
-        x[i] = 0.;
+    double x_RK4[dimension],v_RK4[dimension],x_VV[dimension],v_VV[dimension];
+
+    for(int i=0; i<dimension; i++){
+        v_RK4[i] = v_VV[i] = 0.;
+        x_RK4[i] = x_VV[i]= 0.3;
     }
-    x[0]=1.;
 
-    double time_step,final_time;
-    time_step = 0.01;
-    final_time = 10;
+    // Run algorithms
+    if (dimension==1){
+        cout << dimension << " DIMENSION:" << endl << endl;
 
-    // Runge-Kutta 4th order
-    ofstream file_RK("RK.txt");
-    cout << "RK4" << endl;
-    cout << "Time step = " << time_step << "; final time = " << final_time << endl;
-    cout << "Initial position = ";
-    for(int j=0;j<dimension;j++) cout << x[j] << " ";
-    cout << endl;
-    cout << "Initial velocity = ";
-    for(int j=0;j<dimension;j++) cout << v[j] << " ";
-    cout << endl;
-    RK4(dimension,time_step,final_time,x,v,Mearth,Msun,file_RK);
-    cout << "Final position = ";
-    for(int j=0;j<dimension;j++) cout << x[j] << " ";
-    cout << endl;
-    cout << "Final velocity = ";
-    for(int j=0;j<dimension;j++) cout << v[j] << " ";
-    cout << endl;
-    file_RK.close();
+        // Print out set up for the calculation
+        print_initial(dimension,h,final_time,x_RK4,v_RK4);
 
 
-    // Velocity-Verlet
-    for(int i=0;i<dimension;i++){
-        v[i] = 0.;
-        x[i] = 0.;
+        // 4TH-ORDER RUNGE-KUTTA
+        cout << "RK4" << endl;
+
+        // Set up file
+        char filename_analytic_RK4[100];
+        sprintf(filename_analytic_RK4, "RK4_analytic_%.3f.txt", h);
+        ofstream file_analytic_RK4(filename_analytic_RK4);
+
+        // Run calculation
+        //for(double t=0; t<final_time; t+=h)
+        RK4(dimension,N,final_time,x_RK4,v_RK4,Mearth,Msun,file_analytic_RK4);
+
+        // Print out final result of the calculation
+        print_final(dimension,x_RK4,v_RK4);
+
+        // Close file
+        file_analytic_RK4.close();
+
+
+        // VELOCITY-VERLET
+        cout << endl << "Velocity-Verlet" << endl;
+
+        // Set up file
+        char filename_analytic_VV[100];
+        sprintf(filename_analytic_VV, "VV_analytic_%.3f.txt", h);
+        ofstream file_analytic_VV(filename_analytic_VV);
+
+        // Run calculation //for(double t=0; t<final_time; t+=h)
+        VV(dimension,N,h,x_VV,v_VV,Mearth,Msun,file_analytic_VV);
+
+        // Print out final result of the calculation
+        print_final(dimension,x_VV,v_VV);
+
+        // Close file
+        file_analytic_VV.close();
     }
-    x[0]=1.;
-    int N = final_time/time_step;
-    double h = final_time/((double) N);
-    ofstream file_VV("VV.txt");
-    cout << endl << "Velocity-Verlet" << endl;
-    cout << "Time step = " << h << "; final time = " << final_time << endl;
-    cout << "Initial position = ";
-    for(int j=0;j<dimension;j++) cout << x[j] << " ";
-    cout << endl;
-    cout << "Initial velocity = ";
-    for(int j=0;j<dimension;j++) cout << v[j] << " ";
-    cout << endl;
-    VV(N,dimension,final_time,x,v,Mearth,Msun,file_VV);
-    cout << "Final position = ";
-    for(int j=0;j<dimension;j++) cout << x[j] << " ";
-    cout << endl;
-    cout << "Final velocity = ";
-    for(int j=0;j<dimension;j++) cout << v[j] << " ";
-    cout << endl;
-    file_VV.close();
+
+    else{
+        cout << dimension << " DIMENSION:" << endl << endl;
+
+        // Print out set up for the calculation
+        print_initial(dimension,h,final_time,x_RK4,v_RK4);
+
+        // 4TH-ORDER RUNGE-KUTTA
+        cout << endl << "RK4" << endl;
+
+        // Set up file
+        char filename_RK4[100];
+        sprintf(filename_RK4, "RK4_%.3f.txt", h);
+        ofstream file_RK4(filename_RK4);
+
+        // Run calculation //for(double t=0; t<final_time; t+=h)
+        RK4(dimension,N,final_time,x_RK4,v_RK4,Mearth,Msun,file_RK4);
+
+         // Print out final result of the calculation
+        print_final(dimension,x_RK4,v_RK4);
+
+        // Close file
+        file_RK4.close();
+
+        // VELOCITY-VERLET
+        cout << endl << "Velocity-Verlet" << endl;
+
+        // Set up file
+        char filename_VV[100];
+        sprintf(filename_VV, "VV_%.3f.txt", h);
+        ofstream file_VV(filename_VV);
+
+        // Run calculation
+        //for(double t=0; t<final_time; t+=h)
+        VV(dimension,N,h,x_VV,v_VV,Mearth,Msun,file_VV);
+
+        // Print out final result of the calculation
+        print_final(dimension,x_VV,v_VV);
+
+        // Close file
+        file_VV.close();
+    }
+
+    // GALAXY MODEL
+    galaxy MM15;
+    int objects; // Number of stars to be added in galaxy
+    star solar(1,0,0,0,0,0,0);
+    MM15.add(solar);
+    cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
     return 0;
 }
 
-double dvdt(double x, double mass1, double mass2){
-    double G = 4*M_PI*M_PI; // Gravitational constant
-    double y = 0;
-    double r = sqrt(x*x+y*y); // Distance between the two objects
-    return -G*mass1*mass2*x/(r*r*r);
-}
-
-void RK4(int dimension,double h, double final_time, double *x, double *v, double mass1, double mass2,ofstream &file){
+void RK4(int dimension,int N, double final_time, double *x, double *v, double mass1, double mass2,ofstream &file){
     // 4th order Runge-Kutta solver for two coupeled first ordered ODE
+
+    double h = final_time/((double) N);
 
     double k1[dimension],k2[dimension],k3[dimension],k4[dimension]; // position
     double l1[dimension],l2[dimension],l3[dimension],l4[dimension]; // velocity
 
-    double distance,r3;
+    double distance,r3,t;
     double xi = 0;
     double G = 4*M_PI*M_PI;
 
 
-    for(double t=0;t<final_time;t+=h){
+    for(int i=0;i<N;i++){
+        t = i*h;
         xi = 0;
         for(int i=0;i<dimension;i++){
             xi += x[i]*x[i];
@@ -138,7 +183,7 @@ void RK4(int dimension,double h, double final_time, double *x, double *v, double
     }
 }
 
-void VV(int N,int dimension,double final_time,double *x_initial,double *v_initial, double mass1, double mass2, ofstream &file){
+void VV(int dimension,int N,double final_time,double *x_initial,double *v_initial, double mass1, double mass2, ofstream &file){
     // Velocity-Verlet
 
     double h = final_time/((double) N);
@@ -156,7 +201,7 @@ void VV(int N,int dimension,double final_time,double *x_initial,double *v_initia
     double xi = 0;
     double G = 4*M_PI*M_PI;
 
-    for(int i=1; i<N; i+=1){
+    for(int i=1;i<N;i++){
         xi = 0;
         for(int i=0;i<dimension;i++){
             xi += x[i]*x[i];
@@ -182,4 +227,28 @@ void VV(int N,int dimension,double final_time,double *x_initial,double *v_initia
     }
 }
 
+void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial){
+    // A function that prints out the set up of the calculation
 
+    cout << "Time step = " << time_step << "; final time = " << final_time << endl;
+
+    cout << "Initial position = ";
+    for(int j=0;j<dimension;j++) cout << x_initial[j] << " ";
+    cout << endl;
+
+    cout << "Initial velocity = ";
+    for(int j=0;j<dimension;j++) cout << v_initial[j] << " ";
+    cout << endl;
+}
+
+void print_final(int dimension,double *x_final,double *v_final){
+    // A function that prints out the final results of the calculation
+
+    cout << "Final position = ";
+    for(int j=0; j<dimension; j++) cout << x_final[j] << " ";
+    cout << endl;
+
+    cout << "Final velocity = ";
+    for(int j=0; j<dimension; j++) cout << v_final[j] << " ";
+    cout << endl;
+}

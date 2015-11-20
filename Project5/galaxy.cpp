@@ -6,9 +6,10 @@ galaxy::galaxy()
 
 }
 
-/*
+
 void galaxy::add(star newstar)
 {
-    // do something
-}*/
+    total_stars += 1;
+    all_stars.push_back(newstar);
+}
 
