@@ -45,8 +45,9 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch)
 
     double time_step = t_crunch/((double) N);
     double time=0;
+    print_position(output_file,this->all_stars,3,time);
+    time = time_step;
     while(time<t_crunch){
-        time += time_step;
         for(int nr=0;nr<total_stars;nr++){
             Fg = 0;
             star &current = all_stars[nr];
@@ -62,7 +63,7 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch)
             for(int j=0;j<dimension;j++){
                 for(int nr2=0;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    relative_position = ((other.position[j]+time_step*k1[j]/2.)-(current.position[j]+time_step*k1[j]/2.));
+                    relative_position = ((other.position[j]+k1[j]/2.)-(current.position[j]+k1[j]/2.));
                     Fg += current.GravitationalForce_r3(other)*relative_position;
                 }
                 k2[j] = time_step*(current.velocity[j]+l1[j]/2.);
@@ -71,7 +72,7 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch)
             for(int j=0;j<dimension;j++){
                 for(int nr2=0;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    relative_position = ((other.position[j]+time_step*k2[j]/2.)-(current.position[j]+time_step*k2[j]/2.));
+                    relative_position = ((other.position[j]+k2[j]/2.)-(current.position[j]+k2[j]/2.));
                     Fg += current.GravitationalForce_r3(other)*relative_position;
                 }
                 k3[j] = time_step*(current.velocity[j]+l2[j]/2.);
@@ -80,7 +81,7 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch)
             for(int j=0;j<dimension;j++){
                 for(int nr2=0;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    relative_position = ((other.position[j]+time_step*k3[j])-(current.position[j]+time_step*k3[j]));
+                    relative_position = ((other.position[j]+k3[j])-(current.position[j]+k3[j]));
                     Fg += current.GravitationalForce_r3(other)*relative_position;
                 }
                 k4[j] = time_step*(current.velocity[j]+l3[j]);
@@ -92,9 +93,9 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch)
             }
         }
         print_position(output_file,this->all_stars,3,time);
+        time += time_step;
     }
     output_file.close();
-    //std::cout << (k1[0] + 2.*(k2[0] + k3[0]) + k4[0])/6. << " " << (l1[0] + 2.*(l2[0] + l3[0]) + l4[0])/6. << std::endl;
 }
 
 void galaxy::VelocityVerlet(int N, double t_crunch)
