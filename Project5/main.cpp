@@ -123,10 +123,16 @@ int main()
     }
 
     // GALAXY MODEL
-    galaxy MM15;
-    int objects; // Number of stars to be added in galaxy
+    double R0 = 20; // Radius of galaxy
+    int objects = 100; // Number of stars to be added in galaxy
+    galaxy MM15(R0);
+    /*for(int i=0;i<objects;i++){
+        star star_name(m,x,y,z,0,0,0); // m,x,y,z randomly distributed
+        MM15.add(star_name);
+    }*/
     star solar(1,0,0,0,0,0,0);
     MM15.add(solar);
+
     cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
     return 0;

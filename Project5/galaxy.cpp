@@ -3,7 +3,14 @@
 
 galaxy::galaxy()
 {
+    total_stars = 0;
+    radius = 100;
+}
 
+galaxy::galaxy(double radi)
+{
+    total_stars = 0;
+    radius = radi;
 }
 
 

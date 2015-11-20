@@ -7,9 +7,18 @@ using std::vector;
 class galaxy
 {
 public:
-    int total_stars = 0; // initialize
+    friend class star;
+
+    // initializers
     galaxy();
+    galaxy(double radi);
+
+    // properties
+    double radius;
+    int total_stars;
     vector<star> all_stars;
+
+    // functions
     void add(star newstar);
 };
 
