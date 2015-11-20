@@ -53,14 +53,11 @@ An open cluster is a group of up to a few thousand stars that are gravitationall
 
 Open clusters are usually found in the arms of spiral galaxies or in irregular galaxies. Once an open cluster has formed, it will gradually dissipate as its members gets ejected from the cluster due to random collisions, lasting only a few hundred million years. 
 
+% (Images which shows an open cluster, and a galaxy with visible clusters - HII regions.)
 
-(Images which shows an open cluster, and a galaxy with visible clusters - HII regions.)
+In this project we make a simple model for how an open cluster is formed from a gravitational collapse and model the interactions among a large number of stars. We have simulated a "cold collapse", meaning the stars will start at rest. The stars have masses randomly distributed by a Gaussian distribution around 10$M_{\odot}$ with a standard deviation of 1$M_{\odot}$, and uniform randomly distributed positions within a sphere of a given radius $R_0$. 
 
-In this project we looked at a simple model for how an open cluster is made from a gravitational collapse and for the interactions among a large number of stars. We have simulated a "cold collapse", meaning the particles will have little or no initial velocity.
-
-...
-
-First we study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem in three dimensions. The time evolution of the system is described through \textbf{Newton's law}, given by:
+We first study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem in three dimensions. The time evolution of the system is described through \textbf{Newton's law}, given by:
 
 \begin{equation}\label{eq:ODE}
 	\frac{\mathrm{d}^2 x}{\mathrm{d}t^2} = \frac{F_{G,x}}{M}
@@ -79,24 +76,21 @@ Eq. (\ref{eq:ODE}) is a second-order differential equation, which we can rewrite
 \end{equation}
 These equations can be used to determine the position and velocity of an object.
 
-When solving this problem we will convert the units of mass and length to dimensionless variables using solar masses $M_{\odot}$ and light years. 
-
-... (describe this and introduce new equations)
-
-When setting up the $N$-body problem we will let the particle start at rest with masses randomly distributed by a Gaussian distribution around 10$M_{\odot}$ with a standard deviation of 1$M_{\odot}$. The particles will start with uniformly randomly distributed positions within a sphere of a given radius $R_0$. 
+When solving this problem we will convert the units of mass and length to dimensionless variables using solar masses $M_{\odot}$ and light years, which is described in Sec.~\ref{sec:nondim}.
 
 In the case where $N \rightarrow \infty$ and keeping the mean density $\rho_0$ constant, the system will collapse into a singularity at a finite \textbf{collapse time} 
 
 \begin{equation}\label{eq:t_crunch}
-\tau_{\mathrm{crunch}} = \sqrt{\frac{3 \pi}{32G\rho_0}}.
+\tau_{\mathrm{crunch}} = \sqrt{\frac{3 \pi}{32G\rho_0}},
 \end{equation} 
-This will however not be the case in our model for a finite value of $N$. EXPLAIN.
+derived in Appendix~\ref{sec:t_crunch_derive}. We can write $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$, which gives
 
-Eq. (\ref{eq:t_crunch}) can be derived ... DERIVATION!
+\begin{equation}
+	G = ?,
+\end{equation}
+which is derived in the Appendix~\ref{sec:G_derive}.
 
-Next we want to find $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$. DERIVATION.
-
-After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we will introduce a smoothing function that will take care of any numerical instability that arises when two of the particles come very close. We modify the Newtonian gravitational force as
+After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we introduce a smoothing function to take care of any numerical instability that may arise when two stars come very close. We modify the gravitational force as
 
 \begin{equation}\label{eq:force_mod}
 	F_{G,\mathrm{mod}} = - \frac{G M_1 M_2}{r^2 + \epsilon^2},
@@ -177,6 +171,41 @@ The same algorithm follows for all dimensions $(x,y,z)$.
 Using this method gives a global truncating error which goes like $O(h^4)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
 
 
+\subsection{Random distributions}
+The particles in the $N$-body case will start with positions $(x,y,z)$ drawn from a \textbf{random uniform distribution} within a sphere of radius $R_0$. Achieving this numerically is not entirely trivial if we want to avoid the particle density being much higher in the centre. First we consider the spherical representation of the coordinates
+
+\begin{equation}\label{eq:coord_transf}
+\begin{aligned}
+	x &= r \, \mathrm{sin}\theta \, \mathrm{cos}\phi \\
+	y &= r \, \mathrm{sin}\theta \, \mathrm{sin}\phi \\
+	z &= r \, \mathrm{cos}\theta
+\end{aligned}
+\end{equation}
+where $\theta \in [0,\pi]$, $\phi \in [0,2\pi]$ and $r \in [0,R_0]$. The trick is to rewrite the volume element as
+
+\begin{equation*}
+	r^2 \, \mathrm{sin} \theta \, dr d\theta d\phi = A \, du dv dw,
+\end{equation*}
+where $u,v,w \in [0,1]$ and $A$ is a constant. Following the approach of H.T. Ihle (2015), we find 
+
+\begin{equation}\label{eq:coord_sphere}
+\begin{aligned}
+	\theta &= \mathrm{arccos}(1 - 2v) \\
+	\phi &= 2\pi w \\
+	r &= R_0 u^{1/3}
+\end{aligned}
+\end{equation}
+where $u,v,w$ are computed using the built-in C++ function \verb@uniform_real_distribution@, which will give randomly distributed numbers in the interval $[0,1]$. Then, plugging the computed values of Eq. (\ref{eq:coord_sphere}) into Eq. (\ref{eq:coord_transf}) gives the desired result. 
+
+The particles will be assigned a randomly distributed mass from a \textbf{Gaussian distribution} for a given mean value $10 M_{\odot}$ and with a standard deviation $M_{\odot}$. This is simply done using the built-in C++ function \verb@normal_distribution@.  
+
+
+
+\subsection{Nondimensionalization}\label{sec:nondim}
+We use solar masses $M_{\odot}$ and light years as units of mass and length to make our equations dimensionless.
+
+...
+
 
 
 \section{Results}
@@ -255,10 +284,33 @@ Based on our study of the stability and time usage of the two methods, we can sa
 
 \section{List of codes}
 
-The codes developed and used for this project are:\
+The codes developed and used for this project are: \\
 
-...
+\noindent \verb@main.cpp@ -- main program (C++).
+
+\noindent \verb@plotting_analytical.py@ -- plotting program to compare the one-dimensional 2-body problem with an analytical solution (Python).
+
+
 
 \end{multicols}
+
+
+
+
+
+\clearpage
+\appendix
+\onecolumn 
+ 
+\section{Appendix}
+
+\subsection{Derivation of $t_{\mathrm{crunch}}$}\label{sec:t_crunch_derive}
+ 
+...
+ 
+\subsection{Rewriting of $t_{\mathrm{crunch}}$}\label{sec:G_derive}
+
+We want to write $G$ in units of $\tau_{\mathrm{crunch}}$ so that $G$ becomes a function of the number of particles $N$ and the average mass of the particles $\mu$. DERIVATION.
+
 
 \end{document}

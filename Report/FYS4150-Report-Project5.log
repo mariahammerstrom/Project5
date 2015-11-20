@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.7.15)  19 NOV 2015 17:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.7.15)  20 NOV 2015 12:47
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -583,17 +583,22 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <12> not available
 
 {/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    Font shape `OT1/phv/m/it' in size <10> not available
-(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 127.
-LaTeX Font Info:    Try loading font information for OMS+txr on input line 138.
+(Font)              Font shape `OT1/phv/m/sl' tried instead on input line 121.
+LaTeX Font Info:    Try loading font information for OMS+txr on input line 132.
 
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/txfonts/omstxr.fd
 File: omstxr.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `OMS/txr/m/n' in size <10> not available
-(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 138.
- [2]
-Underfull \hbox (badness 10000) in paragraph at lines 198--199
+(Font)              Font shape `OMS/txsy/m/n' tried instead on input line 132.
+LaTeX Font Info:    Try loading font information for OT1+txtt on input line 198
+.
+
+(/usr/local/texlive/2014/texmf-dist/tex/latex/txfonts/ot1txtt.fd
+File: ot1txtt.fd 2000/12/15 v3.1
+) [2]
+Underfull \hbox (badness 10000) in paragraph at lines 227--228
 
  []
 
@@ -601,29 +606,29 @@ Underfull \hbox (badness 10000) in paragraph at lines 198--199
 File: Images/comparison_x.png Graphic file (type png)
 
 <use Images/comparison_x.png>
-Package pdftex.def Info: Images/comparison_x.png used on input line 203.
+Package pdftex.def Info: Images/comparison_x.png used on input line 232.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
 <Images/comparison_v.png, id=21, 578.16pt x 433.62pt>
 File: Images/comparison_v.png Graphic file (type png)
 
 <use Images/comparison_v.png>
-Package pdftex.def Info: Images/comparison_v.png used on input line 204.
+Package pdftex.def Info: Images/comparison_v.png used on input line 233.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
-LaTeX Font Info:    Try loading font information for OT1+txss on input line 207
+LaTeX Font Info:    Try loading font information for OT1+txss on input line 236
 .
 
 (/usr/local/texlive/2014/texmf-dist/tex/latex/txfonts/ot1txss.fd
 File: ot1txss.fd 2000/12/15 v3.1
 )
 LaTeX Font Info:    Font shape `OT1/txss/m/n' will be
-(Font)              scaled to size 8.54997pt on input line 207.
+(Font)              scaled to size 8.54997pt on input line 236.
 LaTeX Font Info:    Font shape `OT1/txss/bx/n' in size <9> not available
-(Font)              Font shape `OT1/txss/b/n' tried instead on input line 207.
+(Font)              Font shape `OT1/txss/b/n' tried instead on input line 236.
 LaTeX Font Info:    Font shape `OT1/txss/b/n' will be
-(Font)              scaled to size 8.54997pt on input line 207.
+(Font)              scaled to size 8.54997pt on input line 236.
 
-Underfull \hbox (badness 10000) in paragraph at lines 218--220
+Underfull \hbox (badness 10000) in paragraph at lines 247--249
 
  []
 
@@ -631,35 +636,43 @@ Underfull \hbox (badness 10000) in paragraph at lines 218--220
 File: Images/energy_conservation.png Graphic file (type png)
 
 <use Images/energy_conservation.png>
-Package pdftex.def Info: Images/energy_conservation.png used on input line 223.
+Package pdftex.def Info: Images/energy_conservation.png used on input line 252.
 
 (pdftex.def)             Requested size: 369.88582pt x 223.72371pt.
- [3] [4 <./Images/comparison_x.png> <./Images/comparison_v.png> <./Images/energ
-y_conservation.png>]
-(./FYS4150-Report-Project5.aux) ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 287--288
+
+ []
+
+[3] [4 <./Images/comparison_x.png> <./Images/comparison_v.png> <./Images/energy
+_conservation.png>] [5
+
+
+] (./FYS4150-Report-Project5.aux) ) 
 Here is how much of TeX's memory you used:
- 7316 strings out of 493117
- 106130 string characters out of 6135433
- 301383 words of memory out of 5000000
- 10611 multiletter control sequences out of 15000+600000
- 54412 words of font info for 130 fonts, out of 8000000 for 9000
+ 7351 strings out of 493117
+ 106678 string characters out of 6135433
+ 309432 words of memory out of 5000000
+ 10642 multiletter control sequences out of 15000+600000
+ 54688 words of font info for 131 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,12n,75p,667b,612s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/
-dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfont
-s/rtxi.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxmi
-.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></
-usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txex.pfb></usr/loc
-al/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/texl
-ive/2014/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/201
-4/texmf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2014/texm
-f-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fon
-ts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/u
-rw/times/utmri8a.pfb>
-Output written on FYS4150-Report-Project5.pdf (4 pages, 236650 bytes).
+ 42i,12n,75p,667b,616s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/texmf-dist/fonts/en
+c/dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfo
+nts/rtxi.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtx
+mi.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb>
+</usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txex.pfb></usr/l
+ocal/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/public/txfonts/txtt.pfb></usr/local/texlive/2
+014/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2014/tex
+mf-dist/fonts/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2014/texmf-dis
+t/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/ty
+pe1/urw/times/utmr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/ti
+mes/utmri8a.pfb>
+Output written on FYS4150-Report-Project5.pdf (5 pages, 244271 bytes).
 PDF statistics:
- 67 PDF objects out of 1000 (max. 8388607)
- 44 compressed objects within 1 object stream
+ 74 PDF objects out of 1000 (max. 8388607)
+ 49 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  16 words of extra memory for PDF output out of 10000 (max. 10000000)
 
