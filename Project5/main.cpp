@@ -25,9 +25,9 @@ int main()
     Msun = 1.;
     Mearth = 1./332946;
 
-    int N = 40;                     // No. of integration points
+    int N = 100;                     // No. of integration points
     double final_time = 10;         // End time of calculation
-    double h = final_time/N;        // Time step
+    double h = final_time/((double) N);        // Time step
 
     // Set up initial conditions for each dimension
     int dimension = 3;
@@ -127,6 +127,38 @@ int main()
     }
     */
 
+    // Testing code
+    bool stellar;
+    stellar = false;
+    solver test;
+    star star1(1,20,8,12,0,0,0);
+    star star2(2,6,14,21,0,0,0);
+
+    char filename_analytic_RK4[100];
+    sprintf(filename_analytic_RK4, "RK4_analytic_%.3f.txt", h);
+    ofstream file_analytic_RK4(filename_analytic_RK4);
+
+    cout << "RK: " << endl;
+    print_initial(dimension,h,final_time,star1.position,star1.velocity);
+    test.RK4(dimension,N,final_time,star1,star2,file_analytic_RK4,stellar);
+    print_final(dimension,star1.position,star1.velocity);
+    cout << endl;
+    file_analytic_RK4.close();
+
+    star star3(1,20,8,12,0,0,0);
+    star star4(2,6,14,21,0,0,0);
+
+    char filename_analytic_VV[100];
+    sprintf(filename_analytic_VV, "VV_analytic_%.3f.txt", h);
+    ofstream file_analytic_VV(filename_analytic_VV);
+
+    cout << "VV: " << endl;
+    print_initial(dimension,h,final_time,star3.position,star3.velocity);
+    test.VV(dimension,N,final_time,star3,star4,file_analytic_VV,stellar);
+    print_final(dimension,star1.position,star3.velocity);
+    file_analytic_VV.close();
+
+
     // GALAXY MODEL
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
@@ -140,7 +172,6 @@ int main()
     galaxy MM15(R0);
     for(int i=0;i<objects;i++){
         Gaussian_distribution(mean,deviation,m,&generator);
-        cout << i << " " << m << endl;
         randomUniformSphere(R0,x,y,z,&generator);
         star stari(m,x,y,z,0,0,0);
         MM15.add(stari);

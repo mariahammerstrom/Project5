@@ -6,6 +6,7 @@ solved with 4th order Runge-Kutta (RK4) and Velocity-Verlet (VV), compared with 
 
 """
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import rc
@@ -34,6 +35,8 @@ def plot_time(time_step):
     #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Verlet_%.1f.txt' % time_step
     filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/VV.txt'
     filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/RK.txt'
+    # filename_verlet = 'C:\Users\mariefoss\Documents\GitHub\Project5\build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug\VV'
+    # filename_RK4 = 'C:\Users\mariefoss\Documents\GitHub\Project5\build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug\RK'
     t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
     t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
     #print len(t_verlet),len(t_RK4)
@@ -94,6 +97,7 @@ def plot_timestep(time_step_list):
     
     for i in range(len(time_step_list)):
         filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Verlet_%.1f.txt' % time_step_list[i]
+        # filename_verlet = 'C:\Users\mariefoss\Documents\GitHub\Project5\build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug\VV_%.3f.txt' % time_step_list[i]
         t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
         
         plt.figure(1)
@@ -112,11 +116,14 @@ def plot_timestep(time_step_list):
     
     return 0
 
+def main(argv):
+    # Plot results as a function of time
+    time_step = 0.2
+    plot_time(time_step)
 
-# Plot results as a function of time
-time_step = 0.2
-plot_time(time_step)
-
-# Plot results for different time steps
-#time_step_list = [0.2]
-#plot_timestep(time_step_list)
+    # Plot results for different time steps
+    # time_step_list = [0.2]
+    # plot_timestep(time_step_list)
+	
+if __name__ == "__main__":
+    main(sys.argv[1:]) 
