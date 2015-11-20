@@ -4,8 +4,10 @@ A program that creates a scatter plot in 3D of a cluster of stars, with stars
 scaled according to their mass.
 """
 
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.mlab as mlab
 from matplotlib.pyplot import rc
 rc('font',**{'family':'serif'})
 
@@ -32,7 +34,7 @@ def read_file(filename):
     return index,m,x,y,z,v_x,v_y,v_z
     
 
-def plot_scatter(N,x,y,z,mass):
+def plot_scatter(N,x,y,z,mass,title):
     # Input: N = no. of stars, x,y,z = positions for each star, mass = mass of each star
     # Output: Scatter plot.
     
@@ -42,13 +44,16 @@ def plot_scatter(N,x,y,z,mass):
     # Scale stars according to their mass
     for i in range(len(mass)):
         if mass[i] < 9:
-            s = 2
+            #s = 2
+            c = 'c'
         elif mass[i] > 9 and mass[i] < 11:
-            s = 15
+            #s = 15
+            c = 'y'
         elif mass[i] > 11:
-            s = 30
+            #s = 30
+            c = 'm'
         
-        ax.scatter(x[i],y[i],z[i],s=s,c='k')
+        ax.scatter(x[i],y[i],z[i],s=30,c=c)
 
     ax.set_xlabel(r'$x$',size=14)
     ax.set_ylabel(r'$y$',size=14)
@@ -57,19 +62,27 @@ def plot_scatter(N,x,y,z,mass):
     plt.xlim(-20,20)
     plt.ylim(-20,20)
     
-    ax.set_title('Initial configuration',size=12)
+    ax.set_title(title,size=12)
 
     plt.show()
 
 
 
-N = 100 # Number of stars
+def main(argv):
+    N = 100 # Number of stars
 
-# Initial configuration
-filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
-index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
+    # Read data
+    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
+    index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
     
-plot_scatter(N,x,y,z,m)
+    # Initial configuration
+    plot_scatter(N,x[0:100],y[0:100],z[0:100],m[0:100],'Initial condition, t = 0')
 
-# Final configuration
-
+    # Final configuration
+    #print index[-100:]
+    #plot_scatter(N,x[-100:],y[-100:],z[-100:],m[-100:],'Final condition, t = %.2f' % index[-1])
+    
+	
+if __name__ == "__main__":
+    main(sys.argv[1:]) 
+    
