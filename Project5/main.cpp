@@ -16,8 +16,8 @@ void RK4(int dimension, int N, double final_time, double *x, double *v, double m
 void VV(int dimension, int N, double final_time, double *x_initial, double *v_initial, double mass1, double mass2, ofstream &file);
 void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial);
 void print_final(int dimension, double *x_final, double *v_final);
-void randomUniformSphere(double R0,double &x,double &y,double &z);
-void Gaussian_distribution(double mean,double stddev,double &mass);
+void randomUniformSphere(double R0,double &x,double &y,double &z, default_random_engine *generator);
+void Gaussian_distribution(double mean,double stddev,double &mass, default_random_engine *generator);
 
 int main()
 {
@@ -128,6 +128,9 @@ int main()
     */
 
     // GALAXY MODEL
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+
     double R0 = 20; // Radius of galaxy
     int objects = 100; // Number of stars to be added in galaxy
     double m,x,y,z; // randomly distributed mass and position
@@ -136,9 +139,9 @@ int main()
     double deviation = 1.;
     galaxy MM15(R0);
     for(int i=0;i<objects;i++){
-        Gaussian_distribution(mean,deviation,m);
+        Gaussian_distribution(mean,deviation,m,&generator);
         cout << i << " " << m << endl;
-        randomUniformSphere(R0,x,y,z);
+        randomUniformSphere(R0,x,y,z,&generator);
         star stari(m,x,y,z,0,0,0);
         MM15.add(stari);
     }
@@ -274,18 +277,18 @@ void print_final(int dimension,double *x_final,double *v_final){
     cout << endl;
 }
 
-void randomUniformSphere(double R0,double &x,double &y,double &z){
+void randomUniformSphere(double R0,double &x,double &y,double &z,default_random_engine *generator){
     // Random uniform number distribution that returns coordinates (x,y,z) in a sphere of radius R0.
 
     // Set up the uniform number generator
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine generator(seed);
+    //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    //default_random_engine generator(seed);
     uniform_real_distribution<double> uniform_sphere(0.0,1.0);
 
     // Spherical coordinates
-    double phi = M_PI*uniform_sphere(generator);
-    double theta = acos(1 -2*uniform_sphere(generator));
-    double r = R0*pow(uniform_sphere(generator),1./3);
+    double phi = 2*M_PI*uniform_sphere(*generator);
+    double theta = acos(1 -2*uniform_sphere(*generator));
+    double r = R0*pow(uniform_sphere(*generator),1./3);
 
     // Convert to cartesian coordinates
     x = r*sin(theta)*cos(phi);
@@ -294,14 +297,15 @@ void randomUniformSphere(double R0,double &x,double &y,double &z){
 
 }
 
-void Gaussian_distribution(double mean,double stddev,double &mass){
+void Gaussian_distribution(double mean,double stddev,double &mass, default_random_engine *generator){
     // Gaussian random number distribution that returns a mass around a mean with a given standard deviation.
 
     // Set up the uniform number generator
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine generator(seed);
+    //unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    //default_random_engine generator(seed);
     normal_distribution<double> normal_dist(mean,stddev);
 
     // Generate the mass
-    mass = normal_dist(generator);
+    mass = normal_dist(*generator);
+    //cout << seed << endl;
 }
