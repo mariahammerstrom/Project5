@@ -16,16 +16,20 @@ def read_file(filename):
     
     data = np.loadtxt(filename,unpack=True) # Read data
     
-    t = data[0]            # time
-    x = data[1]            # position, x-direction
-    v_x = data[2]          # velocity, x-direction
-    y = data[3]            # position, y-direction
-    v_y = data[4]          # velocity, y-direction
-    z = data[5]            # position, z-direction
-    v_z = data[6]          # velocity, z-direction
-    m = data[7]            # mass
+    index = data[0]        # index
+    m = data[1]            # mass
     
-    return t,x,v_x,y,v_y,z,v_z,m
+    # Positions
+    x = data[2]            # position, x-direction
+    y = data[3]            # position, y-direction
+    z = data[4]            # position, z-direction
+    
+    # Velocities
+    v_x = data[5]          # velocity, x-direction
+    v_y = data[6]          # velocity, y-direction
+    v_z = data[7]          # velocity, z-direction
+    
+    return index,m,x,y,z,v_x,v_y,v_z
     
 
 def plot_scatter(N,x,y,z,mass):
@@ -50,30 +54,22 @@ def plot_scatter(N,x,y,z,mass):
     ax.set_ylabel(r'$y$',size=14)
     ax.set_zlabel(r'$z$',size=14)
     
+    plt.xlim(-20,20)
+    plt.ylim(-20,20)
+    
     ax.set_title('Initial configuration',size=12)
 
     plt.show()
 
 
 
-N = 5 # Number of stars
+N = 100 # Number of stars
 
 # Initial configuration
-x_coord = np.zeros(N)
-y_coord = np.zeros(N)
-z_coord = np.zeros(N)
-#mass = np.zeros(N)
-mass = np.array([8,10,12,15,5])
-
-for i in range(N):
-    #filename = 'stars_initial.txt'
-    #t,x,v_x,y,v_y,z,v_z,m = read_file(filename)
-    x_coord[i] = i
-    y_coord[i] = i
-    z_coord[i] = i
-    #mass[i] = m
-
-plot_scatter(N,x_coord,y_coord,z_coord,mass)
+filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
+index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
+    
+plot_scatter(N,x,y,z,m)
 
 # Final configuration
 
