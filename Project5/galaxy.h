@@ -21,9 +21,9 @@ public:
 
     // functions
     void add(star newstar);
-    void print_position(std::ofstream &output, vector<star> vec, int n, double time);
+    void print_position(std::ofstream &output, int dimension, double time);
     void RungeKutta4(int dimension, int N, double t_crunch);
-    void VelocityVerlet(int N, double t_crunch);
+    void VelocityVerlet(int dimension, int N, double t_crunch);
 };
 
 #endif // GALAXY_H

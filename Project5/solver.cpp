@@ -19,7 +19,7 @@ void solver::RK4(int dimension,int N, double final_time,star &star1,star star2,s
     double h = final_time/((double) N); // time step
 
     for(int i=0;i<N;i++){
-        if(stellar) Fg = star1.GravitationalForce_r3(star2);
+        if(stellar) Fg = star1.Acceleration(star2);
         else Fg = 1;
 
         for(int j=0;j<dimension;j++){
@@ -67,7 +67,7 @@ void solver::VV(int dimension,int N,double final_time,star &star1,star star2,std
     double Fg; // gravitational force between the two objects
 
     for(int i=1; i<N; i+=1){
-        if(stellar) Fg = star1.GravitationalForce_r3(star2);
+        if(stellar) Fg = star1.Acceleration(star2);
         else Fg = 1;
 
         for(int j=0;j<dimension;j++){

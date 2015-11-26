@@ -24,7 +24,7 @@ public:
     // Functions
     double distance(star otherStar);
     double GravitationalForce(star otherStar);
-    double GravitationalForce_r3(star otherStar);
+    double Acceleration(star otherStar);
     //void merge(star star1,star star2);
 
 };

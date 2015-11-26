@@ -45,14 +45,14 @@ double star::distance(star otherStar)
 double star::GravitationalForce(star otherStar)
 {
     double r = this->distance(otherStar);
-    return -G*this->mass*otherStar.mass/(r*r);
+    return G*this->mass*otherStar.mass/(r*r); // *(-1)
 }
 
-double star::GravitationalForce_r3(star otherStar)
+double star::Acceleration(star otherStar)
 {
     double r = this->distance(otherStar);
-    if(r!=0) return -G*this->mass*otherStar.mass/(r*r*r);
-    else return 0;
+    double a = this->GravitationalForce(otherStar)/this->mass/r;
+    return a;
 }
 
 /*
