@@ -19,82 +19,33 @@ void Gaussian_distribution(double mean,double stddev,double &mass, default_rando
 
 int main()
 {
-    int N = 100;                 // No. of integration points
-    double final_time = 10;    // End time of calculation
+    int N = 100;                // No. of integration points
+    double final_time = 10;     // End time of calculation
     int dimension;              // No. of spatial dimensions
     bool stellar;               // true if star cluster
 
-    // Testing code
+    cout << "Time step: " << final_time/((double) N) << endl;
 
-    double h = final_time/((double) N); // Time step
-
+    // ANALYTIC
     stellar = false;
     dimension = 1;
+
+    // RK4 test
     star star1(1,1,0,0,0,0,0);
-    galaxy test;
-    test.add(star1);
+    galaxy testRK;
+    testRK.add(star1);
+    testRK.RungeKutta4(dimension,N,final_time,stellar);
 
-    //char filename_analytic_RK4[100];
-    //sprintf(filename_analytic_RK4, "RK4_analytic_%.3f.txt", h);
-    //ofstream file_analytic_RK4(filename_analytic_RK4);
-
-    //cout << "RK: " << endl;
-    //print_initial(dimension,h,final_time,star1.position,star1.velocity);
-    test.RungeKutta4(dimension,N,final_time,stellar);
-    //print_final(dimension,star1.position,star1.velocity);
-    //file_analytic_RK4.close();
-
-    /*
-    star star3(0.05,1,0,0,0,0,0);
-    star star4(1,0,0,0,0,0,0);
-
-    char filename_analytic_VV[100];
-    sprintf(filename_analytic_VV, "VV_analytic_%.3f.txt", h);
-    ofstream file_analytic_VV(filename_analytic_VV);
-
-    cout << "VV: " << endl;
-    print_initial(dimension,h,final_time,star3.position,star3.velocity);
-    test.VV(dimension,N,final_time,star3,star4,file_analytic_VV,stellar);
-    print_final(dimension,star1.position,star3.velocity);
-    file_analytic_VV.close();
-    */
+    // VV test
+    star star2(1,1,0,0,0,0,0);
+    galaxy testVV;
+    testVV.add(star2);
+    //testVV.VelocityVerlet(dimension,N,final_time);
 
 
-    // binary stars
-    /*
-    dimension = 3;
-    galaxy binary(10.);
-    star star1(9,1,1,1,0,0,0); binary.add(star1);
-    star star2(11,-1,-1,-1,0,0,0); binary.add(star2);
 
-    cout << "Star1: ";
-    for(int i=0;i<dimension;i++){cout << star1.position[i] << " ";}
-    for(int i=0;i<dimension;i++){cout << star1.velocity[i] << " ";}
-    cout << star1.distance(star2) << " ";
-
-    cout << star1.Acceleration(star2) << endl;
-    cout << "Star2: ";
-    for(int i=0;i<dimension;i++){cout << star2.position[i] << " ";}
-    for(int i=0;i<dimension;i++){cout << star2.velocity[i] << " ";}
-    cout << star2.distance(star1) << " ";
-    cout << star2.Acceleration(star1) << endl;
-
-    binary.RungeKutta4(dimension,N,final_time);
-
-    cout << endl << "Star1: ";
-    for(int i=0;i<dimension;i++){cout << star1.position[i] << " ";}
-    for(int i=0;i<dimension;i++){cout << star1.velocity[i] << " ";}
-    cout << star1.distance(star2) << " ";
-    cout << star1.Acceleration(star2) << endl;
-    cout << "Star2: ";
-    for(int i=0;i<dimension;i++){cout << star2.position[i] << " ";}
-    for(int i=0;i<dimension;i++){cout << star2.velocity[i] << " ";}
-    cout << star2.distance(star1) << " ";
-    cout << star2.Acceleration(star1) << endl;
-    */
 
     // GALAXY (STAR CLUSTER) MODEL
-
     dimension = 3; stellar = true;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);

@@ -38,7 +38,7 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch, bool stellar)
 
     char *filename = new char[1000];
     if(stellar){
-        sprintf(filename, "cluster_RK4_%d_%d.txt", total_stars, t_crunch);
+        sprintf(filename, "cluster_RK4_%d_%.f.txt", total_stars, t_crunch);
 
     }else{
         sprintf(filename, "analytic_RK4.txt");
@@ -51,7 +51,6 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch, bool stellar)
     double l1[total_stars][dimension],l2[total_stars][dimension],l3[total_stars][dimension],l4[total_stars][dimension];
 
     double time_step = t_crunch/((double) N);
-    std::cout << time_step << std::endl;
     double time = 0;
 
     // write initial values to file
@@ -144,11 +143,7 @@ void galaxy::RungeKutta4(int dimension,int N, double t_crunch, bool stellar)
                 current.position[j] += (k1[nr][j] + 2.*(k2[nr][j] + k3[nr][j]) + k4[j][nr])/6.;
                 current.velocity[j] += (l1[nr][j] + 2.*(l2[nr][j] + l3[nr][j]) + l4[j][nr])/6.;
             }
-            //std::cout << nr << " " << current.position[0] << " " << current.position[1] << " " << current.position[2];
-            //std::cout << " " << current.velocity[0]  << " " << current.velocity[1]  << " " << current.velocity[2];
-            //std::cout << std::endl;
         }
-        // std::cout << "-----------------" << std::endl;
 
         // write current values to file
         print_position(output_file,dimension,time);
