@@ -22,7 +22,7 @@ public:
     // functions
     void add(star newstar);
     void print_position(std::ofstream &output, int dimension, double time);
-    void RungeKutta4(int dimension, int N, double t_crunch);
+    void RungeKutta4(int dimension, int N, double t_crunch, bool stellar);
     void VelocityVerlet(int dimension, int N, double t_crunch);
 };
 

@@ -18,9 +18,13 @@ def read_file(filename):
     
     data = np.loadtxt(filename,unpack=True) # Read data
     
-    t = data[0]            # time
-    x = data[1]            # position,x-direction
-    v_x = data[2]          # velocity, x-direction
+    #t = data[0]            # time
+    #x = data[1]            # position,x-direction
+    #v_x = data[2]          # velocity, x-direction
+
+    t = data[0]
+    x = data[3]
+    v_x = data[4]
     
     return t,x,v_x
     
@@ -30,22 +34,23 @@ def plot_time(time_step):
     # compared with the analytical solution.
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/VV_analytic_%.3f.txt' % time_step
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/RK4_analytic_%.3f.txt' % time_step
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/VV_analytic_%.3f.txt' % time_step
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/RK4_analytic_%.3f.txt' % time_step
+    filename_RK4 = 'C:/Users/mariefoss/Documents/GitHub/Project5/build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_RK4.txt'
 
-    t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
+    #t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
     t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
     
     # Calculate energies
-    E_verlet = 0.5*np.array(v_verlet)**2 + 0.5*np.array(x_verlet)**2
+    #E_verlet = 0.5*np.array(v_verlet)**2 + 0.5*np.array(x_verlet)**2
     E_RK4 = 0.5*np.array(v_RK4)**2 + 0.5*np.array(x_RK4)**2
-    E_analytic = 0.5*np.array(-np.sin(t_verlet))**2 + 0.5*np.array(np.cos(t_verlet))**2
+    E_analytic = 0.5*np.array(-np.sin(t_RK4))**2 + 0.5*np.array(np.cos(t_RK4))**2
     
     # Make plots
     plt.figure(1)
     plt.title('Comparing methods (position), time step = %.2f' % time_step,size=12)
-    plt.plot(t_verlet,np.cos(t_verlet),label='Analytic')
-    plt.plot(t_verlet,x_verlet,label='Verlet')
+    plt.plot(t_RK4,np.cos(t_RK4),label='Analytic')
+    #plt.plot(t_verlet,x_verlet,label='Verlet')
     plt.plot(t_RK4,x_RK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$x$',size=14)
@@ -54,8 +59,8 @@ def plot_time(time_step):
     
     plt.figure(2)
     plt.title('Comparing methods (velocity), time step = %.2f' % time_step,size=12)
-    plt.plot(t_verlet,-np.sin(t_verlet),label='Analytic')
-    plt.plot(t_verlet,v_verlet,label='Verlet')
+    plt.plot(t_RK4,-np.sin(t_RK4),label='Analytic')
+    #plt.plot(t_verlet,v_verlet,label='Verlet')
     plt.plot(t_RK4,v_RK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$v_x$',size=14)
@@ -64,8 +69,8 @@ def plot_time(time_step):
     
     plt.figure(3)
     plt.title('Total energy, time step = %.2f' % time_step,size=12)
-    plt.plot(t_verlet,np.array(E_analytic)-0.5,label='Analytic')
-    plt.plot(t_verlet,np.array(E_verlet)-0.5,label='Verlet')
+    plt.plot(t_RK4,np.array(E_analytic)-0.5,label='Analytic')
+    #plt.plot(t_verlet,np.array(E_verlet)-0.5,label='Verlet')
     plt.plot(t_RK4,np.array(E_RK4)-0.5,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$E$',size=14)

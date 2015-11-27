@@ -19,36 +19,32 @@ void Gaussian_distribution(double mean,double stddev,double &mass, default_rando
 
 int main()
 {
-    int N = 10;               // No. of integration points
-    double final_time = 0.5;     // End time of calculation
-    int dimension;              // dimension of system
+    int N = 100;                 // No. of integration points
+    double final_time = 10;    // End time of calculation
+    int dimension;              // No. of spatial dimensions
     bool stellar;               // true if star cluster
 
-
     // Testing code
-    /*
-    // double Msun,Mearth;
-    // Msun = 1.;
-    // Mearth = 1./332946;
 
     double h = final_time/((double) N); // Time step
 
     stellar = false;
-    dimension = 3;
-    solver test;
-    star star1(9,1,0.5,2,0,0,0);
-    star star2(11,-2,0,1,0,0,0);
+    dimension = 1;
+    star star1(1,1,0,0,0,0,0);
+    galaxy test;
+    test.add(star1);
 
-    char filename_analytic_RK4[100];
-    sprintf(filename_analytic_RK4, "RK4_analytic_%.3f.txt", h);
-    ofstream file_analytic_RK4(filename_analytic_RK4);
+    //char filename_analytic_RK4[100];
+    //sprintf(filename_analytic_RK4, "RK4_analytic_%.3f.txt", h);
+    //ofstream file_analytic_RK4(filename_analytic_RK4);
 
-    cout << "RK: " << endl;
-    print_initial(dimension,h,final_time,star1.position,star1.velocity);
-    test.RK4(dimension,N,final_time,star1,star2,file_analytic_RK4,stellar);
-    print_final(dimension,star1.position,star1.velocity);
-    file_analytic_RK4.close();
+    //cout << "RK: " << endl;
+    //print_initial(dimension,h,final_time,star1.position,star1.velocity);
+    test.RungeKutta4(dimension,N,final_time,stellar);
+    //print_final(dimension,star1.position,star1.velocity);
+    //file_analytic_RK4.close();
 
+    /*
     star star3(0.05,1,0,0,0,0,0);
     star star4(1,0,0,0,0,0,0);
 
@@ -75,6 +71,7 @@ int main()
     for(int i=0;i<dimension;i++){cout << star1.position[i] << " ";}
     for(int i=0;i<dimension;i++){cout << star1.velocity[i] << " ";}
     cout << star1.distance(star2) << " ";
+
     cout << star1.Acceleration(star2) << endl;
     cout << "Star2: ";
     for(int i=0;i<dimension;i++){cout << star2.position[i] << " ";}
@@ -95,7 +92,6 @@ int main()
     cout << star2.distance(star1) << " ";
     cout << star2.Acceleration(star1) << endl;
     */
-
 
     // GALAXY (STAR CLUSTER) MODEL
 
@@ -123,7 +119,7 @@ int main()
     cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
     // run system through RK4/VV, all data is written to file as we go
-    MM15.RungeKutta4(dimension,N,final_time);
+    MM15.RungeKutta4(dimension,N,final_time,true);
     // MM15.VelocityVerlet(dimension,N,final_time);
 
 
