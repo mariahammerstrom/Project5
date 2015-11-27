@@ -126,7 +126,7 @@ The numerical algorithms we wish to implement and compare are the fourth-order R
 Using the 4th order Runge-Kutta method (RK4), we can estimate the next value $x_{i+1}$ (and similarly $y_{i+1}$ and $z_{i+1}$) through the formula
 
 \begin{equation}
-	x_{i+1} \approx x_i + \frac{h}{6} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}
+	x_{i+1} \approx x_i + \frac{h}{6} (v_{i,x} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}),
 \end{equation}
 where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $h/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $h$ denotes the time step, defined as $h = (t_f - t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!).
 
