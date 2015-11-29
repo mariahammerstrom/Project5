@@ -119,7 +119,7 @@ where $\rho_0$ and $r_0$ are scaling constants.
 
 \section{Methods}\label{sec:methods}
 
-The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. 
+The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. Both methods are self-starting. 
 
 
 \subsection{4th order Runge-Kutta method}\label{sec:RK4}
@@ -143,36 +143,62 @@ These equations must be deployed for all three dimensions $x,y$ and $z$.
 Using this method gives a global truncating error which goes like $O(h^4)$. 
 
 
+%\subsection{Verlet method}\label{sec:VV}
+%This method is derived by performing a Taylor expansion of $x(t+h)$ and $x(t-h)$, and add the two equations. This results in the formula
+%
+%\begin{equation}\label{eq:verlet}
+%	x_{i+1} = 2x_i - x_{i-1} + a_x(t_i,x_i)h^2 + O(h^4) \quad i = 1, 2, \dots
+%\end{equation}
+%where $a_x$ is the acceleration, which is the second derivative of $x$, or the first derivative of $v_x$. Velocity is not included in the equation, but can be computed using the well-known formula
+%
+%\begin{equation}\label{eq:verlet_velocity}
+%	v_{i,x} = \frac{x_{i+1} - x_{i-1}}{2h} + O(h^2)
+%\end{equation}
+%where $x_{i+1}$ has been estimated by Eq. (\ref{eq:verlet}). 
+%
+%We see from both Eq. (\ref{eq:verlet}) and Eq. (\ref{eq:verlet_velocity}) that this algorithm is not self-starting as it depends on $x_{i-1}$. The first time we calculate Eq. (\ref{eq:verlet}), meaning $x_2$, we need to know both $x_0$ and $x_1$. The known initial position gives us $x_0$ and we have to use a different algorithm to make an estimate for $x_1$. The simplest solution is to use Euler's method, which approximates $x_1$ by:
+%
+%\begin{equation}\label{eq:euler}
+%	x_1 = x_0 + v_{0,x} h^2
+%\end{equation}
+%The algorithm can be summed up as:
+%
+%\begin{itemize}
+%	\item Given the initial position $x_0$ and velocity $v_0$, calculate the next position $x_1$ using Eq. (\ref{eq:euler}).
+%	\item Calculating all subsequent positions $x_{i+1}$ using Eq. (\ref{eq:verlet}).
+%	\item Calculate all velocities $v_{i,x}$ using Eq. (\ref{eq:verlet_velocity}).
+%\end{itemize}
+%The same algorithm follows for all dimensions $(x,y,z)$.
+%
+%Using this method gives a global truncating error which goes like $O(h^4)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
 
 
-\subsection{Velocity-Verlet method}\label{sec:VV}
-This method is derived by performing a Taylor expansion of $x(t+h)$ and $x(t-h)$, and add the two equations. This results in the formula
+\subsection{Velocity-Verlet}\label{sec:VV}
 
-\begin{equation}\label{eq:verlet}
-	x_{i+1} = 2x_i - x_{i-1} + a_x(t_i,x_i)h^2 + O(h^4) \quad i = 1, 2, \dots
+This method is derived by performing a Taylor expansion of $x(t+h)$, which in discretized notation can be written as
+
+\begin{equation}\label{eq:VV_position}
+	x_{i+1} = x_i + v_i \Delta t + \frac{\Delta t^2}{2}a_i,
 \end{equation}
-where $a_x$ is the acceleration, which is the second derivative of $x$, or the first derivative of $v_x$. Velocity is not included in the equation, but can be computed using the well-known formula
+where $a_i$ is the acceleration and $\Delta t$ is the time step.
 
-\begin{equation}\label{eq:verlet_velocity}
-	v_{i,x} = \frac{x_{i+1} - x_{i-1}}{2h} + O(h^2)
+For this method the next step in the velocity is calculated by
+
+\begin{equation}\label{eq:VV_velocity}
+	v_{i+1} = v_i + \frac{1}{2}\Delta t (a_i + a_{i+1}),
 \end{equation}
-where $x_{i+1}$ has been estimated by Eq. (\ref{eq:verlet}). 
-
-We see from both Eq. (\ref{eq:verlet}) and Eq. (\ref{eq:verlet_velocity}) that this algorithm is not self-starting as it depends on $x_{i-1}$. The first time we calculate Eq. (\ref{eq:verlet}), meaning $x_2$, we need to know both $x_0$ and $x_1$. The known initial position gives us $x_0$ and we have to use a different algorithm to make an estimate for $x_1$. The simplest solution is to use Euler's method, which approximates $x_1$ by:
-
-\begin{equation}\label{eq:euler}
-	x_1 = x_0 + v_{0,x} h^2
-\end{equation}
-The algorithm can be summed up as:
+where $a_{i+1}$ is the acceleration calculated using $x_{i+1}$. Thus the algorithm can be summed up as:
 
 \begin{itemize}
-	\item Given the initial position $x_0$ and velocity $v_0$, calculate the next position $x_1$ using Eq. (\ref{eq:euler}).
-	\item Calculating all subsequent positions $x_{i+1}$ using Eq. (\ref{eq:verlet}).
-	\item Calculate all velocities $v_{i,x}$ using Eq. (\ref{eq:verlet_velocity}).
+	\item Given the initial position $x_0$ and velocity $v_0$ at time $t = t_0 = 0$, calculate the next position $x_1$ using Eq. (\ref{eq:VV_position}).
+	\item Calculate $a_1$ from the interacting forces using the new position $x_1$.
+	\item Calculate $v_1$ as described in Eq. (\ref{eq:VV_velocity}) given $a_1$.
+	\item Increase the time step, so that $t = t_0 + \Delta t$. 
+	\item Keep calculating $x_{i+1}$ and $v_{i+1}$, and increasing the time step, until the pre-determined final time is reached.
 \end{itemize}
-The same algorithm follows for all dimensions $(x,y,z)$.
+Using this method gives a global truncating error which goes like $O(h^3)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
 
-Using this method gives a global truncating error which goes like $O(h^4)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
+
 
 
 \subsection{Random distributions}
