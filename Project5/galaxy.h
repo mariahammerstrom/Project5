@@ -27,9 +27,9 @@ public:
     double **setup_matrix(int width,int height);
     void delete_matrix(double **matrix);
     void GravitationalForce(star &current,star &other,double &Fx,double &Fy,double &Fz);
-    void GravitationalForce_RK(double x1,double x2,double y1,double y2,double z1,double z2,double &Fx,double &Fy,double &Fz,double mass1,double mass2);
+    void GravitationalForce_RK(double x_rel, double y_rel, double z_rel, double &Fx, double &Fy, double &Fz, double mass1, double mass2);
     void SpringForce(star &current,star &other,double &Fx);
-    void SpringForce_RK(double x1,double x2,double &Fx);
+    void SpringForce_RK(double x_rel, double &Fx);
 
 };
 

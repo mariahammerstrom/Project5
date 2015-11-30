@@ -47,114 +47,116 @@ void galaxy::RungeKutta4(int dimension,int N, double final_time, bool stellar)
     std::ofstream output_file(filename);
 
     // Set up arrays
-    double **acceleration = setup_matrix(total_stars,dimension);
-    double x1[total_stars][dimension],x2[total_stars][dimension],x3[total_stars][dimension],x4[total_stars][dimension];
-    double v1[total_stars][dimension],v2[total_stars][dimension],v3[total_stars][dimension],v4[total_stars][dimension];
-    double a1[total_stars][dimension],a2[total_stars][dimension],a3[total_stars][dimension],a4[total_stars][dimension];
+    double k1_x[total_stars][dimension],k2_x[total_stars][dimension],k3_x[total_stars][dimension],k4_x[total_stars][dimension];
+    double k1_v[total_stars][dimension],k2_v[total_stars][dimension],k3_v[total_stars][dimension],k4_v[total_stars][dimension];
 
-    double dvdt,relative_position;
+    double relative_position[3];
     double Fx,Fy,Fz;
-    double position_temp_other[3];
-
-    std::cout << "Time" << "\t" << "Star" << "\t" << "Mass"<< "\t" << "x" << "\t" << "y" << "\t" << "z" << "\t" << "vx" << "\t" << "vy" << "\t" << "vz" << "\t" << "Fx" << "\t" << "Fy" << "\t" << "Fz" << std::endl;
-    std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
-
 
     // Write initial values to file
     print_position(output_file,dimension,time);
 
-    // Start evolving
+    // START CALCULATIONS
+    // Loop over time
     time = time_step;
     while(time<final_time){
+
         // k1
         for(int nr1=0;nr1<total_stars;nr1++){
             star &current = all_stars[nr1];
-            dvdt = 0;
             Fx = Fy = Fz = 0.;
+            if(stellar){
+                for(int nr2=0;nr2<total_stars;nr2++){
+                    if(nr2!=nr1){
+                        star &other = all_stars[nr2];
+                        for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]-current.position[j]);
+                        GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
+                    }
+                }
+            }else Fx += current.position[0];
+
+            for(int j=0;j<dimension;j++) k1_x[nr1][j] = time_step*current.velocity[j];
+
+            k1_v[nr1][0] = time_step*Fx/current.mass;
+            k1_v[nr1][1] = time_step*Fy/current.mass;
+            k1_v[nr1][2] = time_step*Fz/current.mass;
+        }
+
+        // k2
+        for(int nr1=0;nr1<total_stars;nr1++){
+            star &current = all_stars[nr1];
+            Fx = Fy = Fz = 0;
             for(int j=0;j<dimension;j++){
                 if(stellar){
                     for(int nr2=0;nr2<total_stars;nr2++){
                         if(nr2!=nr1){
                             star &other = all_stars[nr2];
-                            relative_position = (other.position[j]-current.position[j]);
-                            dvdt += current.Acceleration(other)*relative_position;
+                            for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k1_x[nr2][j]/2.)-(current.position[j]+k1_x[nr1][j]/2.);
+                            GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                         }
                     }
-                }else{
-                    dvdt += current.position[j];
-                }
-                // x1[nr1][j] = current.position[j];
-                v1[nr1][j] = time_step*current.velocity[j];
-                a1[nr1][j] = -time_step*dvdt;
+                }else Fx += (current.position[0]+k1_x[nr1][0]/2.);
+
+                for(int j=0;j<dimension;j++) k2_x[nr1][j] = time_step*(current.velocity[j]+k1_v[nr1][j]/2.);
+
+                k2_v[nr1][0] = time_step*Fx/current.mass;
+                k2_v[nr1][1] = time_step*Fy/current.mass;
+                k2_v[nr1][2] = time_step*Fz/current.mass;
             }
         }
-        // k2
-        for(int nr=0;nr<total_stars;nr++){
-            star &current = all_stars[nr];
-            dvdt = 0;
-            for(int j=0;j<dimension;j++){
-                if(stellar){
-                    for(int nr2=0;nr2<total_stars;nr2++){
-                        if(nr2!=nr){
-                            star &other = all_stars[nr2];
-                            relative_position = (other.position[j]+v1[nr2][j]/2.)-(current.position[j]+v1[nr][j]/2.);
-                            dvdt += current.Acceleration(other)*relative_position;
-                        }
-                    }
-                }else{
-                    dvdt += current.position[j]+v1[nr][j]/2.;
-                }
-                v2[nr][j] = time_step*(current.velocity[j]+a1[nr][j]/2.);
-                a2[nr][j] = -time_step*dvdt;
-            }
-        }
+
         // k3
-        for(int nr=0;nr<total_stars;nr++){
-            star &current = all_stars[nr];
-            dvdt = 0;
+        for(int nr1=0;nr1<total_stars;nr1++){
+            star &current = all_stars[nr1];
+            Fx = Fy = Fz = 0;
             for(int j=0;j<dimension;j++){
                 if(stellar){
                     for(int nr2=0;nr2<total_stars;nr2++){
-                        if(nr2!=nr){
+                        if(nr2!=nr1){
                             star &other = all_stars[nr2];
-                            relative_position = (other.position[j]+v2[nr2][j]/2.)-(current.position[j]+v2[nr][j]/2.);
-                            dvdt += current.Acceleration(other)*relative_position;
+                            for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k2_x[nr2][j]/2.)-(current.position[j]+k2_x[nr1][j]/2.);
+                            GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                         }
                     }
-                }else{
-                    dvdt += current.position[j]+v2[nr][j]/2.;
-                }
-                v3[nr][j] = time_step*(current.velocity[j]+a2[nr][j]/2.);
-                a3[nr][j] = -time_step*dvdt;
+                }else Fx += current.position[0]+k2_x[nr1][0]/2.;
+
+                for(int j=0;j<dimension;j++) k3_x[nr1][j] = time_step*(current.velocity[j]+k2_v[nr1][j]/2.);
+
+                k3_v[nr1][0] = time_step*Fx/current.mass;
+                k3_v[nr1][1] = time_step*Fy/current.mass;
+                k3_v[nr1][2] = time_step*Fz/current.mass;
             }
         }
+
         // k4
-        for(int nr=0;nr<total_stars;nr++){
-            star &current = all_stars[nr];
-            dvdt = 0;
+        for(int nr1=0;nr1<total_stars;nr1++){
+            star &current = all_stars[nr1];
+            Fx = Fy = Fz = 0;
             for(int j=0;j<dimension;j++){
                 if(stellar){
                     for(int nr2=0;nr2<total_stars;nr2++){
-                        if(nr2!=nr){
+                        if(nr2!=nr1){
                             star &other = all_stars[nr2];
-                            relative_position = (other.position[j]+v3[nr2][j])-(current.position[j]+v3[nr][j]);
-                            dvdt += current.Acceleration(other)*relative_position;
+                            for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k3_x[nr2][j])-(current.position[j]+k3_x[nr1][j]);
+                            GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                         }
                     }
-                }else{
-                    dvdt += current.position[j]+v3[nr][j];
-                }
-                v4[nr][j] = time_step*(current.velocity[j]+a3[nr][j]);
-                a4[nr][j] = -time_step*dvdt;
+                }else Fx += current.position[0]+k3_x[nr1][0];
+
+                for(int j=0;j<dimension;j++) k4_x[nr1][j] = time_step*(current.velocity[j]+k3_v[nr1][j]);
+
+                k4_v[nr1][0] = time_step*Fx/current.mass;
+                k4_v[nr1][1] = time_step*Fy/current.mass;
+                k4_v[nr1][2] = time_step*Fz/current.mass;
             }
         }
 
         // Update position and velocity
-        for(int nr=0;nr<total_stars;nr++){
-            star &current = all_stars[nr];
+        for(int nr1=0;nr1<total_stars;nr1++){
+            star &current = all_stars[nr1];
             for(int j=0;j<dimension;j++){
-                current.position[j] += (v1[nr][j] + 2.*(v2[nr][j] + v3[nr][j]) + v4[j][nr])/6.;
-                current.velocity[j] += (a1[nr][j] + 2.*(a2[nr][j] + a3[nr][j]) + a4[j][nr])/6.;
+                current.position[j] += (k1_x[nr1][j] + 2.*(k2_x[nr1][j] + k3_x[nr1][j]) + k4_x[j][nr1])/6.;
+                current.velocity[j] += (k1_v[nr1][j] + 2.*(k2_v[nr1][j] + k3_v[nr1][j]) + k4_v[j][nr1])/6.;
             }
         }
 
@@ -188,12 +190,12 @@ void galaxy::VelocityVerlet(int dimension,int N, double final_time, bool stellar
     // Initialize forces
     double Fx,Fy,Fz,Fxnew,Fynew,Fznew; // Forces in each dimension
 
-    std::cout << "Time" << "\t" << "Star" << "\t" << "Mass"<< "\t" << "x" << "\t" << "y" << "\t" << "z" << "\t" << "vx" << "\t" << "vy" << "\t" << "vz" << "\t" << "Fx" << "\t" << "Fy" << "\t" << "Fz" << std::endl;
-    std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
-
+    // Write initial values to file
+    print_position(output_file,dimension,time);
 
     // START CALCULATIONS
     // Loop over time
+    time += time_step;
     while(time < final_time){
 
         // Loop over all stars
@@ -208,7 +210,7 @@ void galaxy::VelocityVerlet(int dimension,int N, double final_time, bool stellar
 
                 // Calculate forces in each dimension
                 if(stellar) GravitationalForce(current,other,Fx,Fy,Fz);
-                else SpringForce(current,other,Fx);
+                else Fx -= current.position[0]-other.position[0];
             }
             // Acceleration in each dimension for current star
             acceleration[nr1][0] = Fx/current.mass;
@@ -228,7 +230,7 @@ void galaxy::VelocityVerlet(int dimension,int N, double final_time, bool stellar
 
                 // Calculate forces in each dimension using the updated position
                 if(stellar) GravitationalForce(current,other,Fxnew,Fynew,Fznew);
-                else SpringForce(current,other,Fxnew);
+                else Fxnew -= current.position[0]-other.position[0];
             }
             // Acceleration each dimension exerted for current star
             acceleration_new[nr1][0] = Fxnew/current.mass;
@@ -237,13 +239,10 @@ void galaxy::VelocityVerlet(int dimension,int N, double final_time, bool stellar
 
             // Calculate new velocity for current star
             for(int j=0; j<3; j++) current.velocity[j] = current.velocity[j] + 0.5*time_step*(acceleration[nr1][j] + acceleration_new[nr1][j]);
-
-            // Print out values to inspect
-            std::cout << time << "\t" << nr1+1 << "\t" << current.mass << "\t" << current.position[0] << "\t" << current.position[1] << "\t" << current.position[2] << "\t" << current.velocity[0] << "\t" << current.velocity[1] << "\t" << current.velocity[2] << "\t" << Fx << "\t" << Fy << "\t" << Fz << std::endl;
         }
-        // Increase time step
+        // Write current values to file
+        print_position(output_file,dimension,time);
         time += time_step;
-        std::cout << "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" << std::endl;
     }
     // Close file
     output_file.close();
@@ -288,49 +287,23 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
     double relative_distance[3];
 
     for(int j = 0; j < 3; j++) relative_distance[j] = current.position[j] - other.position[j];
-    double r = sqrt(relative_distance[0]*relative_distance[0] + relative_distance[1]*relative_distance[1] + relative_distance[2]*relative_distance[2]);
 
     // Calculate the forces in each direction
-    Fx += -G*current.mass*other.mass*relative_distance[0]/(r*r*r);
-    Fy += -G*current.mass*other.mass*relative_distance[1]/(r*r*r);
-    Fz += -G*current.mass*other.mass*relative_distance[2]/(r*r*r);
+    Fx -= current.GravitationalForce(other)*relative_distance[0]/current.distance(other);
+    Fy -= current.GravitationalForce(other)*relative_distance[1]/current.distance(other);
+    Fz -= current.GravitationalForce(other)*relative_distance[2]/current.distance(other);
 }
 
-void galaxy::GravitationalForce_RK(double x1,double x2,double y1,double y2,double z1,double z2,double &Fx,double &Fy,double &Fz,double mass1,double mass2)
+void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double &Fx,double &Fy,double &Fz,double mass1,double mass2)
 {   // Function that calculates the gravitational force between two objects, component by component.
 
     // Calculate relative distance between current star and all other stars
-    double x_rel,y_rel,z_rel;
-
-    for(int j = 0; j < 3; j++){
-        x_rel = x1 - x2;
-        y_rel = y1 - y2;
-        z_rel = z1 - z2;
-    }
     double r = sqrt(x_rel*x_rel + y_rel*y_rel + z_rel*z_rel);
 
+    star g;
+
     // Calculate the forces in each direction
-    Fx += -G*mass1*mass2*x_rel/(r*r*r);
-    Fy += -G*mass1*mass2*y_rel/(r*r*r);
-    Fz += -G*mass1*mass2*z_rel/(r*r*r);
-}
-
-void galaxy::SpringForce(star &current,star &other,double &Fx)
-{   // Function that calculates the spring force between a light, moving object and a heavy, stationary object.
-
-    // Calculate relative distance between current star and all other stars
-    double relative_distance = current.position[0] - other.position[0];
-
-    // Calculate the force
-    Fx += -1.0*relative_distance;
-}
-
-void galaxy::SpringForce_RK(double x1,double x2,double &Fx)
-{   // Function that calculates the spring force between a light, moving object and a heavy, stationary object.
-
-    // Calculate relative distance between current star and all other stars
-    double relative_distance = x1 - x2;
-
-    // Calculate the force
-    Fx += -1.0*relative_distance;
+    Fx -= g.G*mass1*mass2*x_rel/(r*r*r);
+    Fy -= g.G*mass1*mass2*y_rel/(r*r*r);
+    Fz -= g.G*mass1*mass2*z_rel/(r*r*r);
 }

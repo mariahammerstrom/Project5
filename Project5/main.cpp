@@ -19,34 +19,32 @@ void Gaussian_distribution(double mean,double stddev,double &mass, default_rando
 
 int main()
 {
-    int N = 100;                // No. of integration points
-    double final_time = 10;     // End time of calculation
+    int N = 10;                // No. of integration points
+    double final_time = 1;     // End time of calculation
     int dimension;              // No. of spatial dimensions
-    bool stellar;               // true if star cluster
 
     cout << "Time step: " << final_time/((double) N) << endl;
 
     // ANALYTIC
-    stellar = false;
     dimension = 1;
 
     // RK4 test
     star star1(1,1,0,0,0,0,0);
     galaxy testRK;
     testRK.add(star1);
-    testRK.RungeKutta4(dimension,N,final_time,stellar);
+    //testRK.RungeKutta4(dimension,N,final_time,false);
 
     // VV test
     star star2(1,1,0,0,0,0,0);
     galaxy testVV;
     testVV.add(star2);
-    //testVV.VelocityVerlet(dimension,N,final_time);
+    testVV.VelocityVerlet(dimension,N,final_time,false);
 
 
 
 
     // GALAXY (STAR CLUSTER) MODEL
-    dimension = 3; stellar = true;
+    dimension = 3;
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     default_random_engine generator(seed);
 
@@ -70,10 +68,8 @@ int main()
     cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
     // run system through RK4/VV, all data is written to file as we go
-    MM15.RungeKutta4(dimension,N,final_time,true);
-    // MM15.VelocityVerlet(dimension,N,final_time);
-
-
+    //MM15.RungeKutta4(dimension,N,final_time,true);
+    MM15.VelocityVerlet(dimension,N,final_time,true);
 
     return 0;
 }

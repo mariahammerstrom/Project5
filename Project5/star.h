@@ -9,7 +9,7 @@ using std::vector;
 class star
 {
 public:
-    // Astrophysical constants in units of Msun, years, and lightyears
+    // Astrophysical constants in units of solar masses, years, and lightyears
     double G = 4*M_PI*M_PI; // in AU
 
     // Properties
