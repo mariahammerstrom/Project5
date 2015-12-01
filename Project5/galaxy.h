@@ -23,8 +23,8 @@ public:
     double G(double t_crunch);
     void add(star newstar);
     void print_position(std::ofstream &output, int dimension, double time, int number);
-    void RungeKutta4(int dimension, int N, double final_time, bool stellar);
-    void VelocityVerlet(int dimension, int N, double final_time, bool stellar);
+    void RungeKutta4(int dimension, int integration_points, double final_time, bool stellar);
+    void VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar);
     double **setup_matrix(int height, int width);
     void delete_matrix(double **matrix);
     void GravitationalForce(star &current,star &other,double &Fx,double &Fy,double &Fz);

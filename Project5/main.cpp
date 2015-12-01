@@ -19,60 +19,92 @@ void Gaussian_distribution(double mean,double stddev,double &mass, default_rando
 
 int main(){
 
-    int N = 1000;                // No. of integration points
-    double final_time = 10;     // End time of calculation
-    int dimension;              // No. of spatial dimensions
+    int integration_points;                // No. of integration points
+    double final_time;    // End time of calculation
+    int dimension;        // No. of spatial dimensions
 
-    cout << "Time step: " << final_time/((double) N) << endl;
-    cout << "Integration points: " << N << endl;
+    // Which part of the code should run
+    bool spring_test,binary,RK4vsVV,cluster;
+    spring_test = true;
+    binary = false;
+    RK4vsVV = false;
+    cluster = false;
 
     // ANALYTIC
-    dimension = 1;
 
-    // RK4 test
-    star star1(1,1,0,0,0,0,0);
-    galaxy testRK;
-    testRK.add(star1);
-    testRK.RungeKutta4(dimension,N,final_time,false);
+    // Spring force
+    if(spring_test){
+        dimension = 1;
+        integration_points = 100;
+        final_time = 10;
 
-    // VV test
-    star star2(1,1,0,0,0,0,0);
-    galaxy testVV;
-    testVV.add(star2);
-    testVV.VelocityVerlet(dimension,N,final_time,false);
+        cout << "Time step: " << final_time/((double) integration_points) << endl;
+        cout << "Integration points: " << integration_points << endl;
 
+        // RK4 test
+        star star1(1,1,0,0,0,0,0);
+        galaxy testRK;
+        testRK.add(star1);
+        testRK.RungeKutta4(dimension,integration_points,final_time,false);
+
+        // VV test
+        star star2(1,1,0,0,0,0,0);
+        galaxy testVV;
+        testVV.add(star2);
+        testVV.VelocityVerlet(dimension,integration_points,final_time,false);
+    }
+
+    // Binary stars
+    if(binary){
+        cout << "Write code for binary stars" << endl;
+    }
 
 
 
     // GALAXY (STAR CLUSTER) MODEL
-    dimension = 3;
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine generator(seed);
 
-    double R0 = 20.;         // Radius of galaxy
-    int objects = 100;      // Number of stars to be added in galaxy
-    double m,x,y,z;         // randomly distributed mass and position
-    m = x = y = z = 0.0;
+    // Runge-Kutta 4 vs Velocity-Verlet
+    if(RK4vsVV){
+        dimension = 3;
+        integration_points = 10000;
+        final_time = 1000;
 
-    // mean and standard deviation of stellar mass
-    double mean = 10.;
-    double deviation = 1.;
+        cout << "Time step: " << final_time/((double) integration_points) << endl;
+        cout << "Integration points: " << integration_points << endl;
 
-    galaxy MM15_rk(R0);
-    galaxy MM15_vv(R0);
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        default_random_engine generator(seed);
 
-    for(int i=0;i<objects;i++){
-        Gaussian_distribution(mean,deviation,m,&generator);
-        randomUniformSphere(R0,x,y,z,&generator);
-        star stari(m,x,y,z,0,0,0);
-        MM15_rk.add(stari);
-        MM15_vv.add(stari);
+        double R0 = 20.;         // Radius of galaxy
+        int objects = 100;      // Number of stars to be added in galaxy
+        double m,x,y,z;         // randomly distributed mass and position
+        m = x = y = z = 0.0;
+
+        // mean and standard deviation of stellar mass
+        double mean = 10.;
+        double deviation = 1.;
+
+        galaxy MM15_rk(R0);
+        galaxy MM15_vv(R0);
+
+        for(int i=0;i<objects;i++){
+            Gaussian_distribution(mean,deviation,m,&generator);
+            randomUniformSphere(R0,x,y,z,&generator);
+            star stari(m,x,y,z,0,0,0);
+            MM15_rk.add(stari);
+            MM15_vv.add(stari);
+        }
+        cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
+
+        // run system through RK4/VV, all data is written to file as we go
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,true);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,true);
     }
-    cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
 
-    // run system through RK4/VV, all data is written to file as we go
-    MM15_rk.RungeKutta4(dimension,N,final_time,true);
-    MM15_vv.VelocityVerlet(dimension,N,final_time,true);
+    // Cluster
+    if(cluster){
+        cout << "Write code with either RK4 or VV!" << endl;
+    }
 
     return 0;
 }

@@ -47,17 +47,17 @@ void galaxy::print_position(std::ofstream &output, int dimension, double time,in
     }
 }
 
-void galaxy::RungeKutta4(int dimension,int N, double final_time, bool stellar)
+void galaxy::RungeKutta4(int dimension, int integration_points, double final_time, bool stellar)
 {   // 4th order Runge-Kutta solver for a star cluster / spherical galaxy
 
     // Define time step
-    double time_step = final_time/((double) N);
-    double time = 0.;
+    double time_step = final_time/((double) integration_points);
+    double time = 0.0;
 
     // Create file for data storage
     char *filename = new char[1000];
     if(stellar) sprintf(filename, "cluster_RK4_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
-    else sprintf(filename, "analytic_RK4_%d_%.2f.txt",N,time_step); // If 1D 2-body analytic case
+    else sprintf(filename, "analytic_RK4_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
 
     char *file_Fx = new char[1000];
@@ -76,7 +76,7 @@ void galaxy::RungeKutta4(int dimension,int N, double final_time, bool stellar)
 
     // START CALCULATIONS
     // Loop over time
-    time = time_step;
+    time += time_step;
     while(time<final_time){
 
         // k1
@@ -174,20 +174,20 @@ void galaxy::RungeKutta4(int dimension,int N, double final_time, bool stellar)
     output_Fx.close();
 }
 
-void galaxy::VelocityVerlet(int dimension,int N, double final_time, bool stellar)
+void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar)
 {   /*  Velocity-Verlet solver for two coupeled ODEs in a given number of dimensions.
     The algorithm is, exemplified in 1D for position x(t), velocity v(t) and acceleration a(t):
     x(t+dt) = x(t) + v(t)*dt + 0.5*dt*dt*a(t);
     v(t+dt) = v(t) + 0.5*dt*[a(t) + a(t+dt)];*/
 
     // Define time step
-    double time_step = final_time/((double) N);
+    double time_step = final_time/((double) integration_points);
     double time = 0.0;
 
     // Create file for data storage
     char *filename = new char[1000];
     if(stellar) sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
-    else sprintf(filename, "analytic_VV_%d_%.2f.txt",N,time_step); // If 1D 2-body analytic case
+    else sprintf(filename, "analytic_VV_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
 
     char *file_Fx = new char[1000];
