@@ -56,6 +56,23 @@ double star::Acceleration(star otherStar)
     else return 0;
 }
 
+double star::KineticEnergy()
+{
+    double total_velocity = this->velocity[0]*this->velocity[0] + this->velocity[1]*this->velocity[1] + this->velocity[2]*this->velocity[2];
+    return this->mass*total_velocity*total_velocity;
+}
+
+double star::PotentialEnergy(star &otherStar)
+{
+    return -G*this->mass*otherStar.mass/this->distance(otherStar);
+}
+
+bool star::bound(star &otherStar)
+{   // true if the star is gravitationally bound
+
+    return ((this->KineticEnergy() + this->PotentialEnergy(otherStar)) < 0.0);
+}
+
 /*
 void star::merge(star &star2)
 {

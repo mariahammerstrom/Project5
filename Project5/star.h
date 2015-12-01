@@ -12,6 +12,7 @@ public:
     // Astrophysical constants in units of solar masses, years, and lightyears
     double G = 4*M_PI*M_PI; // in AU
     //double G = 1.5608*1e-13; // in units of lightyears,years, and solar masses
+    //double G = (4*M_PI*M_PI/32)*R0*R0*R0/(t_crunch*t_crunch*total_stars*mean_mass)
 
     // Properties
     double mass;
@@ -27,6 +28,9 @@ public:
     double GravitationalForce(star otherStar);
     double Acceleration(star otherStar);
     //void merge(star star1,star star2);
+    double KineticEnergy();
+    double PotentialEnergy(star &otherStar);
+    bool bound(star &otherStar);
 
 };
 

@@ -20,6 +20,7 @@ public:
     galaxy(double radi);
 
     // functions
+    double G(double t_crunch);
     void add(star newstar);
     void print_position(std::ofstream &output, int dimension, double time, int number);
     void RungeKutta4(int dimension, int N, double final_time, bool stellar);

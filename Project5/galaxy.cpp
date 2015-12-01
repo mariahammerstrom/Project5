@@ -15,6 +15,17 @@ galaxy::galaxy(double radi)
     radius = radi;
 }
 
+double galaxy::G(double t_crunch)
+{
+    double R0 = radius;
+    double total_mass = 0;
+    for(int i=0;i<total_stars;i++){
+        star &current = all_stars[i];
+        total_mass += current.mass;
+    }
+    return (4*M_PI*M_PI/32)*R0*R0*R0/(t_crunch*t_crunch*total_mass);
+}
+
 
 void galaxy::add(star newstar)
 {
