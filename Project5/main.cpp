@@ -17,13 +17,14 @@ void print_final(int dimension, double *x_final, double *v_final);
 void randomUniformSphere(double R0,double &x,double &y,double &z, default_random_engine *generator);
 void Gaussian_distribution(double mean,double stddev,double &mass, default_random_engine *generator);
 
-int main()
-{
-    int N = 10;                // No. of integration points
-    double final_time = 1;     // End time of calculation
+int main(){
+
+    int N = 1000;                // No. of integration points
+    double final_time = 10;     // End time of calculation
     int dimension;              // No. of spatial dimensions
 
     cout << "Time step: " << final_time/((double) N) << endl;
+    cout << "Integration points: " << N << endl;
 
     // ANALYTIC
     dimension = 1;
@@ -32,7 +33,7 @@ int main()
     star star1(1,1,0,0,0,0,0);
     galaxy testRK;
     testRK.add(star1);
-    //testRK.RungeKutta4(dimension,N,final_time,false);
+    testRK.RungeKutta4(dimension,N,final_time,false);
 
     // VV test
     star star2(1,1,0,0,0,0,0);
@@ -57,22 +58,25 @@ int main()
     double mean = 10.;
     double deviation = 1.;
 
-    galaxy MM15(R0);
+    galaxy MM15_rk(R0);
+    galaxy MM15_vv(R0);
 
     for(int i=0;i<objects;i++){
         Gaussian_distribution(mean,deviation,m,&generator);
         randomUniformSphere(R0,x,y,z,&generator);
         star stari(m,x,y,z,0,0,0);
-        MM15.add(stari);
+        MM15_rk.add(stari);
+        MM15_vv.add(stari);
     }
-    cout << "MM15 contains " << MM15.total_stars << " star(s)." << endl;
+    cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
 
     // run system through RK4/VV, all data is written to file as we go
-    //MM15.RungeKutta4(dimension,N,final_time,true);
-    MM15.VelocityVerlet(dimension,N,final_time,true);
+    MM15_rk.RungeKutta4(dimension,N,final_time,true);
+    MM15_vv.VelocityVerlet(dimension,N,final_time,true);
 
     return 0;
 }
+
 
 
 void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial){

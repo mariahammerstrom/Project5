@@ -11,6 +11,7 @@ class star
 public:
     // Astrophysical constants in units of solar masses, years, and lightyears
     double G = 4*M_PI*M_PI; // in AU
+    //double G = 1.5608*1e-13; // in units of lightyears,years, and solar masses
 
     // Properties
     double mass;

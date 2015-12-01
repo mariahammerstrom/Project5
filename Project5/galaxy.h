@@ -21,10 +21,10 @@ public:
 
     // functions
     void add(star newstar);
-    void print_position(std::ofstream &output, int dimension, double time);
+    void print_position(std::ofstream &output, int dimension, double time, int number);
     void RungeKutta4(int dimension, int N, double final_time, bool stellar);
     void VelocityVerlet(int dimension, int N, double final_time, bool stellar);
-    double **setup_matrix(int width,int height);
+    double **setup_matrix(int height, int width);
     void delete_matrix(double **matrix);
     void GravitationalForce(star &current,star &other,double &Fx,double &Fy,double &Fz);
     void GravitationalForce_RK(double x_rel, double y_rel, double z_rel, double &Fx, double &Fy, double &Fz, double mass1, double mass2);
