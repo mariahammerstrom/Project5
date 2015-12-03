@@ -19,8 +19,8 @@ def read_file(filename):
     data = np.loadtxt(filename,unpack=True) # Read data
     
     t = data[0]            # time
-    x = data[1]            # position,x-direction
-    v_x = data[2]          # velocity, x-direction
+    x = data[3]            # position,x-direction
+    v_x = data[4]          # velocity, x-direction
     
     return t,x,v_x
     
@@ -30,10 +30,10 @@ def plot_time(N,time_step):
     # compared with the analytical solution.
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_VV_%d_%.2f.txt' % (N,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_RK4_%d_%.2f.txt' % (N,time_step)
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_VV_%d_%.2f.txt' % (N,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_RK4_%d_%.2f.txt' % (N,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_VV_%d_%.2f.txt' % (N,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_RK4_%d_%.2f.txt' % (N,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_VV_%d_%.2f.txt' % (N,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_RK4_%d_%.2f.txt' % (N,time_step)
 
     t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
     t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
@@ -81,7 +81,7 @@ def plot_time(N,time_step):
 
 def main(argv):
     # Plot results as a function of time
-    plot_time(N=100,time_step=0.05)
+    plot_time(N=100,time_step=1.0)
     #plot_time(N=1000,time_step=0.01)
     
 	
