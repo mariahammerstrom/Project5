@@ -32,6 +32,8 @@ def plot_time(N,time_step):
     # Get data
     filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_VV_%d_%.2f.txt' % (N,time_step)
     filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_RK4_%d_%.2f.txt' % (N,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_VV_%d_%.2f.txt' % (N,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_RK4_%d_%.2f.txt' % (N,time_step)
 
     t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
     t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
