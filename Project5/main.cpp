@@ -25,9 +25,9 @@ int main(){
 
     // Which part of the code should run
     bool spring_test,binary,RK4vsVV,cluster;
-    spring_test = true;
+    spring_test = false;
     binary = false;
-    RK4vsVV = false;
+    RK4vsVV = true;
     cluster = false;
 
     // ANALYTIC
@@ -36,19 +36,19 @@ int main(){
     if(spring_test){
         dimension = 1;
         integration_points = 100;
-        final_time = 10;
+        final_time = 20;
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
 
         // RK4 test
-        star star1(1,1,0,0,0,0,0);
+        star star1(1.,1.,0,0,0,0,0);
         galaxy testRK;
         testRK.add(star1);
         testRK.RungeKutta4(dimension,integration_points,final_time,false);
 
         // VV test
-        star star2(1,1,0,0,0,0,0);
+        star star2(1.,1.,0,0,0,0,0);
         galaxy testVV;
         testVV.add(star2);
         testVV.VelocityVerlet(dimension,integration_points,final_time,false);
@@ -66,8 +66,8 @@ int main(){
     // Runge-Kutta 4 vs Velocity-Verlet
     if(RK4vsVV){
         dimension = 3;
-        integration_points = 10000;
-        final_time = 1000;
+        integration_points = 1000;
+        final_time = 10;
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
