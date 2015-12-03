@@ -298,10 +298,12 @@ First we consider the Newtonian two-body problem in three dimensions to study th
 ...
 
 We also check how the two methods work for large time steps.
-For $h=2$, there is no change in velocity in the case with VV.
+
 ...
 
-For very long times, we see that there is a damping in the curve for RK4, but not for VV.
+% Spring force
+Study the analytical case with spring force, the two methods are good estimates for $h<1$. RK4 is slightly closer to the analytical solution. For $h \geqslant 1$, the oscillation in position and velocity is damped when using RK4. This is more visible for longer times. With the VV method, the position amplitude is 1, whereas the velocity amplitude is lowered to 0.75. Thus, for larger time steps, VV is the most stable method.
+
 ...
 
 What is also interesting is to compare the time used to advance one time step for the two different methods, to see which one is the most efficient.
