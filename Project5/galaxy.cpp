@@ -18,7 +18,7 @@ galaxy::galaxy(double radi)
 double galaxy::G(double t_crunch)
 {
     double R0 = radius;
-    double total_mass = 0;
+    double total_mass = 0; // total mass = number of stars x mean mass
     for(int i=0;i<total_stars;i++){
         star &current = all_stars[i];
         total_mass += current.mass;
@@ -86,7 +86,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = other.position[j]-current.position[j];
+                    for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]-current.position[j]);
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k1_x[nr1][j] = time_step*current.velocity[j];
@@ -109,7 +109,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k1_x[nr2][j]/2.)-(current.position[j]+k1_x[nr1][j]/2.);
+                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k1_x[nr2][j]/2.)-(current.position[j]+k1_x[nr1][j]/2.));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k2_x[nr1][j] = time_step*(current.velocity[j]+k1_v[nr1][j]/2.);
@@ -131,7 +131,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k2_x[nr2][j]/2.)-(current.position[j]+k2_x[nr1][j]/2.);
+                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k2_x[nr2][j]/2.)-(current.position[j]+k2_x[nr1][j]/2.));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k3_x[nr1][j] = time_step*(current.velocity[j]+k2_v[nr1][j]/2.);
@@ -155,7 +155,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]+k3_x[nr2][j])-(current.position[j]+k3_x[nr1][j]);
+                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k3_x[nr2][j])-(current.position[j]+k3_x[nr1][j]));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k4_x[nr1][j] = time_step*(current.velocity[j]+k3_v[nr1][j]);
@@ -314,12 +314,13 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
     // Calculate relative distance between current star and all other stars
     double relative_distance[3];
 
-    for(int j = 0; j < 3; j++) relative_distance[j] = other.position[j]-current.position[j];
+    for(int j = 0; j < 3; j++) relative_distance[j] = (other.position[j]-current.position[j]);
+    double r = current.distance(other);
 
     // Calculate the forces in each direction
-    Fx -= current.GravitationalForce(other)*relative_distance[0]/current.distance(other);
-    Fy -= current.GravitationalForce(other)*relative_distance[1]/current.distance(other);
-    Fz -= current.GravitationalForce(other)*relative_distance[2]/current.distance(other);
+    Fx -= current.G*current.mass*other.mass*relative_distance[0]/(r*r*r);
+    Fy -= current.G*current.mass*other.mass*relative_distance[1]/(r*r*r);
+    Fz -= current.G*current.mass*other.mass*relative_distance[2]/(r*r*r);
 }
 
 void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double &Fx,double &Fy,double &Fz,double mass1,double mass2)

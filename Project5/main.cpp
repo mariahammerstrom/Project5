@@ -24,11 +24,10 @@ int main(){
     int dimension;        // No. of spatial dimensions
 
     // Which part of the code should run
-    bool spring_test,binary,RK4vsVV,cluster;
+    bool spring_test,binary,RK4vsVV;
     spring_test = false;
-    binary = false;
-    RK4vsVV = true;
-    cluster = false;
+    binary = true;
+    RK4vsVV = false;
 
     // ANALYTIC
 
@@ -36,7 +35,7 @@ int main(){
     if(spring_test){
         dimension = 1;
         integration_points = 100;
-        final_time = 20;
+        final_time = 100;
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -56,7 +55,54 @@ int main(){
 
     // Binary stars
     if(binary){
-        cout << "Write code for binary stars" << endl;
+        integration_points = 1000;
+        final_time = 100.;
+        dimension = 3;
+        double time_step = final_time/((double) integration_points);
+        double x[3],v[3];
+
+        cout << "Time step: " << final_time/((double) integration_points) << endl;
+        cout << "Integration points: " << integration_points << endl;
+
+        star star1(1.,100.,100.,100.,.1,0.,0.);
+        star star2(100.,0.,0.,0.,0.,0.,0.);
+        cout << star1.GravitationalForce(star2) << endl;
+
+        galaxy binary_rk(100.0);
+        binary_rk.add(star1);
+        binary_rk.add(star2);
+
+        for(int j=0;j<dimension;j++){
+            x[j] = star1.position[j];
+            v[j] = star1.velocity[j];
+        }
+
+
+        galaxy binary_vv(5.0);
+        binary_vv.add(star1);
+        binary_vv.add(star2);
+
+        print_initial(dimension,time_step,final_time,x,v);
+
+        // Evolution of binary system
+        binary_rk.RungeKutta4(dimension,integration_points,final_time,true);
+
+        for(int j=0;j<dimension;j++){
+            x[j] = binary_rk.all_stars[0].position[j];
+            v[j] = binary_rk.all_stars[0].velocity[j];
+        }
+        cout << "RK4: " << endl;
+        print_final(dimension,x,v);
+
+        binary_vv.VelocityVerlet(dimension,integration_points,final_time,true);
+
+        for(int j=0;j<dimension;j++){
+            x[j] = binary_vv.all_stars[0].position[j];
+            v[j] = binary_vv.all_stars[0].velocity[j];
+        }
+        cout << "VV:" << endl;
+        print_final(dimension,x,v);
+
     }
 
 
@@ -99,11 +145,6 @@ int main(){
         // run system through RK4/VV, all data is written to file as we go
         MM15_rk.RungeKutta4(dimension,integration_points,final_time,true);
         MM15_vv.VelocityVerlet(dimension,integration_points,final_time,true);
-    }
-
-    // Cluster
-    if(cluster){
-        cout << "Write code with either RK4 or VV!" << endl;
     }
 
     return 0;
