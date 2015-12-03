@@ -298,7 +298,10 @@ First we consider the Newtonian two-body problem in three dimensions to study th
 ...
 
 We also check how the two methods work for large time steps.
+For $h=2$, there is no change in velocity in the case with VV.
+...
 
+For very long times, we see that there is a damping in the curve for RK4, but not for VV.
 ...
 
 What is also interesting is to compare the time used to advance one time step for the two different methods, to see which one is the most efficient.
@@ -342,7 +345,7 @@ The codes developed and used in this project are:
 
 \begin{itemize}
 	\item \verb@plotting_analytical.py@ -- program to graphically compare the one-dimensional 2-body problem with an analytical solution, described in Sec.~\ref{sec:analytical_test}.
-	\item \verb@plotting_method.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV}.
+	\item \verb@plot_method.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV}.
 	\item \verb@plotting_scatter.py@ -- plotting program to visualize the $N$-body system in 3D. 
 	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profiles in Eq. (\ref{eq:simple_fit}) and Eq. (\ref{eq:NFW}).
 \end{itemize}
