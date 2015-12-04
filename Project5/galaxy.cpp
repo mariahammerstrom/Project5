@@ -50,7 +50,7 @@ void galaxy::print_position(std::ofstream &output, int dimension, double time,in
     }
 }
 
-void galaxy::RungeKutta4(int dimension, int integration_points, double final_time, bool stellar)
+void galaxy::RungeKutta4(int dimension, int integration_points, double final_time, bool stellar,int print_number)
 {   // 4th order Runge-Kutta solver for a star cluster / spherical galaxy
 
     // Define time step
@@ -71,7 +71,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     double Fx,Fy,Fz;
 
     // Write initial values to file
-    print_position(output_file,dimension,time,1);
+    print_position(output_file,dimension,time,print_number);
 
     // Set up clock to measure the time usage
     clock_t start_RK4,finish_RK4;
@@ -180,7 +180,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         }
 
         // Write current values to file and increase time
-        print_position(output_file,dimension,time,1); // total_stars
+        print_position(output_file,dimension,time,print_number);
         time += time_step;
     }
     // Stop clock and print out time usage
@@ -192,7 +192,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     output_file.close();
 }
 
-void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar)
+void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar, int print_number)
 {   /*  Velocity-Verlet solver for two coupeled ODEs in a given number of dimensions.
     The algorithm is, exemplified in 1D for position x(t), velocity v(t) and acceleration a(t):
     x(t+dt) = x(t) + v(t)*dt + 0.5*dt*dt*a(t);
@@ -216,7 +216,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     double Fx,Fy,Fz,Fxnew,Fynew,Fznew; // Forces in each dimension
 
     // Write initial values to file
-    print_position(output_file,dimension,time,1);
+    print_position(output_file,dimension,time,print_number);
 
     // Set up clock to measure the time usage
     clock_t start_VV,finish_VV;
@@ -271,7 +271,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
         }
 
         // Write current values to file and increase time
-        print_position(output_file,dimension,time,1); // total_stars
+        print_position(output_file,dimension,time,print_number);
         time += time_step;
     }
     // Stop clock and print out time usage
@@ -342,4 +342,25 @@ void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double
     Fx -= g.G*mass1*mass2*x_rel/(r*r*r);
     Fy -= g.G*mass1*mass2*y_rel/(r*r*r);
     Fz -= g.G*mass1*mass2*z_rel/(r*r*r);
+}
+
+double galaxy::KineticEnergySystem()
+{
+    double KE = 0;
+    for(int nr=0;nr<total_stars;nr++){
+        star &Current = all_stars[nr];
+        KE += Current.KineticEnergy();
+    }
+}
+
+double galaxy::PotentialEnergySystem()
+{
+    double PE = 0;
+    for(int nr1=0;nr1<total_stars;nr1++){
+        star &Current = all_stars[nr1];
+        for(int nr2=nr1+1;nr2<total_stars;nr2++){
+            star &Other = all_stars[nr2];
+            PE += Current.PotentialEnergy(Other);
+        }
+    }
 }

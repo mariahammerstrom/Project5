@@ -27,8 +27,8 @@ int main()
     bool spring_test,binary,cluster;
 
     spring_test = false;
-    binary = true;
-    cluster = false;
+    binary = false;
+    cluster = true;
 
     int integration_points;  // No. of integration points
     double final_time;       // End time of calculation
@@ -51,19 +51,19 @@ int main()
         star star1(1.,1.,0,0,0,0,0);
         galaxy testRK;
         testRK.add(star1);
-        testRK.RungeKutta4(dimension,integration_points,final_time,force);
+        testRK.RungeKutta4(dimension,integration_points,final_time,force,1);
 
         // VV test
         star star2(1.,1.,0,0,0,0,0);
         galaxy testVV;
         testVV.add(star2);
-        testVV.VelocityVerlet(dimension,integration_points,final_time,force);
+        testVV.VelocityVerlet(dimension,integration_points,final_time,force,1);
     }
 
     // Binary stars
     if(binary){
         integration_points = 10000;
-        final_time = 1000.;
+        final_time = 10000.;
         dimension = 3;
         double time_step = final_time/((double) integration_points);
         double x[3],v[3];
@@ -91,7 +91,7 @@ int main()
 
         // Evolution of binary system
         cout << endl << "RK4: " << endl;
-        binary_rk.RungeKutta4(dimension,integration_points,final_time,force);
+        binary_rk.RungeKutta4(dimension,integration_points,final_time,force,1);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_rk.all_stars[0].position[j];
@@ -100,7 +100,7 @@ int main()
         print_final(dimension,x,v);
 
         cout << endl << "VV:" << endl;
-        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force);
+        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force,1);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_vv.all_stars[0].position[j];
@@ -148,8 +148,8 @@ int main()
         cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
 
         // run system through RK4/VV, all data is written to file as we go
-        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force);
-        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force);
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,5);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,5);
     }
 
     return 0;
