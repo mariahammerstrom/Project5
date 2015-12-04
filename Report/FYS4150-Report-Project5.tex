@@ -316,8 +316,9 @@ Now let us consider the Newtonian two-body problem in three dimensions. Here we 
 \caption{Comparison of our numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue), for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$.}\label{fig:2_body}
 \end{center}
 \end{figure*}
+When choosing the final time to be $t = 10\,000$, however, the VV method proved to be the most stable one. After a while the star that went through the RK4 method was ejected. See fig... Thus, for very large times, one should choose VV.
 
- to study the stability of the two methods described in Sec.~\ref{sec:methods}. This is done by running the two algorithms over a very long time period. 
+... to study the stability of the two methods described in Sec.~\ref{sec:methods}. This is done by running the two algorithms over a very long time period. 
 
 ...
 
