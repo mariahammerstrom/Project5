@@ -9,6 +9,8 @@ star::star()
     velocity[0] = 0;
     velocity[1] = 0;
     velocity[2] = 0;
+    potential = 0;
+    kinetic = 0;
 }
 
 star::star(double M, double x, double y, double z, double vx, double vy, double vz)
@@ -20,6 +22,8 @@ star::star(double M, double x, double y, double z, double vx, double vy, double 
     velocity[0] = vx;
     velocity[1] = vy;
     velocity[2] = vz;
+    potential = 0;
+    kinetic = 0;
 }
 
 

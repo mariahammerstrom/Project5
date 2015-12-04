@@ -23,18 +23,21 @@ int main()
     // 1) Analytical test with box on a spring; set spring_test = true
     // 2) Two planets in a gravitational field; set binary = true
     // 3) Full star cluster in a gravitational field; set cluster = true
+    // 4) Compare RK4 and VV in a full star cluster, set RK4vsVV = true
 
-    bool spring_test,binary,cluster;
+    bool spring_test,binary,cluster,RK4vsVV;
 
     spring_test = false;
     binary = false;
     cluster = true;
+    RK4vsVV = false;
 
     int integration_points;  // No. of integration points
     double final_time;       // End time of calculation
     int dimension;           // No. of spatial dimensions
 
     bool force; // false = run program with analytical spring force, true = run program with gravitational potential
+    bool simple; // true = simple units, G = 4*pi*pi
 
 
     // ANALYTIC: Spring force
@@ -43,6 +46,7 @@ int main()
         integration_points = 100;
         final_time = 100;
         force = false;
+        simple = true;
 
         cout << "ANALYTICAL" << endl;
         cout << "Time step: " << final_time/((double) integration_points) << ", integration points: " << integration_points << endl;
@@ -51,23 +55,24 @@ int main()
         star star1(1.,1.,0,0,0,0,0);
         galaxy testRK;
         testRK.add(star1);
-        testRK.RungeKutta4(dimension,integration_points,final_time,force,1);
+        testRK.RungeKutta4(dimension,integration_points,final_time,force,simple,1);
 
         // VV test
         star star2(1.,1.,0,0,0,0,0);
         galaxy testVV;
         testVV.add(star2);
-        testVV.VelocityVerlet(dimension,integration_points,final_time,force,1);
+        testVV.VelocityVerlet(dimension,integration_points,final_time,force,simple,1);
     }
 
     // Binary stars
     if(binary){
-        integration_points = 10000;
+        integration_points = 100000;
         final_time = 10000.;
         dimension = 3;
         double time_step = final_time/((double) integration_points);
         double x[3],v[3];
         force = true;
+        simple = true;
 
         cout << "BINARY SYSTEM" << endl;
 
@@ -91,7 +96,7 @@ int main()
 
         // Evolution of binary system
         cout << endl << "RK4: " << endl;
-        binary_rk.RungeKutta4(dimension,integration_points,final_time,force,1);
+        binary_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,1);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_rk.all_stars[0].position[j];
@@ -100,7 +105,7 @@ int main()
         print_final(dimension,x,v);
 
         cout << endl << "VV:" << endl;
-        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force,1);
+        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,1);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_vv.all_stars[0].position[j];
@@ -113,11 +118,12 @@ int main()
 
 
     // GALAXY (STAR CLUSTER) MODEL
-    if(cluster){
+    if(RK4vsVV){
         dimension = 3;
         integration_points = 1000;
-        final_time = 1; // in units of t_crunch
+        final_time = 1.; // in units of t_crunch
         force = true;
+        simple = false;
 
         cout << "CLUSTER" << endl;
         cout << "Time step: " << final_time/((double) integration_points) << endl;
@@ -151,9 +157,49 @@ int main()
 
         // run system through RK4/VV, all data is written to file as we go
         cout << "RK4" << endl;
-        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,5);
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,5);
         cout << "VV" << endl;
-        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,5);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,5);
+    }
+
+    if(cluster){
+        dimension = 3;
+        integration_points = 1000;
+        final_time = 5.; // in units of t_crunch
+        force = true;
+        simple = false;
+
+        cout << "CLUSTER" << endl;
+        cout << "Time step: " << final_time/((double) integration_points) << endl;
+        cout << "Integration points: " << integration_points << endl;
+
+        unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+        default_random_engine generator(seed);
+
+        double R0 = 20.;        // Radius of galaxy, in units of lightyears
+        int objects = 100;      // Number of stars to be added in galaxy
+
+        // initialize mass and position, to be randomly distributed
+        double m,x,y,z;
+        m = x = y = z = 0.0;
+
+        // mean and standard deviation of stellar mass
+        double mean = 10.;
+        double deviation = 1.;
+
+        galaxy MM15(R0);
+
+        for(int i=0;i<objects;i++){
+            Gaussian_distribution(mean,deviation,m,&generator);
+            randomUniformSphere(R0,x,y,z,&generator);
+            star stari(m,x,y,z,0,0,0);
+            MM15.add(stari);
+        }
+        cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
+
+        // run system through VV, all data is written to file as we go
+        MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars);
+        cout << "The star cluster MM15 now contains " << MM15.total_stars << " star(s)." << endl;
     }
 
     /*

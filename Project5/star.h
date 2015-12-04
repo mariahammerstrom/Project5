@@ -17,6 +17,8 @@ public:
     double mass;
     double position[3];
     double velocity[3];
+    double potential;
+    double kinetic;
 
     // Initializers
     star();
