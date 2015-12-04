@@ -2,6 +2,7 @@
 #include "star.h"
 #include <iostream>
 #include <cmath>
+#include "time.h"
 
 galaxy::galaxy()
 {
@@ -62,10 +63,6 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     else sprintf(filename, "analytic_RK4_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
 
-    //char *file_Fx = new char[1000];
-    //sprintf(file_Fx, "Fx_RK4.txt");
-    //std::ofstream output_Fx(file_Fx);
-
     // Set up arrays
     double k1_x[total_stars][dimension],k2_x[total_stars][dimension],k3_x[total_stars][dimension],k4_x[total_stars][dimension];
     double k1_v[total_stars][dimension],k2_v[total_stars][dimension],k3_v[total_stars][dimension],k4_v[total_stars][dimension];
@@ -105,7 +102,6 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
                 k1_x[nr1][0] = time_step*current.velocity[0];
                 k1_v[nr1][0] = time_step*Fx/current.mass;
             }
-            //output_Fx << time << "\t" << Fx << std::endl;
         }
 
         // k2
@@ -194,7 +190,6 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
 
     // Close files
     output_file.close();
-    //output_Fx.close();
 }
 
 void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar)
@@ -212,10 +207,6 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     if(stellar) sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
     else sprintf(filename, "analytic_VV_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
-
-    //char *file_Fx = new char[1000];
-    //sprintf(file_Fx, "Fx_VV.txt");
-    //std::ofstream output_Fx(file_Fx);
 
     // Set up arrays
     double **acceleration = setup_matrix(total_stars,3);
@@ -250,7 +241,6 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
                 }
             }
             else Fx = -current.position[0];
-            //output_Fx << time << "\t" << Fx << std::endl;
 
             // Acceleration in each dimension for current star
             acceleration[nr1][0] = Fx/current.mass;
@@ -291,7 +281,6 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
     // Close files
     output_file.close();
-    //output_Fx.close();
 
     // Clear memory
     delete_matrix(acceleration);

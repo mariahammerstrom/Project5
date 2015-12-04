@@ -8,7 +8,6 @@
 #include <time.h>
 #include "star.h"
 #include "galaxy.h"
-#include "solver.h"
 
 using namespace std;
 
@@ -32,8 +31,8 @@ int main()
     cluster = false;
 
     int integration_points;  // No. of integration points
-    double final_time;    // End time of calculation
-    int dimension;        // No. of spatial dimensions
+    double final_time;       // End time of calculation
+    int dimension;           // No. of spatial dimensions
 
     bool force; // false = run program with analytical spring force, true = run program with gravitational potential
 
@@ -63,7 +62,7 @@ int main()
 
     // Binary stars
     if(binary){
-        integration_points = 1000;
+        integration_points = 10000;
         final_time = 1000.;
         dimension = 3;
         double time_step = final_time/((double) integration_points);
