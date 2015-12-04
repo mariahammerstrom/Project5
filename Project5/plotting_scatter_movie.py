@@ -4,16 +4,18 @@ A program that creates a scatter plot in 3D of a cluster of stars, with stars
 scaled according to their mass.
 """
 
-import sys,glob,os
+import sys,os
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 import matplotlib.mlab as mlab
 from matplotlib.pyplot import rc
 rc('font',**{'family':'serif'})
 import mpl_toolkits.mplot3d
-from mpl_toolkits.mplot3d import Axes3D
+#from mpl_toolkits.mplot3d import Axes3D
+#from scitools.all import *
 
-from scitools.all import *
+
 
 def read_file2(filename,star_number,total_stars):
     # Input: filename for file with structure [t,star no.,m,x,y,z,vx,vy,vz]
@@ -90,7 +92,8 @@ def plot_scatter(total_stars,x,y,z,title):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    ax.scatter(x,y,z,s=30,color='purple',marker='o')
+    s = ax.scatter(x,y,z,s=30,color='purple',marker='o')
+    s.set_edgecolors = s.set_facecolors = lambda *args:None
     
     ax.set_xlabel(r'$x$',size=14)
     ax.set_ylabel(r'$y$',size=14)
@@ -107,9 +110,6 @@ def plot_scatter(total_stars,x,y,z,title):
 
 def scatter_plot_series(total_stars,time_step,integration_points):
     
-    for f in glob.glob('Movie/Image_*.eps'):
-        os.remove(f)
-    
     # Get data
     filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
     #filename = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
@@ -117,27 +117,27 @@ def scatter_plot_series(total_stars,time_step,integration_points):
     
     for i in range(integration_points):
         plot_scatter(total_stars,x[i*total_stars:(i+1)*total_stars],y[i*total_stars:(i+1)*total_stars],z[i*total_stars:(i+1)*total_stars],'t = %.2f' % t[i*total_stars])
-        plt.savefig('Movie/Image_%d_%.2f.png' % (total_stars,t[i*total_stars]))
+        #plt.savefig('Movie/Image_%d_%.2f.png' % (total_stars,t[i*total_stars]))
+        plt.show()
         
     return
-    
 
-def make_movie(total_stars,time_step):
-    moviename = '/Movie/movie_%d.gif' % (total_stars)
-    movie('Movie/Image_*.png',output_file=moviename)
-    return 0
 
+def delete_files(total_stars):
+    import glob
+    for f in glob.glob('Movie/Image_%d_*.png' % total_stars):
+        os.remove(f)
+    return
 
 def main(argv):
-    total_stars = 5
-    time_step = 1.0
-    integration_points = 9
+    total_stars = 100
+    time_step = 0.05
+    integration_points = 100
     
-    #scatter_plot_series(total_stars,time_step,integration_points)
-    make_movie(total_stars,time_step)
+    scatter_plot_series(total_stars,time_step,integration_points)
+    #delete_files(total_stars)
     
-    
-
+    #make_movie(total_stars,time_step)
     	
 if __name__ == "__main__":
     main(sys.argv[1:]) 
