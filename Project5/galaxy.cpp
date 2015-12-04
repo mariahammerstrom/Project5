@@ -351,6 +351,7 @@ double galaxy::KineticEnergySystem()
         star &Current = all_stars[nr];
         KE += Current.KineticEnergy();
     }
+    return KE;
 }
 
 double galaxy::PotentialEnergySystem()
@@ -363,4 +364,11 @@ double galaxy::PotentialEnergySystem()
             PE += Current.PotentialEnergy(Other);
         }
     }
+    return PE;
+}
+
+
+bool galaxy::Bound(star OneStar)
+{
+    return ((OneStar.KineticEnergy() - this->PotentialEnergySystem()) < 0);
 }

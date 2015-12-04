@@ -31,6 +31,7 @@ public:
     void GravitationalForce_RK(double x_rel, double y_rel, double z_rel, double &Fx, double &Fy, double &Fz, double mass1, double mass2);
     double KineticEnergySystem();
     double PotentialEnergySystem();
+    bool Bound(star OneStar);
 
 };
 
