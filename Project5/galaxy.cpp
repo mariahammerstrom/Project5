@@ -8,31 +8,33 @@ galaxy::galaxy()
 {
     total_stars = 0;
     radius = 100;
+    total_mass = 0;
 }
 
 galaxy::galaxy(double radi)
 {
     total_stars = 0;
     radius = radi;
+    total_mass = 0;
 }
 
-double galaxy::G(double t_crunch)
-{    // Calculation of the gravitational constant G in dimensionless units
-
-    double R0 = radius;
-    double total_mass = 0; // total mass = number of stars x mean mass
-
-    for(int i=0;i<total_stars;i++){
-        star &current = all_stars[i];
-        total_mass += current.mass;
-    }
-    return (4*M_PI*M_PI/32)*R0*R0*R0/(t_crunch*t_crunch*total_mass);
+galaxy::galaxy(double radi,double mass)
+{
+    total_stars = 0;
+    radius = radi;
+    total_mass = mass;
 }
-
 
 void galaxy::add(star newstar)
 {
     total_stars += 1;
+    total_mass += newstar.mass;
+    all_stars.push_back(newstar);
+}
+
+void galaxy::addM(star newstar)
+{
+    total_stars +=1;
     all_stars.push_back(newstar);
 }
 
@@ -325,9 +327,9 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
     double r = current.distance(other);
 
     // Calculate the forces in each direction    
-    Fx -= current.G*current.mass*other.mass*relative_distance[0]/(r*r*r);
-    Fy -= current.G*current.mass*other.mass*relative_distance[1]/(r*r*r);
-    Fz -= current.G*current.mass*other.mass*relative_distance[2]/(r*r*r);
+    Fx -= this->G*current.mass*other.mass*relative_distance[0]/(r*r*r);
+    Fy -= this->G*current.mass*other.mass*relative_distance[1]/(r*r*r);
+    Fz -= this->G*current.mass*other.mass*relative_distance[2]/(r*r*r);
 }
 
 void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double &Fx,double &Fy,double &Fz,double mass1,double mass2)
@@ -336,12 +338,10 @@ void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double
     // Calculate relative distance between current star and all other stars
     double r = sqrt(x_rel*x_rel + y_rel*y_rel + z_rel*z_rel);
 
-    star g;
-
     // Calculate the forces in each direction
-    Fx -= g.G*mass1*mass2*x_rel/(r*r*r);
-    Fy -= g.G*mass1*mass2*y_rel/(r*r*r);
-    Fz -= g.G*mass1*mass2*z_rel/(r*r*r);
+    Fx -= this->G*mass1*mass2*x_rel/(r*r*r);
+    Fy -= this->G*mass1*mass2*y_rel/(r*r*r);
+    Fz -= this->G*mass1*mass2*z_rel/(r*r*r);
 }
 
 double galaxy::KineticEnergySystem()
@@ -367,8 +367,60 @@ double galaxy::PotentialEnergySystem()
     return PE;
 }
 
+/*
+bool galaxy::EnergyConservation(double previousEnergy)
+{
+    double TotalEnergy = this->KineticEnergySystem() + this->PotentialEnergySysyem();
+    if((TotalEnergy - previousEnergy) < 0.05) return true;
+    else return false;
+}
+*/
 
 bool galaxy::Bound(star OneStar)
 {
-    return ((OneStar.KineticEnergy() - this->PotentialEnergySystem()) < 0);
+    //if(fabs(OneStar.position[0])>this->radius || fabs(OneStar.position[1])>this->radius || fabs(OneStar.position[2])>this->radius)
+    //    return false;
+
+    return ((OneStar.KineticEnergy() + this->PotentialEnergySystem()) < 0);
 }
+
+/*
+
+void galaxy::Remove(int index)
+{
+    all_stars.erase(index);
+    total_stars -= 1;
+}
+
+double galaxy::EnergyLoss()
+{
+    bool bound;
+    double EnergyLoss = 0;
+    int InitialStars = total_stars;
+    for(int nr=0;nr<total_stars;nr++){
+        star &Current = all_stars[nr]
+        bound = this->Bound(Current);
+        if(!bound){
+            this->Remove(nr);
+            EnergyLoss -= Current.KineticEnergy();
+        }
+    }
+    return EnergyLoss;
+}
+
+void galaxy::MergeStars()
+{
+    for(int nr1=0;nr1<total_stars;nr1++){
+        star &Current = all_stars[nr1];
+        for(int nr2=0;nr2<total_stars;nr2++){
+            star &Other = all_stars[nr2];
+            if(Current.distance(Other) < 0.001){
+                Current.mass = Current.mass + Other.mass;
+                this->Remove(nr2);
+            }
+        }
+    }
+
+}
+
+*/

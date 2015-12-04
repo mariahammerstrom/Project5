@@ -116,7 +116,7 @@ int main()
     if(cluster){
         dimension = 3;
         integration_points = 1000;
-        final_time = 10;
+        final_time = 1; // in units of t_crunch
         force = true;
 
         cout << "CLUSTER" << endl;
@@ -126,9 +126,11 @@ int main()
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         default_random_engine generator(seed);
 
-        double R0 = 20.;         // Radius of galaxy
+        double R0 = 20.;        // Radius of galaxy, in units of lightyears
         int objects = 100;      // Number of stars to be added in galaxy
-        double m,x,y,z;         // randomly distributed mass and position
+
+        // initialize mass and position, to be randomly distributed
+        double m,x,y,z;
         m = x = y = z = 0.0;
 
         // mean and standard deviation of stellar mass
@@ -148,9 +150,32 @@ int main()
         cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
 
         // run system through RK4/VV, all data is written to file as we go
+        cout << "RK4" << endl;
         MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,5);
+        cout << "VV" << endl;
         MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,5);
     }
+
+    /*
+    // last part of project
+    double total_mass, mean_mass; int objects;
+    mean_mass = total_mass/((double) objects);
+    double mass_deviation = 1.;
+    double m,x,y,z;
+    m = x = y = z = 0.0;
+    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+    default_random_engine generator(seed);
+
+    galaxy MM15(20,total_mass);
+
+    for(int i=0;i<objects;i++){
+        Gaussian_distribution(mean_mass,mass_deviation,m,&generator);
+        randomUniformSphere(R0,x,y,z,&generator);
+        star stari(m,x,y,z,0,0,0);
+        MM15.addM(stari);
+    }
+    */
+
 
     return 0;
 }

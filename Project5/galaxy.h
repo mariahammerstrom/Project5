@@ -11,17 +11,21 @@ public:
     friend class star;
 
     // properties
-    double radius;
+    double radius,total_mass;
     int total_stars;
     vector<star> all_stars;
+
+    // constants
+    double G = (4*M_PI*M_PI/32)*radius*radius*radius/(total_mass);
 
     // initializers
     galaxy();
     galaxy(double radi);
+    galaxy(double radi,double mass);
 
     // functions
-    double G(double t_crunch);
     void add(star newstar);
+    void addM(star newstar);
     void print_position(std::ofstream &output, int dimension, double time, int number);
     void RungeKutta4(int dimension, int integration_points, double final_time, bool stellar, int print_number);
     void VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar,int print_number);
@@ -31,7 +35,9 @@ public:
     void GravitationalForce_RK(double x_rel, double y_rel, double z_rel, double &Fx, double &Fy, double &Fz, double mass1, double mass2);
     double KineticEnergySystem();
     double PotentialEnergySystem();
+    // bool EnergyConservation();
     bool Bound(star OneStar);
+    // void RemoveStar();
 
 };
 
