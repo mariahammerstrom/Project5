@@ -13,6 +13,9 @@ rc('font',**{'family':'serif'})
 
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
+from math import pi
+
+G = 4*pi**2
 
 
 def read_file(filename):
@@ -47,6 +50,7 @@ def read_file2(filename):
     data = np.loadtxt(filename,unpack=True) # Read data
     
     t = data[0]            # time
+    m = data[2]			   # mass
     
     # Positions
     x = data[3]            # position,x-direction
@@ -60,7 +64,7 @@ def read_file2(filename):
     
     r = np.sqrt(x**2 + y**2 + z**2)
     
-    return t,x,y,z,v_x,v_y,v_z,r
+    return t,m,x,y,z,v_x,v_y,v_z,r
     
 
 def plot_time(stars,N,time_step):
@@ -73,12 +77,12 @@ def plot_time(stars,N,time_step):
     filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
     filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
     
-    t_verlet,x_verlet,y_verlet,z_verlet,v_x_verlet,v_y_verlet,v_z_verlet,r_verlet = read_file2(filename_verlet)
-    t_RK4,x_RK4,y_RK4,z_RK4,v_x_RK4,v_y_RK4,v_z_RK4,r_RK4 = read_file2(filename_RK4)
+    t_verlet,m_verlet,x_verlet,y_verlet,z_verlet,v_x_verlet,v_y_verlet,v_z_verlet,r_verlet = read_file2(filename_verlet)
+    t_RK4,m_RK4,x_RK4,y_RK4,z_RK4,v_x_RK4,v_y_RK4,v_z_RK4,r_RK4 = read_file2(filename_RK4)
     
     # Calculate energies
-    E_verlet = 0.5*np.array(v_x_verlet)**2 + 0.5*np.array(x_verlet)**2
-    E_RK4 = 0.5*np.array(v_x_RK4)**2 + 0.5*np.array(x_RK4)**2
+    E_verlet = 0.5*np.array(v_x_verlet)**2 - G*np.array(m_verlet)**2/np.array(r_verlet)
+    E_RK4 = 0.5*np.array(v_x_RK4)**2 - G*np.array(m_RK4)**2/np.array(r_verlet)
     
     # Make plots
     plt.figure(1)
@@ -167,16 +171,16 @@ def plot_timestep(N,time_step_list):
 def plot_orbits(stars,N,time_step):
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    # filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    # filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
     
     # t1_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet,F_verlet = read_file(filename_verlet)
     # t1_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4,F_RK4 = read_file(filename_RK4)
     
-    t1_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet = read_file2(filename_verlet)
-    t1_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4 = read_file2(filename_RK4)
+    t1_verlet,m_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet = read_file2(filename_verlet)
+    t1_RK4,m_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4 = read_file2(filename_RK4)
     
     mpl.rcParams['legend.fontsize'] = 10
  
@@ -184,7 +188,7 @@ def plot_orbits(stars,N,time_step):
     ax = fig.gca(projection='3d')
     limit = -1 #70 for large time step
     ax.plot(x1_verlet[0:limit],y1_verlet[0:limit],z1_verlet[0:limit],'r', label='#1, VV')
-    ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='#1, RK4')
+    #ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='#1, RK4')
     
     #ax.plot(x2_verlet,y2_verlet,z2_verlet,'g', label='#2, VV')
     #ax.plot(x2_RK4,y2_RK4,z2_RK4, 'y',label='#2, RK4')
@@ -196,8 +200,8 @@ def plot_orbits(stars,N,time_step):
     
 def main(argv):
     # Plot results as a function of time
-    #plot_time(stars=2,N=10000,time_step=.1)
-    plot_orbits(stars=2,N=1000,time_step=1)
+    plot_time(stars=2,N=10000,time_step=1.)
+    plot_orbits(stars=2,N=10000,time_step=1.0)
     
 	
 if __name__ == "__main__":
