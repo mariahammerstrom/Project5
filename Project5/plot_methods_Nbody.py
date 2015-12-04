@@ -66,10 +66,10 @@ def plot_time(total_stars,star_number,time_step):
     # compared with the analytical solution.
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
     
     tVV,mVV,xVV,yVV,zVV,vxVV,vyVV,vzVV = read_file(filename_verlet,star_number,total_stars)
     tRK4,mRK4,xRK4,yRK4,zRK4,vxRK4,vyRK4,vzRK4 = read_file(filename_RK4,star_number,total_stars)
@@ -126,8 +126,8 @@ def plot_time(total_stars,star_number,time_step):
 def plot_orbits_VV(total_stars,time_step):
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
 
     
     # Set up plot
@@ -140,9 +140,10 @@ def plot_orbits_VV(total_stars,time_step):
         t,m,x,y,z,vx,vy,vz = read_file(filename_verlet,i,total_stars)
         ax.plot(x,y,z, label='Star %d, VV' % i)
     
-    radius = 50
+    radius = 20
     plt.xlim([-radius,radius])
     plt.ylim([-radius,radius])
+    ax.set_zlim(-radius, radius)
     #ax.legend()
     plt.show()
 
@@ -176,8 +177,8 @@ def plot_orbits_RK4(total_stars,time_step):
     
 def main(argv):
     total_stars = 100
-    time_step = 0.1
-    integration_points = 10000
+    time_step = 0.003
+    integration_points = 1000
 
     # Plot orbits
     plot_orbits_VV(total_stars,time_step)
