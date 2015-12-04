@@ -5,6 +5,7 @@ A program that:
     1) Draws a histogram for the particle density as a function of radius,
     2) Plots the radial profile density,
     3) Compares the radial profile density with two radial profile density functions.
+
 """
 
 import sys
@@ -15,28 +16,49 @@ rc('font',**{'family':'serif'})
 
 
 def read_file(filename):
-    # Input: filename for file with structure [t,x,v_x,y,v_y,z,v_z]
+    # Input: filename for file with structure [t,index,m,x,y,z,vx,vy,vz]
     # Output: arrays of data values
     
     data = np.loadtxt(filename,unpack=True) # Read data
     
-    index = data[0]        # index
-    m = data[1]            # mass
+    t = data[0]            # time
+    index = data[1]        # index
+    m = data[2]            # mass
     
     # Positions
-    x = data[2]            # position, x-direction
-    y = data[3]            # position, y-direction
-    z = data[4]            # position, z-direction
+    x = data[3]            # position, x-direction
+    y = data[4]            # position, y-direction
+    z = data[5]            # position, z-direction
     
     # Velocities
-    v_x = data[5]          # velocity, x-direction
-    v_y = data[6]          # velocity, y-direction
-    v_z = data[7]          # velocity, z-direction
+    v_x = data[6]          # velocity, x-direction
+    v_y = data[7]          # velocity, y-direction
+    v_z = data[8]          # velocity, z-direction
     
-    return index,m,x,y,z,v_x,v_y,v_z
+    return t,index,m,x,y,z,v_x,v_y,v_z
     
 
-def radial_profile(x,y,z,center):
+def radial_profile(total_stars,time_step,final):
+    # Input: Total stars, time step, whether to print final (True) or initial (False )distribution
+    # Output: Plots and statistics.
+    
+    # Read file
+    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    t,index,m,x,y,z,vx,vy,vz = read_file(filename)
+    
+    if final == True:
+        title = 'Final configuration'
+        x = x[-total_stars:0]
+        y = y[-total_stars:0]
+        z = z[-total_stars:0]
+    else:
+        title = 'Intitial configuration'
+        x = x[0:total_stars]
+        y = y[0:total_stars]
+        z = z[0:total_stars]
+    
+    # Calculate radial distances
+    center = [0,0,0]
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2)
     
     # Print statistics
@@ -45,19 +67,21 @@ def radial_profile(x,y,z,center):
     
     # Plot histogram
     plt.figure()
-    plt.hist(r,21)
-    plt.xlabel('Radial distance')
+    plt.hist(r,11)
+    plt.xlabel('Radial distance [ly]')
     plt.ylabel('Frequency')
+    plt.title(title,size=12)
     plt.show()
     
+    """
     # Plot radial density profile
     r = r.astype(np.int)
     counts = np.bincount(r)
-    radii = np.linspace(0,20,len(counts))
+    radii = np.linspace(0,0.5,len(counts))
     
     plt.figure()
     plt.plot(radii,counts,label='Numerical')
-    plt.xlabel('Radius [ly]',size=12)
+    plt.xlabel('Radial distance [ly]',size=12)
     plt.ylabel('Radial density',size=12)
     plt.title('Radial density profile',size=12)
     
@@ -78,6 +102,7 @@ def radial_profile(x,y,z,center):
     plt.ylabel('Number density',size=12)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
+    """
     
     return
 
@@ -92,14 +117,13 @@ def NFW_profile(rho_0,r_0,r):
 
 def main(argv):
     
-    # Read file
-    N = 100 # Number of stars
-    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
-    index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
-    
+    total_stars = 100
+    time_step = 0.05
+    integration_points = 100
+
     # Radial profile
-    center = [0,0,0]
-    radial_profile(x,y,z,center)
+    final = False # False = intitial distribution, True = final distribution
+    radial_profile(total_stars,time_step,final)
     
 	
 if __name__ == "__main__":
