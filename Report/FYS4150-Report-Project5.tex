@@ -366,9 +366,21 @@ COMMENTS!
 
 In the case where the number of objects $N \rightarrow \infty$ and the mean density $\rho_0$ of the system is kept constant, the system would collapse into a singularity at a finite \textbf{collapse time} because it can be considered a continuous fluid. Then each imaginary shell for different radii from the center will be fully filled with stars and feel the same gravitational force towards the center of the system, thus reaching the center at the same time. 
 
-This will not be the case in our model where $N$ is finite. Then the gravitational field will be largely non-uniform, which means the objects will be pulled towards the center of the system and reach it at different times, and keep moving to the other side of the center, instead of all particles gathering in the center at the same time, creating a collapse. This we can see in Fig. XXX.
+This will not be the case in our model where $N$ is finite. Then the gravitational field will be largely non-uniform, which means the objects will be pulled towards the center of the system and reach it at different times, and keep moving to the other side of the center, instead of all particles gathering in the center at the same time, creating a collapse. This we can see in Fig.~\ref{fig:N_body_simulation}.
 
 COMMENTS.
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/Image_100_000.png}
+	& \includegraphics[width=60mm]{Images/Image_100_150.png}
+	& \includegraphics[width=60mm]{Images/Image_100_495.png} \\
+	(a) Initial configuration				& (b) Closest to collapse at $t = 1.50$ 	& (c) Final configuration \\[6pt]
+\end{tabular}
+\caption{Evolution of the $N$-body system as a function of time for a total of 5$\tau_{\mathrm{crunch}}$.}\label{fig:N_body_simulation}
+\end{center}
+\end{figure*}
 
 
 \subsubsection{The energy of the system}
@@ -454,7 +466,7 @@ The codes developed and used in this project are:
 	\item \verb@plotting_analytical.py@ -- program to graphically compare the one-dimensional 2-body problem with an analytical solution, described in Sec.~\ref{sec:analytical_test}.
 	\item \verb@plot_method.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV} for the 2-body problem.
 	\item \verb@plot_method_Nbody.py@ -- program to graphically compare the two numerical methods for the $N$-body problem.
-	\item \verb@plotting_scatter.py@ -- plotting program to visualize the 3D distribution of particles in the $N$-body system as a scatter plot. 
+	\item \verb@plotting_scatter.py@ -- plotting program to visualize the 3D distribution of particles in the $N$-body system as a scatter plot, as shown in Fig.~\ref{fig:N_body_simulation}. 
 	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profiles in Eq. (\ref{eq:simple_fit}) and Eq. (\ref{eq:NFW}).
 \end{itemize}
 
