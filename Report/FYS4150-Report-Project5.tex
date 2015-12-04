@@ -341,7 +341,7 @@ Finally we want to see whether energy is conserved for our star. This is done ca
 \begin{equation}\label{eq:E_tot}
 	E = \frac{1}{2}Mv^2 - \frac{GM^2}{r}
 \end{equation}
-where $M$ is the mass of the light, orbiting star with velocity $v$ and position $r$. The first term represents the kinetic energy and the second term represents the potential energy. The result for the two methods is shown in Fig.~\ref{fig:2_body_energy}. We see that COMMENT!
+where $M$ is the mass of the light, orbiting star with velocity $v$ and position $r$. The first term represents the kinetic energy and the second term represents the potential energy. The result for the two methods is shown in Fig.~\ref{fig:2_body_energy}a-b. We see that the change in energy is identical for the two methods when the time step is low. Comparing the two figures we see that the energy for RK4 is shifted to the left for larger time steps, while VV varies in about the same way as for smaller time steps, the only difference being that the energy increases somewhat as the time passes. 
 
 In conclusion, based on our study of the stability, time usage and energy conservation of the two methods, we can say that VV would be the better choice of method when simulating systems that require long times.
 
@@ -349,11 +349,11 @@ In conclusion, based on our study of the stability, time usage and energy conser
 \begin{figure*}
 \begin{center}
 \begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/comparison_orbit_01_dist40.png}
-	& \includegraphics[width=90mm]{Images/comparison_orbit_1_dist40.png} \\
+  	\includegraphics[width=90mm]{Images/binary_E_01.png}
+	& \includegraphics[width=90mm]{Images/binary_E_1.png} \\
 	(a) $\Delta t = 0.10$, $t_{\mathrm{final}} = 1\,000$, $r = 40$				& (b) $\Delta t = 1.00$, $t_{\mathrm{final}} = 1\,000$, $r = 40$  \\[6pt]
 \end{tabular}
-\caption{Energy conservation for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta blue for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$ and two different final times $t_{\mathrm{final}} = 1\,000$ and $t_{\mathrm{final}} = 10\,000$.}\label{fig:2_body_energy}
+\caption{Energy evolution for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta blue for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$ and two different final times $t_{\mathrm{final}} = 1\,000$ and $t_{\mathrm{final}} = 10\,000$.}\label{fig:2_body_energy}
 \end{center}
 \end{figure*}
 
@@ -362,7 +362,9 @@ In conclusion, based on our study of the stability, time usage and energy conser
 \subsection{Evolution of the $N$-body system}
 We go on to study the $N$-body system. For a system with $N = 100$ objects and a radius $R_0$ = 20 ly, we want to know how large the time steps are required to be. We run the calculations for both methods in Sec.~\ref{sec:methods} for different time steps to see how a change in time step while change the results.
 
-In the case where the number of objects $N \rightarrow \infty$ and the mean density $\rho_0$ is kept constant, the system would collapse into a singularity at a finite \textbf{collapse time} because it can be considered a continuous fluid. Then each imaginary shell for different radii from the center will be fully filled and feel the same gravitational force towards the center of the system, thus reaching the center at the same time. 
+COMMENTS!
+
+In the case where the number of objects $N \rightarrow \infty$ and the mean density $\rho_0$ of the system is kept constant, the system would collapse into a singularity at a finite \textbf{collapse time} because it can be considered a continuous fluid. Then each imaginary shell for different radii from the center will be fully filled with stars and feel the same gravitational force towards the center of the system, thus reaching the center at the same time. 
 
 This will not be the case in our model where $N$ is finite. Then the gravitational field will be largely non-uniform, which means the objects will be pulled towards the center of the system and reach it at different times, and keep moving to the other side of the center, instead of all particles gathering in the center at the same time, creating a collapse. This we can see in Fig. XXX.
 
@@ -416,7 +418,7 @@ where $n_0$ and $r_0$ are scaling constants. The result can also be compared wit
 \begin{equation}\label{eq:NFW}
 	\rho(r) = \frac{\rho_0}{  \frac{r}{r_0} (1 + \frac{r}{r_0})^2  },
 \end{equation}
-where $\rho_0$ and $r_0$ are scaling constants. 
+where $\rho_0$ and $r_0$ are scaling constants, to see if this profile gives a better fit to our data set. 
 
 MORE!!!
 
