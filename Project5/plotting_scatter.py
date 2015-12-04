@@ -70,19 +70,22 @@ def plot_scatter(N,x,y,z,mass,title):
 
 
 def main(argv):
-    N = 100 # Number of stars
+    total_stars = 100
+    time_step = 0.1
+    integration_points = 10000
+    
+    #N = 100 # Number of stars
 
     # Read data
-    #filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/galaxy_%d_20.0.txt' % N
-    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_10.00.txt'
-    t,index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    t,index,m,x,y,z,v_x,v_y,v_z = read_file(filename_RK4)
     
     # Initial configuration
-    #plot_scatter(N,x[0:100],y[0:100],z[0:100],m[0:100],'Initial condition, t = 0')
+    plot_scatter(total_stars,x[0:total_stars],y[0:total_stars],z[0:total_stars],m[0:total_stars],'Initial condition, t = 0')
 
     # Final configuration
     #print index[-100:]
-    plot_scatter(N,x[-100:],y[-100:],z[-100:],m[-100:],'Final condition, t = %.2f' % t[-1])
+    #plot_scatter(total_stars,x[-100:],y[-100:],z[-100:],m[-100:],'Final condition, t = %.2f' % t[-1])
     
 	
 if __name__ == "__main__":
