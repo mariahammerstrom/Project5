@@ -167,10 +167,10 @@ def plot_timestep(N,time_step_list):
 def plot_orbits(stars,N,time_step):
     
     # Get data
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_VV_%d_%.2f.txt' % (N,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_RK4_%d_%.2f.txt' % (N,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
     
     # t1_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet,F_verlet = read_file(filename_verlet)
     # t1_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4,F_RK4 = read_file(filename_RK4)
@@ -182,8 +182,9 @@ def plot_orbits(stars,N,time_step):
  
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.plot(x1_verlet,y1_verlet,z1_verlet,'r', label='#1, VV')
-    ax.plot(x1_RK4,y1_RK4,z1_RK4, 'b',label='#1, RK4')
+    limit = -1 #70 for large time step
+    ax.plot(x1_verlet[0:limit],y1_verlet[0:limit],z1_verlet[0:limit],'r', label='#1, VV')
+    ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='#1, RK4')
     
     #ax.plot(x2_verlet,y2_verlet,z2_verlet,'g', label='#2, VV')
     #ax.plot(x2_RK4,y2_RK4,z2_RK4, 'y',label='#2, RK4')
@@ -196,7 +197,7 @@ def plot_orbits(stars,N,time_step):
 def main(argv):
     # Plot results as a function of time
     #plot_time(stars=2,N=10000,time_step=.1)
-    plot_orbits(stars=2,N=1000,time_step=0.1)
+    plot_orbits(stars=2,N=1000,time_step=1)
     
 	
 if __name__ == "__main__":

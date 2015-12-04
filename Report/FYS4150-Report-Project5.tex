@@ -76,9 +76,9 @@ Eq. (\ref{eq:ODE}) is a second-order differential equation, which we can rewrite
 \end{equation}
 These equations can be used to determine the position and velocity of an object.
 
-When solving this problem we will convert the units of mass and length to dimensionless variables using solar masses $M_{\odot}$ and light years, which is described in Sec.~\ref{sec:nondim}.
+%When solving this problem we will convert the units of mass and length to dimensionless variables using solar masses $M_{\odot}$ and light years, which is described in Sec.~\ref{sec:nondim}.
 
-In the case where $N \rightarrow \infty$ and keeping the mean density $\rho_0$ constant, the system will collapse into a singularity at a finite \textbf{collapse time} 
+In the case where the number of objects $N \rightarrow \infty$ and keeping the mean density $\rho_0$ constant, the system will collapse into a singularity at a finite \textbf{collapse time} 
 
 \begin{equation}\label{eq:t_crunch}
 \tau_{\mathrm{crunch}} = \sqrt{\frac{3 \pi}{32G\rho_0}},
@@ -257,18 +257,7 @@ which has the known analytical solution $x(t) = A \, \mathrm{cos}(\omega_0 t + \
 \end{equation}
 where we can set $k = m = 1$ for simplicity when checking the validity of our numerical methods. Then the analytical solution is simply $x(t) = \mathrm{cos}(t)$, with $v(t) = - \mathrm{sin}(t)$.
 
-A visualization of our test is shown in Fig.~\ref{fig:analytical}a-b, here for a time step of $\Delta t = 0.2$. We see that the numerical algorithms reproduce the result of the analytical expression very well. Here we have chosen a time step large enough for it to be possible to distinguish the different methods. At a time step of a factor of 10 smaller, $\Delta t = 0.02$, it is impossible to tell the methods apart. \\
-
-\begin{figure*}[t!]
-\begin{center}
-\begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/comparison_x.png}
-	& \includegraphics[width=90mm]{Images/comparison_v.png} \\
-	(a) Position				& (b) Velocity  \\[6pt]
-\end{tabular}
-\caption{Comparison of our numerical algorithms, Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) in the case of the box on a spring. Here for a time step of $\Delta t = 0.2$.}\label{fig:analytical}
-\end{center}
-\end{figure*}
+A visualization of our test is shown in Fig.~\ref{fig:analytical}a-d, here for time steps of $\Delta t = 0.10$ and $\Delta t = 1.0$. We see that the numerical algorithms reproduce the result of the analytical expression extremely well for small time steps -- it's impossible to tell the methods apart. The result is less impressive for larger time step.\\
 
 \noindent Another test we can make is to check for \textbf{energy conservation}. With initial conditions $x_0$ and $v_0$, we can calculate
 
@@ -278,14 +267,28 @@ A visualization of our test is shown in Fig.~\ref{fig:analytical}a-b, here for a
 		E(t = t_i) = E_i &= \frac{1}{2}mv_i^2 + \frac{1}{2}kx_i^2,
 	\end{aligned}
 \end{equation}
-and check that $E_0 = E_i$ for every period $T$. It is however easier to just plot $E_i$ as a function of time for the different methods and inspect the result. If the energy is conserved, the plot should be a straight line, as the energy should not change over time. As shown in Fig.~\ref{fig:analytical_energy} this is indeed the case in the analytical case. If we look closely at the $y$-axis we see that this really is the case for all the methods, with the numerical methods deviating from the expected result in the fifth decimal place. \\
+and check that $E_0 = E_i$ for every period $T$. It is however easier to just plot $E_i$ as a function of time for the different methods and inspect the result. If the energy is conserved, the plot should be a straight line, as the energy should not change over time. As shown in Fig.~\ref{fig:analytical}e-f this is indeed the case in the analytical case. If we look closely at the $y$-axis we see that this really is the case for all the methods, with the numerical methods deviating from the expected result in the fourth decimal place. For RK4 with large time steps, the energy is not conserved at all, but declines rapidly.\\
 
-\begin{figure*}[t!]
+
+\begin{figure*}
 \begin{center}
-  	\includegraphics[width=130mm]{Images/energy_conservation.png}
-\caption{The total energy $E$ as a function of time $t$ of our numerical algorithms, Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) in the case of the box on a spring. Here for a time step of $\Delta t = 0.2$.}\label{fig:analytical_energy}
+\begin{tabular}{cc}
+  	\includegraphics[width=90mm]{Images/comparison_x_01.png}
+	& \includegraphics[width=90mm]{Images/comparison_x_1.png} \\
+	(a) Position, $\Delta t = 0.10$				& (b) Position, $\Delta t = 1.00$  \\[6pt]
+	
+	  \includegraphics[width=90mm]{Images/comparison_v_01.png}
+	& \includegraphics[width=90mm]{Images/comparison_v_1.png} \\
+	(c) Velocity, $\Delta t = 0.10$				& (d) Velocity, $\Delta t = 1.00$  \\[6pt]
+	
+  	\includegraphics[width=90mm]{Images/comparison_E_01.png}
+	& \includegraphics[width=90mm]{Images/comparison_E_1.png} \\
+	(e) Energy, $\Delta t = 0.10$				& (f) Energy, $\Delta t = 1.00$  \\[6pt]
+\end{tabular}
+\caption{Comparison of our numerical algorithms in the analytical case of the box on a spring: Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) are shown for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, and for two different durations $t_{\mathrm{final}} = 10$ and $t_{\mathrm{final}} = 100$.}\label{fig:analytical}
 \end{center}
 \end{figure*}
+
 
 \noindent Now that we have verified our numerical methods, we can go on to solve the problem at hand.
 
@@ -293,7 +296,28 @@ and check that $E_0 = E_i$ for every period $T$. It is however easier to just pl
 
 \subsection{Stability of methods}
 
-First we consider the Newtonian two-body problem in three dimensions to study the stability of the two methods described in Sec.~\ref{sec:methods}. This is done by running the two algorithms over a very long time period. 
+% Spring force
+Let us first comment on the stability of the analytical case before moving on to the gravitational system. Studying the analytical case with spring force, the two methods are good estimates for time step $h<1$. RK4 is slightly closer to the analytical solution. For $h \geqslant 1$, the oscillation in position and velocity is damped when using RK4. This is more visible for longer times. With the VV method, the position amplitude is 1, whereas the velocity amplitude is lowered to 0.75. Thus, for larger time steps, VV is the most stable method.
+
+% 2-body problem
+Now let us consider the Newtonian two-body problem in three dimensions. Here we have chosen a configuration close to that of the Sun-Earth system: One mass is heavy and has no velocity of its own (Sun-like object), while the other mass is much lighter with some velocity in the $x$-direction (Earth-like object). By trying out different relative distances $r$ between the Sun-like and the Earth-like object, as well as different velocities in the $x$-direction, we can get a system where our Earth-like object follows a nice orbit around the massive object in the center. As seen in Fig.~\ref{fig:2_body}a-d, the orbit -- or lack thereof -- very much depends on the time step, especially in the case where the radius is a bit too small to make the orbit stable, visible in Fig.~\ref{fig:2_body}b. In general it is clear from the figures that RK4 does a better job in all cases, except in Fig.~\ref{fig:2_body}c where the two methods give approximately identical results. 
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{cc}
+  	\includegraphics[width=90mm]{Images/comparison_orbit_01_dist40.png}
+	& \includegraphics[width=90mm]{Images/comparison_orbit_1_dist40.png} \\
+	(a) Position, $\Delta t = 0.10$, $r = 40$				& (b) Position, $\Delta t = 1.00$, $r = 40$  \\[6pt]
+	
+	 \includegraphics[width=90mm]{Images/comparison_orbit_01_dist60.png}
+	& \includegraphics[width=90mm]{Images/comparison_orbit_1_dist60.png} \\
+	(c) Position, $\Delta t = 0.10$, $r = 60$				& (c) Position, $\Delta t = 1.00$, $r = 60$  \\[6pt]
+\end{tabular}
+\caption{Comparison of our numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue), for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$.}\label{fig:2_body}
+\end{center}
+\end{figure*}
+
+ to study the stability of the two methods described in Sec.~\ref{sec:methods}. This is done by running the two algorithms over a very long time period. 
 
 ...
 
@@ -301,8 +325,7 @@ We also check how the two methods work for large time steps.
 
 ...
 
-% Spring force
-Study the analytical case with spring force, the two methods are good estimates for $h<1$. RK4 is slightly closer to the analytical solution. For $h \geqslant 1$, the oscillation in position and velocity is damped when using RK4. This is more visible for longer times. With the VV method, the position amplitude is 1, whereas the velocity amplitude is lowered to 0.75. Thus, for larger time steps, VV is the most stable method.
+
 
 ...
 
@@ -311,6 +334,11 @@ What is also interesting is to compare the time used to advance one time step fo
 ...
 
 Based on our study of the stability and time usage of the two methods, we can say that ... COMMENT. \\
+
+
+
+
+
 
 
 \noindent We go on to look at the $N$-body system. For a system with $N = 100$ and a radius $R_0$ = 20 ly, a time step of XXXX is required.

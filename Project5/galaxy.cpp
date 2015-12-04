@@ -16,9 +16,11 @@ galaxy::galaxy(double radi)
 }
 
 double galaxy::G(double t_crunch)
-{
+{    // Calculation of the gravitational constant G in dimensionless units
+
     double R0 = radius;
     double total_mass = 0; // total mass = number of stars x mean mass
+
     for(int i=0;i<total_stars;i++){
         star &current = all_stars[i];
         total_mass += current.mass;
@@ -34,7 +36,7 @@ void galaxy::add(star newstar)
 }
 
 void galaxy::print_position(std::ofstream &output, int dimension, double time,int number)
-{   // writes mass, position and velocity to a file "output"
+{   // Writes mass, position and velocity to a file "output"
     if(dimension > 3 || dimension <= 0) dimension = 3;
     else{
         for(int i=0;i<number;i++){
@@ -60,9 +62,9 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     else sprintf(filename, "analytic_RK4_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
 
-    char *file_Fx = new char[1000];
-    sprintf(file_Fx, "Fx_RK4.txt");
-    std::ofstream output_Fx(file_Fx);
+    //char *file_Fx = new char[1000];
+    //sprintf(file_Fx, "Fx_RK4.txt");
+    //std::ofstream output_Fx(file_Fx);
 
     // Set up arrays
     double k1_x[total_stars][dimension],k2_x[total_stars][dimension],k3_x[total_stars][dimension],k4_x[total_stars][dimension];
@@ -72,7 +74,11 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     double Fx,Fy,Fz;
 
     // Write initial values to file
-    print_position(output_file,dimension,time,1); // total_stars
+    print_position(output_file,dimension,time,1);
+
+    // Set up clock to measure the time usage
+    clock_t start_RK4,finish_RK4;
+    start_RK4 = clock();
 
     // START CALCULATIONS
     // Loop over time
@@ -82,11 +88,11 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         // k1
         for(int nr1=0;nr1<total_stars;nr1++){
             star &current = all_stars[nr1];
-            Fx = Fy = Fz = 0.;
+            Fx = Fy = Fz = 0.; // Reset forces for each run
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = (other.position[j]-current.position[j]);
+                    for(int j=0;j<dimension;j++) relative_position[j] = -(other.position[j]-current.position[j]);
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k1_x[nr1][j] = time_step*current.velocity[j];
@@ -99,7 +105,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
                 k1_x[nr1][0] = time_step*current.velocity[0];
                 k1_v[nr1][0] = time_step*Fx/current.mass;
             }
-            output_Fx << time << "\t" << Fx << std::endl;       
+            //output_Fx << time << "\t" << Fx << std::endl;
         }
 
         // k2
@@ -109,7 +115,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k1_x[nr2][j]/2.)-(current.position[j]+k1_x[nr1][j]/2.));
+                    for(int j=0;j<dimension;j++) relative_position[j] = -((other.position[j]+k1_x[nr2][j]/2.)-(current.position[j]+k1_x[nr1][j]/2.));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k2_x[nr1][j] = time_step*(current.velocity[j]+k1_v[nr1][j]/2.);
@@ -131,7 +137,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k2_x[nr2][j]/2.)-(current.position[j]+k2_x[nr1][j]/2.));
+                    for(int j=0;j<dimension;j++) relative_position[j] = -((other.position[j]+k2_x[nr2][j]/2.)-(current.position[j]+k2_x[nr1][j]/2.));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k3_x[nr1][j] = time_step*(current.velocity[j]+k2_v[nr1][j]/2.);
@@ -144,8 +150,6 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
                 k3_x[nr1][0] = time_step*(current.velocity[0]+k2_v[nr1][0]/2.);
                 k3_v[nr1][0] = time_step*Fx/current.mass;
             }
-
-
         }
 
         // k4
@@ -155,7 +159,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
             if(stellar){
                 for(int nr2=nr1+1;nr2<total_stars;nr2++){
                     star &other = all_stars[nr2];
-                    for(int j=0;j<dimension;j++) relative_position[j] = ((other.position[j]+k3_x[nr2][j])-(current.position[j]+k3_x[nr1][j]));
+                    for(int j=0;j<dimension;j++) relative_position[j] = -((other.position[j]+k3_x[nr2][j])-(current.position[j]+k3_x[nr1][j]));
                     GravitationalForce_RK(relative_position[0],relative_position[1],relative_position[2],Fx,Fy,Fz,current.mass,other.mass);
                 }
                 for(int j=0;j<dimension;j++) k4_x[nr1][j] = time_step*(current.velocity[j]+k3_v[nr1][j]);
@@ -183,9 +187,14 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         print_position(output_file,dimension,time,1); // total_stars
         time += time_step;
     }
+    // Stop clock and print out time usage
+    finish_RK4 = clock();
+    std::cout << "Total time = " << "\t" << ((float)(finish_RK4 - start_RK4)/CLOCKS_PER_SEC) << " seconds" << std::endl; // print elapsed time
+    std::cout << "One time step = " << "\t" << ((float)(finish_RK4 - start_RK4)/CLOCKS_PER_SEC)/integration_points << " seconds" << std::endl; // print elapsed time
+
     // Close files
     output_file.close();
-    output_Fx.close();
+    //output_Fx.close();
 }
 
 void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar)
@@ -198,15 +207,15 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     double time_step = final_time/((double) integration_points);
     double time = 0.0;
 
-    // Create file for data storage
+    // Create files for data storage
     char *filename = new char[1000];
     if(stellar) sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
     else sprintf(filename, "analytic_VV_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
 
-    char *file_Fx = new char[1000];
-    sprintf(file_Fx, "Fx_VV.txt");
-    std::ofstream output_Fx(file_Fx);
+    //char *file_Fx = new char[1000];
+    //sprintf(file_Fx, "Fx_VV.txt");
+    //std::ofstream output_Fx(file_Fx);
 
     // Set up arrays
     double **acceleration = setup_matrix(total_stars,3);
@@ -216,7 +225,11 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     double Fx,Fy,Fz,Fxnew,Fynew,Fznew; // Forces in each dimension
 
     // Write initial values to file
-    print_position(output_file,dimension,time,1); // total_stars
+    print_position(output_file,dimension,time,1);
+
+    // Set up clock to measure the time usage
+    clock_t start_VV,finish_VV;
+    start_VV = clock();
 
     // START CALCULATIONS
     // Loop over time
@@ -232,14 +245,12 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             // Calculate forces in each dimension
             if(stellar){
                 for(int nr2=nr1+1; nr2<total_stars; nr2++){
-                    //if(nr2!=nr1){
                     star &other = all_stars[nr2];
                     GravitationalForce(current,other,Fx,Fy,Fz);
-                    //}
                 }
             }
             else Fx = -current.position[0];
-            output_Fx << time << "\t" << Fx << std::endl;
+            //output_Fx << time << "\t" << Fx << std::endl;
 
             // Acceleration in each dimension for current star
             acceleration[nr1][0] = Fx/current.mass;
@@ -247,7 +258,9 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             acceleration[nr1][2] = Fz/current.mass;
 
             // Calculate new position for current star
-            for(int j=0; j<dimension; j++) current.position[j] = current.position[j] + current.velocity[j]*time_step + 0.5*time_step*time_step*acceleration[nr1][j];
+            for(int j=0; j<dimension; j++) {
+                current.position[j] += current.velocity[j]*time_step + 0.5*time_step*time_step*acceleration[nr1][j];
+            }
 
             // Loop over all other stars
             if(stellar){
@@ -264,16 +277,21 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             acceleration_new[nr1][2] = Fznew/current.mass;
 
             // Calculate new velocity for current star
-            for(int j=0; j<dimension; j++) current.velocity[j] = current.velocity[j] + 0.5*time_step*(acceleration[nr1][j] + acceleration_new[nr1][j]);
+             for(int j=0; j<dimension; j++) current.velocity[j] += 0.5*time_step*(acceleration[nr1][j] + acceleration_new[nr1][j]);
         }
 
         // Write current values to file and increase time
         print_position(output_file,dimension,time,1); // total_stars
         time += time_step;
     }
+    // Stop clock and print out time usage
+    finish_VV = clock();
+    std::cout << "Total time = " << "\t" << ((float)(finish_VV - start_VV)/CLOCKS_PER_SEC) << " seconds" << std::endl; // print elapsed time
+    std::cout << "One time step = " << "\t" << ((float)(finish_VV - start_VV)/CLOCKS_PER_SEC)/integration_points << " seconds" << std::endl; // print elapsed time
+
     // Close files
     output_file.close();
-    output_Fx.close();
+    //output_Fx.close();
 
     // Clear memory
     delete_matrix(acceleration);
@@ -314,10 +332,10 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
     // Calculate relative distance between current star and all other stars
     double relative_distance[3];
 
-    for(int j = 0; j < 3; j++) relative_distance[j] = (other.position[j]-current.position[j]);
+    for(int j = 0; j < 3; j++) relative_distance[j] = current.position[j]-other.position[j];
     double r = current.distance(other);
 
-    // Calculate the forces in each direction
+    // Calculate the forces in each direction    
     Fx -= current.G*current.mass*other.mass*relative_distance[0]/(r*r*r);
     Fy -= current.G*current.mass*other.mass*relative_distance[1]/(r*r*r);
     Fz -= current.G*current.mass*other.mass*relative_distance[2]/(r*r*r);

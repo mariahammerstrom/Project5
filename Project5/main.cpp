@@ -5,68 +5,75 @@
 #include <fstream>
 #include <random>
 #include <chrono>
-//#include <mpi.h>
+#include <time.h>
 #include "star.h"
 #include "galaxy.h"
 #include "solver.h"
 
 using namespace std;
 
-void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial);
+void print_initial(int dimension, double time_step, double final_time, double *x_initial, double *v_initial, int N);
 void print_final(int dimension, double *x_final, double *v_final);
 void randomUniformSphere(double R0,double &x,double &y,double &z, default_random_engine *generator);
 void Gaussian_distribution(double mean,double stddev,double &mass, default_random_engine *generator);
 
-int main(){
+int main()
+{
 
-    int integration_points;                // No. of integration points
+    // Which system would you like to run?
+    // 1) Analytical test with box on a spring; set spring_test = true
+    // 2) Two planets in a gravitational field; set binary = true
+    // 3) Full star cluster in a gravitational field; set cluster = true
+
+    bool spring_test,binary,cluster;
+
+    spring_test = false;
+    binary = true;
+    cluster = false;
+
+    int integration_points;  // No. of integration points
     double final_time;    // End time of calculation
     int dimension;        // No. of spatial dimensions
 
-    // Which part of the code should run
-    bool spring_test,binary,RK4vsVV;
-    spring_test = false;
-    binary = true;
-    RK4vsVV = false;
+    bool force; // false = run program with analytical spring force, true = run program with gravitational potential
 
-    // ANALYTIC
 
-    // Spring force
+    // ANALYTIC: Spring force
     if(spring_test){
         dimension = 1;
         integration_points = 100;
         final_time = 100;
+        force = false;
 
-        cout << "Time step: " << final_time/((double) integration_points) << endl;
-        cout << "Integration points: " << integration_points << endl;
+        cout << "ANALYTICAL" << endl;
+        cout << "Time step: " << final_time/((double) integration_points) << ", integration points: " << integration_points << endl;
 
         // RK4 test
         star star1(1.,1.,0,0,0,0,0);
         galaxy testRK;
         testRK.add(star1);
-        testRK.RungeKutta4(dimension,integration_points,final_time,false);
+        testRK.RungeKutta4(dimension,integration_points,final_time,force);
 
         // VV test
         star star2(1.,1.,0,0,0,0,0);
         galaxy testVV;
         testVV.add(star2);
-        testVV.VelocityVerlet(dimension,integration_points,final_time,false);
+        testVV.VelocityVerlet(dimension,integration_points,final_time,force);
     }
 
     // Binary stars
     if(binary){
         integration_points = 1000;
-        final_time = 100.;
+        final_time = 1000.;
         dimension = 3;
         double time_step = final_time/((double) integration_points);
         double x[3],v[3];
+        force = true;
 
-        cout << "Time step: " << final_time/((double) integration_points) << endl;
-        cout << "Integration points: " << integration_points << endl;
+        cout << "BINARY SYSTEM" << endl;
 
-        star star1(1.,100.,100.,100.,.1,0.,0.);
-        star star2(100.,0.,0.,0.,0.,0.,0.);
-        cout << star1.GravitationalForce(star2) << endl;
+        star star1(1.,60.,60.,60.,1.0,0.,0.);
+        star star2(10.,0.,0.,0.,0.,0.,0.);
 
         galaxy binary_rk(100.0);
         binary_rk.add(star1);
@@ -77,30 +84,29 @@ int main(){
             v[j] = star1.velocity[j];
         }
 
-
         galaxy binary_vv(5.0);
         binary_vv.add(star1);
         binary_vv.add(star2);
 
-        print_initial(dimension,time_step,final_time,x,v);
+        print_initial(dimension,time_step,final_time,x,v,integration_points);
 
         // Evolution of binary system
-        binary_rk.RungeKutta4(dimension,integration_points,final_time,true);
+        cout << endl << "RK4: " << endl;
+        binary_rk.RungeKutta4(dimension,integration_points,final_time,force);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_rk.all_stars[0].position[j];
             v[j] = binary_rk.all_stars[0].velocity[j];
         }
-        cout << "RK4: " << endl;
         print_final(dimension,x,v);
 
-        binary_vv.VelocityVerlet(dimension,integration_points,final_time,true);
+        cout << endl << "VV:" << endl;
+        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_vv.all_stars[0].position[j];
             v[j] = binary_vv.all_stars[0].velocity[j];
         }
-        cout << "VV:" << endl;
         print_final(dimension,x,v);
 
     }
@@ -108,13 +114,13 @@ int main(){
 
 
     // GALAXY (STAR CLUSTER) MODEL
-
-    // Runge-Kutta 4 vs Velocity-Verlet
-    if(RK4vsVV){
+    if(cluster){
         dimension = 3;
         integration_points = 1000;
         final_time = 10;
+        force = true;
 
+        cout << "CLUSTER" << endl;
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
 
@@ -143,8 +149,8 @@ int main(){
         cout << "The star cluster MM15 contains " << MM15_rk.total_stars << " star(s)." << endl;
 
         // run system through RK4/VV, all data is written to file as we go
-        MM15_rk.RungeKutta4(dimension,integration_points,final_time,true);
-        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,true);
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force);
     }
 
     return 0;
@@ -152,10 +158,10 @@ int main(){
 
 
 
-void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial){
+void print_initial(int dimension,double time_step, double final_time,double *x_initial,double *v_initial, int N){
     // A function that prints out the set up of the calculation
 
-    cout << "Time step = " << time_step << "; final time = " << final_time << endl;
+    cout << "Time step = " << time_step << "; final time = " << final_time << "; integration points = " << N << endl;
 
     cout << "Initial position = ";
     for(int j=0;j<dimension;j++) cout << x_initial[j] << " ";
