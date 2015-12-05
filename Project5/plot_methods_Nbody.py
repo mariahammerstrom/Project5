@@ -66,19 +66,19 @@ def plot_time(total_stars,star_number,time_step):
     # compared with the analytical solution.
     
     # Get data
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
     #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (total_stars,time_step)
     
     tVV,mVV,xVV,yVV,zVV,vxVV,vyVV,vzVV = read_file(filename_verlet,star_number,total_stars)
-    #tRK4,mRK4,xRK4,yRK4,zRK4,vxRK4,vyRK4,vzRK4 = read_file(filename_RK4,star_number,total_stars)
+    tRK4,mRK4,xRK4,yRK4,zRK4,vxRK4,vyRK4,vzRK4 = read_file(filename_RK4,star_number,total_stars)
 
     # Plot: Position
     plt.figure(1)
     plt.title('Position, time step = %.2f' % time_step,size=12)
     plt.plot(tVV,xVV,label='Verlet')
-    #plt.plot(tRK4,xRK4,label='RK4')
+    plt.plot(tRK4,xRK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$x$',size=14)
     plt.legend(loc=1,prop={'size':12})
@@ -88,7 +88,7 @@ def plot_time(total_stars,star_number,time_step):
     plt.figure(2)
     plt.title('Velocity, time step = %.2f' % time_step,size=12)
     plt.plot(tVV,vxVV,label='Verlet')
-    #plt.plot(tRK4,vxRK4,label='RK4')
+    plt.plot(tRK4,vxRK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$v_x$',size=14)
     plt.legend(loc=2,prop={'size':12})
@@ -96,30 +96,39 @@ def plot_time(total_stars,star_number,time_step):
     
     # Plot: Radial position
     rVV = np.sqrt(xVV**2 + yVV**2 + zVV**2)
-    #rRK4 = np.sqrt(xRK4**2 + yRK4**2 + zRK4**2)
+    rRK4 = np.sqrt(xRK4**2 + yRK4**2 + zRK4**2)
     
     plt.figure(3)
     plt.title('Radial position, time step = %.2f' % time_step,size=12)
     plt.plot(tVV,rVV,label='Verlet')
-    #plt.plot(tRK4,rRK4,label='RK4')
+    plt.plot(tRK4,rRK4,label='RK4')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$r$',size=14)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
     
     # Plot: Energy
-    data = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_energy.txt',unpack=True)
-    time = data[0]
-    Ek = data[1]
-    Ep = data[2]
-    Etot = data[3]
+    dataVV = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_energy_%d_%.2f.txt' % (total_stars,time_step),unpack=True)
+    dataRK4 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_energy_%d_%.2f.txt' % (total_stars,time_step),unpack=True)
+    #data = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_energy.txt',unpack=True)
+    time = dataVV[0]
+    EkVV = dataVV[1]
+    EpVV = dataVV[2]
+    EtotVV = dataVV[3]
+    EkRK4 = dataRK4[1]
+    EpRK4 = dataRK4[2]
+    EtotRK4 = dataRK4[3]
     
     
     plt.figure(4)
-    plt.title('Total energy, time step = %.2f' % time_step,size=12)
-    plt.plot(time,Ek,label='Kinetic')
-    plt.plot(time,Ep,label='Potential')
-    plt.plot(time,Etot,label='Total')
+    plt.title('Total energy, time step = %.3f' % time_step,size=12)
+    plt.plot(time,EkVV,'b--',label='VV kinetic')
+    plt.plot(time,EpVV,'b.',label='VV potential')
+    plt.plot(time,EtotVV,'b',label='VV total')
+    
+    plt.plot(time,EkRK4,'g--',label='RK4 kinetic')
+    plt.plot(time,EpRK4,'g.',label='RK4 potential')
+    plt.plot(time,EtotRK4,'g',label='RK4 total')
     plt.xlabel(r'$t$',size=14)
     plt.ylabel(r'$E$',size=14)
     plt.legend(loc=1,prop={'size':12})
@@ -131,9 +140,8 @@ def plot_time(total_stars,star_number,time_step):
 def plot_orbits_VV(total_stars,time_step):
     
     # Get data
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
     
     # Set up plot
     mpl.rcParams['legend.fontsize'] = 10
@@ -182,7 +190,7 @@ def plot_orbits_RK4(total_stars,time_step):
     
 def main(argv):
     total_stars = 100
-    time_step = 0.005
+    time_step = 0.001
     integration_points = 1000
 
     # Plot orbits
