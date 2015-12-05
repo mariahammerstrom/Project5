@@ -93,12 +93,18 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     // Define time step
     double time_step = final_time/((double) integration_points);
     double time = 0.0;
+    double loss = 0.; // Possible energy loss
 
     // Create file for data storage
     char *filename = new char[1000];
-    if(stellar) sprintf(filename, "cluster_RK4_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
+    char *filenameE = new char[1000];
+    if(stellar){
+        sprintf(filename, "cluster_RK4_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
+        sprintf(filenameE, "cluster_RK4_energy_%d_%.2f.txt",total_stars,time_step);
+    }
     else sprintf(filename, "analytic_RK4_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
+    std::ofstream output_energy(filenameE);
 
     // Set up arrays
     double k1_x[total_stars][dimension],k2_x[total_stars][dimension],k3_x[total_stars][dimension],k4_x[total_stars][dimension];
@@ -109,6 +115,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
 
     // Write initial values to file
     print_position(output_file,dimension,time,print_number);
+    print_energy(output_energy,time);
 
     // Set up clock to measure the time usage
     clock_t start_RK4,finish_RK4;
@@ -219,6 +226,10 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         // Write current values to file and increase time
         print_position(output_file,dimension,time,print_number);
         time += time_step;
+
+        print_energy(output_energy,time);
+        loss += EnergyLoss();
+
     }
     // Stop clock and print out time usage
     finish_RK4 = clock();
@@ -227,6 +238,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
 
     // Close files
     output_file.close();
+    output_energy.close();
 }
 
 void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number)
@@ -244,10 +256,14 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
     // Create files for data storage
     char *filename = new char[1000];
-    if(stellar) sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
+    char *filenameE = new char[1000];
+    if(stellar){
+        sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
+        sprintf(filenameE, "cluster_VV_energy_%d_%.2f.txt",total_stars,time_step);
+    }
     else sprintf(filename, "analytic_VV_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
-    std::ofstream output_energy("cluster_energy.txt");
+    std::ofstream output_energy(filenameE);
 
     // Set up arrays
     double **acceleration = setup_matrix(total_stars,3);

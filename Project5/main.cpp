@@ -29,8 +29,8 @@ int main()
 
     spring_test = false;
     binary = false;
-    cluster = true;
-    RK4vsVV = false;
+    cluster = false;
+    RK4vsVV = true;
 
     int integration_points;  // No. of integration points
     double final_time;       // End time of calculation
