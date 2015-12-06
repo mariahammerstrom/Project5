@@ -79,7 +79,6 @@ void galaxy::print_energy(std::ofstream &output, double time)
             totalPotential -= Current.potential;
         }
     }
-
     output << time << "\t";
     output << totalKinetic << "\t" << 0.5*totalPotential << "\t";
     output << totalKinetic+0.5*totalPotential << std::endl;
@@ -99,10 +98,10 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     char *filename = new char[1000];
     char *filenameE = new char[1000];
     if(stellar){
-        sprintf(filename, "cluster_RK4_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
-        sprintf(filenameE, "cluster_RK4_energy_%d_%.2f.txt",total_stars,time_step);
+        sprintf(filename, "cluster_RK4_%d_%.3f.txt",total_stars,time_step); // If N-body cluster
+        sprintf(filenameE, "cluster_RK4_energy_%d_%.3f.txt",total_stars,time_step);
     }
-    else sprintf(filename, "analytic_RK4_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
+    else sprintf(filename, "analytic_RK4_%d_%.3f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
     std::ofstream output_energy(filenameE);
 
@@ -222,14 +221,12 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
                 current.velocity[j] += (k1_v[nr1][j] + 2.*(k2_v[nr1][j] + k3_v[nr1][j]) + k4_v[nr1][j])/6.;
             }
         }
-
         // Write current values to file and increase time
         print_position(output_file,dimension,time,print_number);
         time += time_step;
 
         print_energy(output_energy,time);
         loss += EnergyLoss();
-
     }
     // Stop clock and print out time usage
     finish_RK4 = clock();
@@ -258,10 +255,10 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     char *filename = new char[1000];
     char *filenameE = new char[1000];
     if(stellar){
-        sprintf(filename, "cluster_VV_%d_%.2f.txt",total_stars,time_step); // If N-body cluster
-        sprintf(filenameE, "cluster_VV_energy_%d_%.2f.txt",total_stars,time_step);
+        sprintf(filename, "cluster_VV_%d_%.3f.txt",total_stars,time_step); // If N-body cluster
+        sprintf(filenameE, "cluster_VV_energy_%d_%.3f.txt",total_stars,time_step);
     }
-    else sprintf(filename, "analytic_VV_%d_%.2f.txt",integration_points,time_step); // If 1D 2-body analytic case
+    else sprintf(filename, "analytic_VV_%d_%.3f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
     std::ofstream output_energy(filenameE);
 
@@ -472,7 +469,5 @@ void galaxy::MergeStars()
             }
         }
     }
-
 }
-
 */
