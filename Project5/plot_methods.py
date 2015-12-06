@@ -72,10 +72,10 @@ def plot_time(stars,N,time_step):
     # compared with the analytical solution.
     
     # Get data
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_VV_%d_%.2f.txt' % (N,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_RK4_%d_%.2f.txt' % (N,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_VV_%d_%.3f.txt' % (N,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_RK4_%d_%.3f.txt' % (N,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.3f.txt' % (stars,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.3f.txt' % (stars,time_step)
     
     t_verlet,m_verlet,x_verlet,y_verlet,z_verlet,v_x_verlet,v_y_verlet,v_z_verlet,r_verlet = read_file2(filename_verlet)
     t_RK4,m_RK4,x_RK4,y_RK4,z_RK4,v_x_RK4,v_y_RK4,v_z_RK4,r_RK4 = read_file2(filename_RK4)
@@ -171,10 +171,10 @@ def plot_timestep(N,time_step_list):
 def plot_orbits(stars,N,time_step):
     
     # Get data
-    # filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    # filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.3f.txt' % (stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.3f.txt' % (stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
     
     # t1_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet,F_verlet = read_file(filename_verlet)
     # t1_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4,F_RK4 = read_file(filename_RK4)
@@ -187,8 +187,8 @@ def plot_orbits(stars,N,time_step):
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     limit = -1 #70 for large time step
-    ax.plot(x1_verlet[0:limit],y1_verlet[0:limit],z1_verlet[0:limit],'r', label='#1, VV')
-    #ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='#1, RK4')
+    ax.plot(x1_verlet[0:limit],y1_verlet[0:limit],z1_verlet[0:limit],'r', label='VV')
+    ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='RK4')
     
     #ax.plot(x2_verlet,y2_verlet,z2_verlet,'g', label='#2, VV')
     #ax.plot(x2_RK4,y2_RK4,z2_RK4, 'y',label='#2, RK4')
@@ -200,8 +200,14 @@ def plot_orbits(stars,N,time_step):
     
 def main(argv):
     # Plot results as a function of time
-    plot_time(stars=2,N=10000,time_step=1.)
-    plot_orbits(stars=2,N=10000,time_step=1.0)
+    #plot_time(stars=2,N=10000,time_step=1.)
+    plot_orbits(stars=2,N=1000,time_step=0.08)
+    
+    # 29.78 km/s = 29 780 m/s
+    # 1 year = 365*24*60*60 s
+    # 1 ly = 9.45e15
+    
+    print 29780*(365*24*60*60)/(9.45e15)
     
 	
 if __name__ == "__main__":
