@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.7.15)  4 DEC 2015 19:59
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.7.15)  7 DEC 2015 09:24
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -663,129 +663,207 @@ LaTeX Font Info:    Font shape `OT1/txss/b/n' will be
 
 LaTeX Warning: Float too large for page by 2.58542pt on input line 292.
 
-<Images/comparison_orbit_01_dist40.png, id=27, 578.16pt x 433.62pt>
-File: Images/comparison_orbit_01_dist40.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png, id=27, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png Graphic file (type png)
 
-<use Images/comparison_orbit_01_dist40.png>
-Package pdftex.def Info: Images/comparison_orbit_01_dist40.png used on input li
-ne 310.
-(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+<use Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png used on
+ input line 312.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/comparison_orbit_1_dist40.png, id=28, 578.16pt x 433.62pt>
-File: Images/comparison_orbit_1_dist40.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_005_tfinal5.png, id=28, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_005_tfinal5.png Graphic file (type png)
 
-<use Images/comparison_orbit_1_dist40.png>
-Package pdftex.def Info: Images/comparison_orbit_1_dist40.png used on input lin
-e 311.
-(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+<use Images/Earth-Sun/EarthSun_orbit_005_tfinal5.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_005_tfinal5.png used o
+n input line 313.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/comparison_orbit_01_dist60.png, id=29, 578.16pt x 433.62pt>
-File: Images/comparison_orbit_01_dist60.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png, id=29, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png Graphic file (type png)
 
-<use Images/comparison_orbit_01_dist60.png>
-Package pdftex.def Info: Images/comparison_orbit_01_dist60.png used on input li
-ne 314.
-(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+<use Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png used 
+on input line 314.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/comparison_orbit_1_dist60.png, id=30, 578.16pt x 433.62pt>
-File: Images/comparison_orbit_1_dist60.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png, id=30, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png Graphic file (type png)
 
-<use Images/comparison_orbit_1_dist60.png>
-Package pdftex.def Info: Images/comparison_orbit_1_dist60.png used on input lin
-e 315.
-(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+<use Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png used o
+n input line 317.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/VV_longtime.png, id=31, 578.16pt x 430.0065pt>
-File: Images/VV_longtime.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_005_tfinal50.png, id=31, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_005_tfinal50.png Graphic file (type png)
 
-<use Images/VV_longtime.png>
-Package pdftex.def Info: Images/VV_longtime.png used on input line 318.
-(pdftex.def)             Requested size: 256.0748pt x 190.4501pt.
+<use Images/Earth-Sun/EarthSun_orbit_005_tfinal50.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_005_tfinal50.png used 
+on input line 318.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/RK_longtime.png, id=32, 578.16pt x 430.0065pt>
-File: Images/RK_longtime.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png, id=32, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png Graphic file (type png)
 
-<use Images/RK_longtime.png>
-Package pdftex.def Info: Images/RK_longtime.png used on input line 319.
-(pdftex.def)             Requested size: 256.0748pt x 190.4501pt.
+<use Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png used
+ on input line 319.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-
-LaTeX Warning: Float too large for page by 5.78625pt on input line 324.
+Overfull \hbox (6.12456pt too wide) in paragraph at lines 311--323
+ [] 
+ []
 
 [3] [4 <./Images/comparison_x_01.png> <./Images/comparison_x_1.png> <./Images/c
 omparison_v_01.png> <./Images/comparison_v_1.png> <./Images/comparison_E_01.png
-> <./Images/comparison_E_1.png>] [5 <./Images/comparison_orbit_01_dist40.png> <
-./Images/comparison_orbit_1_dist40.png> <./Images/comparison_orbit_01_dist60.pn
-g> <./Images/comparison_orbit_1_dist60.png> <./Images/VV_longtime.png> <./Image
-s/RK_longtime.png>] <Images/binary_E_01.png, id=56, 578.16pt x 430.0065pt>
-File: Images/binary_E_01.png Graphic file (type png)
+> <./Images/comparison_E_1.png>]
+<Images/Earth-Sun/EarthSun_energy_05.png, id=47, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_energy_05.png Graphic file (type png)
 
-<use Images/binary_E_01.png>
-Package pdftex.def Info: Images/binary_E_01.png used on input line 352.
-(pdftex.def)             Requested size: 256.0748pt x 190.4501pt.
+<use Images/Earth-Sun/EarthSun_energy_05.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_energy_05.png used on input 
+line 353.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/binary_E_1.png, id=57, 578.16pt x 430.0065pt>
-File: Images/binary_E_1.png Graphic file (type png)
+<Images/Earth-Sun/EarthSun_energy_005.png, id=48, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_energy_005.png Graphic file (type png)
 
-<use Images/binary_E_1.png>
-Package pdftex.def Info: Images/binary_E_1.png used on input line 353.
-(pdftex.def)             Requested size: 256.0748pt x 190.4501pt.
+<use Images/Earth-Sun/EarthSun_energy_005.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_energy_005.png used on input
+ line 354.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/Image_100_000.png, id=58, 578.16pt x 433.62pt>
+<Images/Earth-Sun/EarthSun_energy_0005.png, id=49, 578.16pt x 433.62pt>
+File: Images/Earth-Sun/EarthSun_energy_0005.png Graphic file (type png)
+
+<use Images/Earth-Sun/EarthSun_energy_0005.png>
+Package pdftex.def Info: Images/Earth-Sun/EarthSun_energy_0005.png used on inpu
+t line 355.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+Overfull \hbox (6.12456pt too wide) in paragraph at lines 352--358
+ [] 
+ []
+
+<Images/comparison_N_RK4_position.png, id=50, 578.16pt x 433.62pt>
+File: Images/comparison_N_RK4_position.png Graphic file (type png)
+
+<use Images/comparison_N_RK4_position.png>
+Package pdftex.def Info: Images/comparison_N_RK4_position.png used on input lin
+e 372.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+<Images/comparison_N_RK4_velocity.png, id=51, 578.16pt x 433.62pt>
+File: Images/comparison_N_RK4_velocity.png Graphic file (type png)
+
+<use Images/comparison_N_RK4_velocity.png>
+Package pdftex.def Info: Images/comparison_N_RK4_velocity.png used on input lin
+e 373.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+<Images/comparison_E_RK4_0001.png, id=52, 578.16pt x 433.62pt>
+File: Images/comparison_E_RK4_0001.png Graphic file (type png)
+
+<use Images/comparison_E_RK4_0001.png>
+Package pdftex.def Info: Images/comparison_E_RK4_0001.png used on input line 37
+4.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+<Images/comparison_N_VV_position.png, id=53, 578.16pt x 433.62pt>
+File: Images/comparison_N_VV_position.png Graphic file (type png)
+
+<use Images/comparison_N_VV_position.png>
+Package pdftex.def Info: Images/comparison_N_VV_position.png used on input line
+ 377.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+<Images/comparison_N_VV_velocity.png, id=54, 578.16pt x 433.62pt>
+File: Images/comparison_N_VV_velocity.png Graphic file (type png)
+
+<use Images/comparison_N_VV_velocity.png>
+Package pdftex.def Info: Images/comparison_N_VV_velocity.png used on input line
+ 378.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+<Images/comparison_E_VV_0001.png, id=55, 578.16pt x 433.62pt>
+File: Images/comparison_E_VV_0001.png Graphic file (type png)
+
+<use Images/comparison_E_VV_0001.png>
+Package pdftex.def Info: Images/comparison_E_VV_0001.png used on input line 379
+.
+(pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
+
+Overfull \hbox (6.12456pt too wide) in paragraph at lines 371--382
+ [] 
+ []
+
+<Images/Image_100_000.png, id=56, 578.16pt x 433.62pt>
 File: Images/Image_100_000.png Graphic file (type png)
 
 <use Images/Image_100_000.png>
-Package pdftex.def Info: Images/Image_100_000.png used on input line 376.
+Package pdftex.def Info: Images/Image_100_000.png used on input line 395.
 (pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/Image_100_150.png, id=59, 578.16pt x 433.62pt>
+<Images/Image_100_150.png, id=57, 578.16pt x 433.62pt>
 File: Images/Image_100_150.png Graphic file (type png)
 
 <use Images/Image_100_150.png>
-Package pdftex.def Info: Images/Image_100_150.png used on input line 377.
+Package pdftex.def Info: Images/Image_100_150.png used on input line 396.
 (pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-<Images/Image_100_495.png, id=60, 578.16pt x 433.62pt>
+<Images/Image_100_495.png, id=58, 578.16pt x 433.62pt>
 File: Images/Image_100_495.png Graphic file (type png)
 
 <use Images/Image_100_495.png>
-Package pdftex.def Info: Images/Image_100_495.png used on input line 378.
+Package pdftex.def Info: Images/Image_100_495.png used on input line 397.
 (pdftex.def)             Requested size: 170.71652pt x 128.03589pt.
 
-Overfull \hbox (6.12456pt too wide) in paragraph at lines 375--381
+Overfull \hbox (6.12456pt too wide) in paragraph at lines 394--400
  [] 
  []
 
 LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <9> not available
-(Font)              Font shape `OT1/phv/b/n' tried instead on input line 386.
-[6] [7 <./Images/binary_E_01.png> <./Images/binary_E_1.png> <./Images/Image_100
-_000.png> <./Images/Image_100_150.png> <./Images/Image_100_495.png>] [8]
-(./FYS4150-Report-Project5.aux) ) 
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 405.
+[5 <./Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png> <./Images/Earth-Sun/Earth
+Sun_orbit_005_tfinal5.png> <./Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png>
+ <./Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png> <./Images/Earth-Sun/EarthS
+un_orbit_005_tfinal50.png> <./Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png
+>] [6 <./Images/Earth-Sun/EarthSun_energy_05.png> <./Images/Earth-Sun/EarthSun_
+energy_005.png> <./Images/Earth-Sun/EarthSun_energy_0005.png> <./Images/compari
+son_N_RK4_position.png> <./Images/comparison_N_RK4_velocity.png> <./Images/comp
+arison_E_RK4_0001.png> <./Images/comparison_N_VV_position.png> <./Images/compar
+ison_N_VV_velocity.png> <./Images/comparison_E_VV_0001.png>] [7 <./Images/Image
+_100_000.png> <./Images/Image_100_150.png> <./Images/Image_100_495.png>]
+[8] (./FYS4150-Report-Project5.aux)
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+ ) 
 Here is how much of TeX's memory you used:
- 7440 strings out of 493117
- 109004 string characters out of 6135433
- 301501 words of memory out of 5000000
- 10714 multiletter control sequences out of 15000+600000
- 57637 words of font info for 135 fonts, out of 8000000 for 9000
+ 7478 strings out of 493117
+ 110925 string characters out of 6135433
+ 301509 words of memory out of 5000000
+ 10743 multiletter control sequences out of 15000+600000
+ 57875 words of font info for 136 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 42i,12n,75p,1013b,616s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/local/texlive/2014/texmf-dist/fonts/enc/
-dvips/base/8r.enc}</usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfont
-s/rtxi.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxmi
-.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxr.pfb></
-usr/local/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txex.pfb></usr/loc
-al/texlive/2014/texmf-dist/fonts/type1/public/txfonts/txsy.pfb></usr/local/texl
-ive/2014/texmf-dist/fonts/type1/public/txfonts/txsya.pfb></usr/local/texlive/20
-14/texmf-dist/fonts/type1/public/txfonts/txtt.pfb></usr/local/texlive/2014/texm
-f-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/local/texlive/2014/texmf-dist/
-fonts/type1/urw/helvetic/uhvro8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/
-type1/urw/times/utmb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/
-times/utmr8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr
-i8a.pfb>
-Output written on FYS4150-Report-Project5.pdf (8 pages, 1412185 bytes).
+ 42i,12n,75p,1459b,616s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/local/t
+exlive/2014/texmf-dist/fonts/type1/public/txfonts/rtxi.pfb></usr/local/texlive/
+2014/texmf-dist/fonts/type1/public/txfonts/rtxmi.pfb></usr/local/texlive/2014/t
+exmf-dist/fonts/type1/public/txfonts/rtxr.pfb></usr/local/texlive/2014/texmf-di
+st/fonts/type1/public/txfonts/txex.pfb></usr/local/texlive/2014/texmf-dist/font
+s/type1/public/txfonts/txsy.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1
+/public/txfonts/txsya.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/publi
+c/txfonts/txtt.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/helvetic
+/uhvb8a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/helvetic/uhvro8
+a.pfb></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></us
+r/local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/te
+xlive/2014/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on FYS4150-Report-Project5.pdf (8 pages, 1518570 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
+ 131 PDF objects out of 1000 (max. 8388607)
  60 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 86 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 121 words of extra memory for PDF output out of 10000 (max. 10000000)
 

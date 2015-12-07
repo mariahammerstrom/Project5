@@ -302,58 +302,60 @@ and check that $E_0 = E_i$ for every period $T$. It is however easier to just pl
 Let us first comment on the stability of the analytical case before moving on to the gravitational system. Studying the analytical case with spring force, the two methods described in Sec.~\ref{sec:methods} are good estimates for time step $\Delta t<1$. RK4 is slightly closer to the analytical solution. For $\Delta t \geqslant 1$, the oscillation in position and velocity is damped when using RK4. This is more visible for longer times. With the VV method, the position amplitude is 1, whereas the velocity amplitude is lowered to 0.75. Thus, for larger time steps, VV is the most stable method.
 
 % 2-body problem
-Now let us consider the Newtonian two-body problem in three dimensions. Here we have chosen a configuration close to that of the Sun-Earth system: One mass is heavy and has no velocity of its own (Sun-like object), while the other mass is much lighter with some velocity in the $x$-direction (Earth-like object). By trying out different relative distances $r$ between the Sun-like and the Earth-like object, as well as different velocities in the $x$-direction, we can get a system where our Earth-like object follows a nice orbit around the massive object in the center. As seen in Fig.~\ref{fig:2_body}a-d, the orbit -- or lack thereof -- very much depends on the time step, especially in the case where the radius is a bit too small to make the orbit stable, visible in Fig.~\ref{fig:2_body}b. In general it is clear from the figures that RK4 does a better job in all cases, except in Fig.~\ref{fig:2_body}c where the two methods give approximately identical results. 
+Now let us consider the Newtonian two-body problem in three dimensions. Here we have chosen a configuration close to that of the Sun-Earth system: One mass is heavy ($M = 1 M_{\odot}$) and has no velocity of its own (Sun), while the other mass is much lighter ($M = 1 M_{\bigoplus} = 0.000003 M_{\odot}$) with some velocity in the $x$-direction (Earth). Then we can use that $GM_{\odot} = 4\pi^2$ AU$^3$/years$^2$. By letting Earth sit at a distance 1 AU from the Sun and giving the planet some velocity in the $x$-direction, we can get a system where our Earth-like object follows a nice orbit around the massive object in the center. As seen in Fig.~\ref{fig:2_body}a-d, the orbit -- or lack thereof -- very much depends on the time step. If the time step is to small, $\Delta t = 0.5$ years in this case, no stable orbit is achieved. For a smaller time step of $\Delta t = 0.05$ years, what originally looks like nice Earth orbits are obtained, though the VV orbit drifts away from the Sun with time, as seen in Fig.~\ref{fig:2_body}e. However, for a time step of $\Delta t = 0.005$ years, both methods gives stable orbits, both for short and long time scales, as seen in Fig.~\ref{fig:2_body}c and Fig.~\ref{fig:2_body}f. $\Delta t = 0.005$ years is thus the best time step to use in this case, and based on Fig.~\ref{fig:2_body}b and Fig.~\ref{fig:2_body}e, RK4 appears to be the more stable of the two methods.
+
+The nice orbits in Fig.~\ref{fig:2_body}a-d was obtained by giving Earth a velocity of 5 AU/year = 23.63 km/s. The actual velocity of Earth is 29.78 km/s, but if we used this velocity instead, Earth would take off from its orbit. This can be explained that we here are only considering the Earth-Sun system and neglecting the other planets, which would have an affect on Earth's orbit and velocity. 
 
 \begin{figure*}
 \begin{center}
-\begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/comparison_orbit_01_dist40.png}
-	& \includegraphics[width=90mm]{Images/comparison_orbit_1_dist40.png} \\
-	(a) $\Delta t = 0.10$, $t_{\mathrm{final}} = 1\,000$, $r = 40$				& (b) $\Delta t = 1.00$, $t_{\mathrm{final}} = 1\,000$, $r = 40$  \\[6pt]
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_05_tfinal5.png}
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_005_tfinal5.png} 
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_0005_tfinal5.png}\\
+	(a) $\Delta t = 0.5$, $t_{\mathrm{final}} = 5$				& (b) $\Delta t = 0.05$, $t_{\mathrm{final}} = 5$  		& (c) $\Delta t = 0.005$, $t_{\mathrm{final}} = 5$\\[6pt]
 	
-	 \includegraphics[width=90mm]{Images/comparison_orbit_01_dist60.png}
-	& \includegraphics[width=90mm]{Images/comparison_orbit_1_dist60.png} \\
-	(c) $\Delta t = 0.10$, $t_{\mathrm{final}} = 1\,000$, $r = 60$				& (d) $\Delta t = 1.00$, $t_{\mathrm{final}} = 1\,000$, $r = 60$  \\[6pt]
+	\includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_05_tfinal50.png}
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_005_tfinal50.png}
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_orbit_0005_tfinal50.png} \\
 	
-	\includegraphics[width=90mm]{Images/VV_longtime.png}
-	& \includegraphics[width=90mm]{Images/RK_longtime.png} \\
-	(e) $\Delta t = 1.00$, $t_{\mathrm{final}} = 10\,000$, $r = 60$				& (f) $\Delta t = 1.00$, $t_{\mathrm{final}} = 10\,000$, $r = 60$  \\[6pt]
+	(d) $\Delta t = 0.5$, $t_{\mathrm{final}} = 50$ 				&(e) $\Delta t = 0.05$, $t_{\mathrm{final}} = 50$				& (f) $\Delta t = 0.005$, $t_{\mathrm{final}} = 50$  \\[6pt]
 \end{tabular}
-\caption{Orbits for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta blue for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$ and two different final times $t_{\mathrm{final}} = 1\,000$ and $t_{\mathrm{final}} = 10\,000$.}\label{fig:2_body}
+\caption{Orbits for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta (blue) for different time steps $\Delta t$, and two different final times $t_{\mathrm{final}} = 5$ and $t_{\mathrm{final}} = 50$. Axes are in AUs.}\label{fig:2_body}
 \end{center}
 \end{figure*}
-When choosing the final time to be $t = 10\,000$, however, VV proved is the most stable method, as seen in Fig.~\ref{fig:2_body}e-f, as the star that went through the RK4 method was ejected. 
-
-What is also interesting is to compare the time used by the two different methods to see which one is the most efficient:
+What is also interesting is to compare the time used by the two different methods to see which one is the most efficient ($t_{\mathrm{final}} = 1.0$) (instead of quoting the time used to compute \textit{one} time step, we here quote the time taken by the calculation as a whole):
 
 \begin{center}
 \begin{tabular}{ l l l l }\hline
 	$\Delta t$ 				& Integration points	 	& Time RK4 (s)		& Time VV (s)		\\ \hline
-	1.0 					& $10 \, 000$ 			& 0.349			& 0.326		 \\
-	0.1 					& $1 \, 000$			& 3.477 			& 4.300		 \\
+	0.0001 				& $10\,000$ 			& 0.168853		& 0.157352		 \\
+	0.001 				& $1\,000$ 			& 0.020674		& 0.021062		 \\
+	0.01 					& $100$ 				& 0.002490		& 0.002334		 \\
+	0.1 					& $10$				& 0.000165		& 0.000147		 \\
 	\hline
 \end{tabular}
 \end{center}
-We see that the time usage is very similar for the two methods, with VV being slightly more efficient for a large time step, and RK4 being the most efficient for a small time step. 
+We see that the time usage is very similar for the two methods, increasing by a factor of 10 when the number of integration points is increased by a factor of 10. The times quoted here does however differ from run to run, where the first digits -- if rewriting to scientific notation -- typically range from 1.5 to 2.6. It also happens that it varies which of the methods is the fastest one. In conclusion, the time differences for the two methods are too small for timing to be an issue for choosing one of the methods over the other.
 
 Finally we want to see whether energy is conserved for our star. This is done calculating
 
 \begin{equation}\label{eq:E_tot}
 	E = \frac{1}{2}Mv^2 - \frac{GM^2}{r}
 \end{equation}
-where $M$ is the mass of the light, orbiting star with velocity $v$ and position $r$. The first term represents the kinetic energy and the second term represents the potential energy. The result for the two methods is shown in Fig.~\ref{fig:2_body_energy}a-b. We see that the change in energy is identical for the two methods when the time step is low. Comparing the two figures we see that the energy for RK4 is shifted to the left for larger time steps, while VV varies in about the same way as for smaller time steps, the only difference being that the energy increases somewhat as the time passes. 
+where $M$ is the mass of the light, orbiting star with velocity $v$ and position $r$. The first term represents the kinetic energy and the second term represents the potential energy. The result for the two methods is shown in Fig.~\ref{fig:2_body_energy}a-c. We see that the change in energy is identical for the two methods when the time step is small. Comparing the two figures ... COMMENT! %we see that the energy for RK4 is shifted to the left for larger time steps, while VV varies in about the same way as for smaller time steps, the only difference being that the energy increases somewhat as the time passes. 
 
 In conclusion, based on our study of the stability, time usage and energy conservation of the two methods, we can say that VV would be the better choice of method when simulating systems that require long times.
 
 
 \begin{figure*}
 \begin{center}
-\begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/binary_E_01.png}
-	& \includegraphics[width=90mm]{Images/binary_E_1.png} \\
-	(a) $\Delta t = 0.10$, $t_{\mathrm{final}} = 1\,000$, $r = 40$				& (b) $\Delta t = 1.00$, $t_{\mathrm{final}} = 1\,000$, $r = 40$  \\[6pt]
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_energy_05.png}
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_energy_005.png}
+	& \includegraphics[width=60mm]{Images/Earth-Sun/EarthSun_energy_0005.png} \\
+	(a) $\Delta t = 0.5$		& (b) $\Delta t = 0.05$		& (b) $\Delta t = 0.005$  \\[6pt]
 \end{tabular}
-\caption{Energy evolution for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta blue for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, as well as two different radii, $r = 40$ and $r = 60$ and two different final times $t_{\mathrm{final}} = 1\,000$ and $t_{\mathrm{final}} = 10\,000$.}\label{fig:2_body_energy}
+\caption{Energy evolution for our two numerical algorithms for the orbits shown in Fig.~\ref{fig:2_body}a-c: Velocity-Verlet (red) and 4th-order Runge-Kutta (blue) for different time steps.}\label{fig:2_body_energy}
 \end{center}
 \end{figure*}
 
@@ -363,6 +365,23 @@ In conclusion, based on our study of the stability, time usage and energy conser
 We go on to study the $N$-body system. For a system with $N = 100$ objects and a radius $R_0$ = 20 ly, we want to know how large the time steps are required to be. We run the calculations for both methods in Sec.~\ref{sec:methods} for different time steps to see how a change in time step while change the results.
 
 COMMENTS!
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/comparison_N_RK4_position.png}
+	& \includegraphics[width=60mm]{Images/comparison_N_RK4_velocity.png} 
+	& \includegraphics[width=60mm]{Images/comparison_E_RK4_0001.png}\\
+	(a) Position (RK4)				& (b) Velocity (RK4)  		& (c) Total energy (RK4) \\[6pt]
+	
+	\includegraphics[width=60mm]{Images/comparison_N_VV_position.png}
+	& \includegraphics[width=60mm]{Images/comparison_N_VV_velocity.png}
+	& \includegraphics[width=60mm]{Images/comparison_E_VV_0001.png} \\
+	(d) Position (VV) 					&(e) Velocity (VV)				& (f) Total energy (VV)  \\[6pt]
+\end{tabular}
+\caption{The decay of precision of RK4 (top) and VV (bottom) for three different time steps $\Delta t \in [0.001, 0.005, 0.025]$ for one of the stars in the $N$-body system.}\label{fig:N_body_timestep}
+\end{center}
+\end{figure*}
 
 In the case where the number of objects $N \rightarrow \infty$ and the mean density $\rho_0$ of the system is kept constant, the system would collapse into a singularity at a finite \textbf{collapse time} because it can be considered a continuous fluid. Then each imaginary shell for different radii from the center will be fully filled with stars and feel the same gravitational force towards the center of the system, thus reaching the center at the same time. 
 
@@ -443,6 +462,10 @@ MORE!!!
 
 ...
 
+
+\section{References}
+
+...
 
 
 
