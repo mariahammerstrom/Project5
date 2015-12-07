@@ -72,8 +72,8 @@ def plot_time(stars,N,time_step):
     # compared with the analytical solution.
     
     # Get data
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_VV_%d_%.3f.txt' % (N,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_cluster_RK4_%d_%.3f.txt' % (N,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.3f.txt' % (stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.3f.txt' % (stars,time_step)
     #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.3f.txt' % (stars,time_step)
     #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.3f.txt' % (stars,time_step)
     
@@ -85,16 +85,17 @@ def plot_time(stars,N,time_step):
     E_RK4 = 0.5*np.array(v_x_RK4)**2 - G*np.array(m_RK4)**2/np.array(r_verlet)
     
     # Make plots
-    plt.figure(1)
+    plt.figure()
     plt.title('Position, N = %d, time step = %.2f' % (N,time_step),size=12)
-    plt.plot(t_verlet,x_verlet,label='Verlet')
-    plt.plot(t_RK4,x_RK4,label='RK4')
-    plt.xlabel(r'$t$',size=14)
-    plt.ylabel(r'$x$',size=14)
+    plt.plot(t_verlet,x_verlet,'r',label='VV')
+    plt.plot(t_RK4,x_RK4,'b',label='RK4')
+    plt.xlabel(r'$t$ $\mathrm{[year]}$',size=14)
+    plt.ylabel(r'$x$ $\mathrm{[AU]}$',size=14)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
     
-    plt.figure(3)
+    """
+    plt.figure()
     plt.title('Radial position, N = %d, time step = %.2f' % (N,time_step),size=12)
     plt.plot(t_verlet,r_verlet,label='Verlet')
     plt.plot(t_RK4,r_RK4,label='RK4')
@@ -102,17 +103,18 @@ def plot_time(stars,N,time_step):
     plt.ylabel(r'$r$',size=14)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
+    """
     
-    plt.figure(2)
+    plt.figure()
     plt.title('Velocity, N = %d, time step = %.2f' % (N,time_step),size=12)
-    plt.plot(t_verlet,v_x_verlet,label='Verlet')
-    plt.plot(t_RK4,v_x_RK4,label='RK4')
-    plt.xlabel(r'$t$',size=14)
-    plt.ylabel(r'$v_x$',size=14)
+    plt.plot(t_verlet,v_x_verlet,'r',label='VV')
+    plt.plot(t_RK4,v_x_RK4,'b',label='RK4')
+    plt.xlabel(r'$t$ $\mathrm{[year]}$',size=14)
+    plt.ylabel(r'$v_x$ $\mathrm{[AU/year]}$',size=14)
     plt.legend(loc=2,prop={'size':12})
     plt.show()
     
-    # plt.figure(4)
+    # plt.figure()
     # plt.title('Force, N = %d, time step = %.2f' % (N,time_step),size=12)
     # plt.plot(t_verlet,F_verlet,label='Verlet')
     # plt.plot(t_RK4,F_RK4,label='RK4')
@@ -121,51 +123,16 @@ def plot_time(stars,N,time_step):
     # plt.legend(loc=2,prop={'size':12})
     # plt.show()
     
-    plt.figure(3)
-    plt.title('Total energy, N = %d, time step = %.2f' % (N,time_step),size=12)
-    plt.plot(t_verlet,np.array(E_verlet)-0.5,label='Verlet')
-    plt.plot(t_RK4,np.array(E_RK4)-0.5,label='RK4')
-    plt.xlabel(r'$t$',size=14)
-    plt.ylabel(r'$E$',size=14)
+    plt.figure()
+    plt.title('Total energy, N = %d, time step = %.3f' % (N,time_step),size=12)
+    plt.plot(t_verlet,np.array(E_verlet),'r',label='VV')
+    plt.plot(t_RK4,np.array(E_RK4),'b',label='RK4')
+    plt.xlabel(r'$t$ $\mathrm{[year]}$',size=14)
+    plt.ylabel(r'$E$ $[M_{\odot}\mathrm{AU}^2\mathrm{/years}^2]$',size=14)
     plt.legend(loc=1,prop={'size':12})
     plt.show()
     
     return
-    
-    
-def plot_timestep(N,time_step_list):
-    # Function that plots the results from VV and RK4 as a function of time, 
-    # compared with the analytical solution for different time steps.
-    
-    # Define plots
-    plt.figure(1)
-    plt.title('Position, N = $d' % N,size=12)
-    plt.xlabel(r'$t$',size=14)
-    plt.ylabel(r'$x$',size=14)
-    
-    plt.figure(2)
-    plt.title('Velocity, N = $d' % N,size=12)
-    plt.xlabel(r'$t$',size=14)
-    plt.ylabel(r'$v_x$',size=14)
-    
-    
-    for i in range(len(time_step_list)):
-        filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/Verlet_%.1f.txt' % time_step_list[i]
-        t_verlet,x_verlet,y_verlet,z_verlet,v_x_verlet,v_y_verlet,v_z_verlet = read_file(filename_verlet)
-        
-        plt.figure(1)
-        plt.plot(t_verlet,x_verlet,label='Verlet, dt = %.1f' % time_step_list[i])
-        #plt.plot(t_RK4,x_RK4,label='RK4')
-        plt.legend(loc=1,prop={'size':12})
-        
-        plt.figure(2)
-        plt.plot(t_verlet,v_x_verlet,label='Verlet, dt = %.1f' % time_step_list[i])
-        #plt.plot(t_RK4,v_x_RK4,label='RK4')
-        plt.legend(loc=2,prop={'size':12})
-    
-    plt.show()
-    
-    return 0
 
 
 def plot_orbits(stars,N,time_step):
@@ -190,8 +157,9 @@ def plot_orbits(stars,N,time_step):
     ax.plot(x1_verlet[0:limit],y1_verlet[0:limit],z1_verlet[0:limit],'r', label='VV')
     ax.plot(x1_RK4[0:limit],y1_RK4[0:limit],z1_RK4[0:limit], 'b',label='RK4')
     
-    #ax.plot(x2_verlet,y2_verlet,z2_verlet,'g', label='#2, VV')
-    #ax.plot(x2_RK4,y2_RK4,z2_RK4, 'y',label='#2, RK4')
+    ax.set_xlabel(r'$x$ $\mathrm{[AU]}$')
+    ax.set_ylabel(r'$y$ $\mathrm{[AU]}$')
+    ax.set_zlabel(r'$z$ $\mathrm{[AU]}$')
     ax.legend()
 
     plt.show()
@@ -200,14 +168,10 @@ def plot_orbits(stars,N,time_step):
     
 def main(argv):
     # Plot results as a function of time
-    #plot_time(stars=2,N=10000,time_step=1.)
-    plot_orbits(stars=2,N=1000,time_step=0.08)
+    plot_time(stars=2,N=1000,time_step=0.005)
+    #plot_orbits(stars=2,N=10000,time_step=0.005)
     
-    # 29.78 km/s = 29 780 m/s
-    # 1 year = 365*24*60*60 s
-    # 1 ly = 9.45e15
-    
-    print 29780*(365*24*60*60)/(9.45e15)
+    print 5*(1.49e8)/(365*24*60*60) # [km/s], should be approx. 29.78 km/s
     
 	
 if __name__ == "__main__":

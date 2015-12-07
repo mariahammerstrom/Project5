@@ -133,17 +133,17 @@ def plot_time(total_stars,star_number,time_step,subset):
         # Plot energy: VV
         plt.figure()
         plt.title('Total energy (Velocity-Verlet), time step = %.3f' % time_step,size=12)
-        plt.plot(time,EkVV,'r',label='K')
-        plt.plot(time[::5],EkVV[::5],'b',label='K (1:5)')
-        plt.plot(time[::10],EkVV[::10],'g',label='K (1:10)')
+        #plt.plot(time,EkVV,'b',label='K')
+        #plt.plot(time[::5],EkVV[::5],'g',label='K (1:5)')
+        #plt.plot(time[::10],EkVV[::10],'r',label='K (1:10)')
         
-        plt.plot(time,EpVV,'r',label='P')
-        plt.plot(time[::5],EpVV[::5],'b',label='P (1:5)')
-        plt.plot(time[::10],EpVV[::10],'g',label='P (1:10)')
+        #plt.plot(time,EpVV,'b',label='P')
+        #plt.plot(time[::5],EpVV[::5],'g',label='P (1:5)')
+        #plt.plot(time[::10],EpVV[::10],'r',label='P (1:10)')
         
-        plt.plot(time,EtotVV,'r',label='Tot')        
-        plt.plot(time[::5],EtotVV[::5],'b',label='Tot (1:5)')
-        plt.plot(time[::10],EtotVV[::10],'g',label='Tot (1:10)')
+        plt.plot(time,EtotVV,'b',label='Tot')        
+        plt.plot(time[::5],EtotVV[::5],'g',label='Tot (1:5)')
+        plt.plot(time[::10],EtotVV[::10],'r',label='Tot (1:10)')
         plt.xlabel(r'$t$',size=14)
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=4,prop={'size':12})
@@ -152,17 +152,17 @@ def plot_time(total_stars,star_number,time_step,subset):
         # Plot energy: RK4
         plt.figure()
         plt.title('Total energy (RK4), time step = %.3f' % time_step,size=12)
-        plt.plot(time,EkRK4,'r',label='K')
-        plt.plot(time[::5],EkRK4[::5],'b',label='K (1:5)')
-        plt.plot(time[::10],EkRK4[::10],'g',label='K (1:10)')
+        #plt.plot(time,EkRK4,'b',label='K')
+        #plt.plot(time[::5],EkRK4[::5],'g',label='K (1:5)')
+        #plt.plot(time[::10],EkRK4[::10],'r',label='K (1:10)')
         
-        plt.plot(time,EpRK4,'r',label='P')
-        plt.plot(time[::5],EpRK4[::5],'b',label='P (1:5)')
-        plt.plot(time[::10],EpRK4[::10],'g',label='P (1:10)')
+        #plt.plot(time,EpRK4,'b',label='P')
+        #plt.plot(time[::5],EpRK4[::5],'g',label='P (1:5)')
+        #plt.plot(time[::10],EpRK4[::10],'r',label='P (1:10)')
         
-        plt.plot(time,EtotRK4,'r',label='Tot')        
-        plt.plot(time[::5],EtotRK4[::5],'b',label='Tot (1:5)')
-        plt.plot(time[::10],EtotRK4[::10],'g',label='Tot (1:10)')
+        plt.plot(time,EtotRK4,'b',label='Tot')        
+        plt.plot(time[::5],EtotRK4[::5],'g',label='Tot (1:5)')
+        plt.plot(time[::10],EtotRK4[::10],'r',label='Tot (1:10)')
         plt.xlabel(r'$t$',size=14)
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=4,prop={'size':12})
@@ -279,9 +279,9 @@ def main(argv):
     #plot_orbits_VV(total_stars,time_step)
     
     # Plot results as a function of time
-    #star_number = 0 # Plot for one particular star
-    #subset = True # True = Print results as a function of time for different time steps, False = one time step
-    #plot_time(total_stars,star_number,time_step,subset)
+    star_number = 0 # Plot for one particular star
+    subset = True # True = Print results as a function of time for different time steps, False = one time step
+    plot_time(total_stars,star_number,time_step,subset)
     
 	
 if __name__ == "__main__":

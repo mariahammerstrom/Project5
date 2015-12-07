@@ -75,12 +75,12 @@ int main()
         simple = true;
 
         integration_points = 1000;
-        final_time = 80.;
+        final_time = 5.;
 
         double time_step = final_time/((double) integration_points);
         double x[3],v[3];
 
-        star star1(0.000003,1.,1.,1., 4.0 ,0. ,0.); // (mass,x,y,z,vx,vy,vz)
+        star star1(0.000003,1.,1.,1., 5.0 ,0. ,0.); // (mass,x,y,z,vx,vy,vz)
         star star2(1.,0.,0.,0.,0.,0.,0.); // (mass,x,y,z,vx,vy,vz)
 
         //star star1(1.,60.,60.,60.,1.0,0.,0.);
@@ -176,8 +176,8 @@ int main()
         force = true;
         simple = false;
 
-        integration_points = 1000;
-        final_time = 5.; // in units of t_crunch
+        integration_points = 100;
+        final_time = 80.; // in units of t_crunch
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
