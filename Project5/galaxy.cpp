@@ -238,7 +238,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
     output_energy.close();
 }
 
-void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number)
+void galaxy::VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number, double epsilon)
 {   /*  Velocity-Verlet solver for two coupeled ODEs in a given number of dimensions.
     The algorithm is, exemplified in 1D for position x(t), velocity v(t) and acceleration a(t):
     x(t+dt) = x(t) + v(t)*dt + 0.5*dt*dt*a(t);
@@ -292,7 +292,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             if(stellar){
                 for(int nr2=nr1+1; nr2<total_stars; nr2++){
                     star &other = all_stars[nr2];
-                    GravitationalForce(current,other,Fx,Fy,Fz);
+                    GravitationalForce(current,other,Fx,Fy,Fz,epsilon);
                 }
             }
             else Fx = -current.position[0];
@@ -311,7 +311,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             if(stellar){
                 for(int nr2=nr1+1; nr2<total_stars; nr2++){
                     star &other = all_stars[nr2];
-                    GravitationalForce(current,other,Fxnew,Fynew,Fznew);
+                    GravitationalForce(current,other,Fxnew,Fynew,Fznew,epsilon);
                 }
             }
             else Fxnew = -current.position[0];
@@ -379,7 +379,7 @@ void galaxy::delete_matrix(double **matrix)
     delete [] matrix;
 }
 
-void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,double &Fz)
+void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,double &Fz,double epsilon)
 {   // Function that calculates the gravitational force between two objects, component by component.
 
     // Calculate relative distance between current star and all other stars
@@ -387,11 +387,12 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
 
     for(int j = 0; j < 3; j++) relative_distance[j] = current.position[j]-other.position[j];
     double r = current.distance(other);
+    double smoothing = epsilon*epsilon*epsilon;
 
     // Calculate the forces in each direction    
-    Fx -= this->G*current.mass*other.mass*relative_distance[0]/(r*r*r);
-    Fy -= this->G*current.mass*other.mass*relative_distance[1]/(r*r*r);
-    Fz -= this->G*current.mass*other.mass*relative_distance[2]/(r*r*r);
+    Fx -= this->G*current.mass*other.mass*relative_distance[0]/((r*r*r) + smoothing);
+    Fy -= this->G*current.mass*other.mass*relative_distance[1]/((r*r*r) + smoothing);
+    Fz -= this->G*current.mass*other.mass*relative_distance[2]/((r*r*r) + smoothing);
 }
 
 void galaxy::GravitationalForce_RK(double x_rel,double y_rel,double z_rel,double &Fx,double &Fy,double &Fz,double mass1,double mass2)

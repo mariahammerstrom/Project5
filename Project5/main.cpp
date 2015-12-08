@@ -27,10 +27,10 @@ int main()
     bool binary = false;
 
     // 3) Compare RK4 and VV in a full star cluster, set RK4vsVV = true
-    bool RK4vsVV = true;
+    bool RK4vsVV = false;
 
     // 4) Full star cluster in a gravitational field for ONE numerical method; set cluster = true
-    bool cluster = false;
+    bool cluster = true;
 
 
     // Numerical setup
@@ -64,7 +64,7 @@ int main()
         star star2(1.,1.,0,0,0,0,0); // (mass,x,y,z,vx,vy,vz)
         galaxy testVV;
         testVV.add(star2);
-        testVV.VelocityVerlet(dimension,integration_points,final_time,force,simple,1);
+        testVV.VelocityVerlet(dimension,integration_points,final_time,force,simple,1,0.);
     }
 
     // 2) Binary stars
@@ -111,7 +111,7 @@ int main()
         print_final(dimension,x,v);
 
         cout << endl << "VV:" << endl;
-        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,1);
+        binary_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,1,0.);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_vv.all_stars[0].position[j];
@@ -164,7 +164,7 @@ int main()
         cout << "RK4" << endl;
         MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,objects);
         cout << "VV" << endl;
-        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,objects);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,objects,0.);
     }
 
     // 4) GALAXY (STAR CLUSTER) MODEL
@@ -173,9 +173,10 @@ int main()
         dimension = 3;
         force = true;
         simple = false;
+        double epsilon = 0.1;
 
         integration_points = 100;
-        final_time = 80.; // in units of t_crunch
+        final_time = 3.; // in units of t_crunch
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -205,7 +206,7 @@ int main()
         cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
         // run system through VV, all data is written to file as we go
-        MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars);
+        MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars,epsilon);
         cout << "The star cluster MM15 now contains " << MM15.total_stars << " star(s)." << endl;
     }
 
