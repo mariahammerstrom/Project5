@@ -165,15 +165,47 @@ def plot_orbits(stars,N,time_step):
     plt.show()
 
     return
+
+
+def plot_orbits2D(stars,N,time_step):
+    
+    # Get data
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.3f.txt' % (stars,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_RK4_%d_%.3f.txt' % (stars,time_step)
+    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (stars,time_step)
+    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_RK4_%d_%.2f.txt' % (stars,time_step)
+    
+    # t1_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet,F_verlet = read_file(filename_verlet)
+    # t1_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4,F_RK4 = read_file(filename_RK4)
+    
+    t1_verlet,m_verlet,x1_verlet,y1_verlet,z1_verlet,v_x1_verlet,v_y1_verlet,v_z1_verlet,r1_verlet = read_file2(filename_verlet)
+    t1_RK4,m_RK4,x1_RK4,y1_RK4,z1_RK4,v_x1_RK4,v_y1_RK4,v_z1_RK4,r1_RK4 = read_file2(filename_RK4)
+    
+    mpl.rcParams['legend.fontsize'] = 10
+ 
+    plt.figure()
+    limit = -1 #70 for large time step
+    plt.plot(x1_verlet[0:limit],y1_verlet[0:limit],'r', label='VV')
+    plt.plot(x1_RK4[0:limit],y1_RK4[0:limit], 'b',label='RK4')
+    plt.title('Earth, time step = %.3f' % time_step,size=12)
+    
+    plt.xlabel(r'$x$ $\mathrm{[AU]}$')
+    plt.ylabel(r'$y$ $\mathrm{[AU]}$')
+    plt.xlim(-1.2,1.2)
+    plt.ylim(-1.2,1.2)
+    plt.legend()
+
+    plt.show()
+
+    return
     
 def main(argv):
     # Plot results as a function of time
     #plot_time(stars=2,N=10,time_step=0.5)
-    plot_orbits(stars=2,N=10000,time_step=0.005)
+    #plot_orbits(stars=2,N=10000,time_step=0.005)
+    plot_orbits2D(stars=2,N=10000,time_step=0.005)
     
     print 6.3*(1.49e8)/(365*24*60*60) # [km/s], should be approx. 29.78 km/s
-    
-    print (-0.896122)**2 + (-0.466798)**2
     
 	
 if __name__ == "__main__":

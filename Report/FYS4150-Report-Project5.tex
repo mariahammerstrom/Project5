@@ -277,18 +277,16 @@ and check that $E_0 = E_i$ for every period $T$. It is however easier to just pl
 
 \begin{figure*}
 \begin{center}
-\begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/comparison_x_01.png}
-	& \includegraphics[width=90mm]{Images/comparison_x_1.png} \\
-	(a) Position, $\Delta t = 0.10$, $t_{\mathrm{final}} = 10$				& (b) Position, $\Delta t = 1.00$, $t_{\mathrm{final}} = 100$  \\[6pt]
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/comparison_x_01.png}
+	& \includegraphics[width=60mm]{Images/comparison_v_01.png}
+	& \includegraphics[width=60mm]{Images/comparison_E_01.png} \\
+	(a) Position, $\Delta t = 0.10$, $t_{\mathrm{final}} = 10$		& (b) Velocity, $\Delta t = 0.10$, $t_{\mathrm{final}} = 10$  	& (c) Energy, $\Delta t = 0.10$, $t_{\mathrm{final}} = 100$ \\[6pt]
 	
-	  \includegraphics[width=90mm]{Images/comparison_v_01.png}
-	& \includegraphics[width=90mm]{Images/comparison_v_1.png} \\
-	(c) Velocity, $\Delta t = 0.10$, $t_{\mathrm{final}} = 10$				& (d) Velocity, $\Delta t = 1.00$, $t_{\mathrm{final}} = 100$  \\[6pt]
-	
-  	\includegraphics[width=90mm]{Images/comparison_E_01.png}
-	& \includegraphics[width=90mm]{Images/comparison_E_1.png} \\
-	(e) Energy, $\Delta t = 0.10$, $t_{\mathrm{final}} = 10$				& (f) Energy, $\Delta t = 1.00$, $t_{\mathrm{final}} = 100$  \\[6pt]
+	\includegraphics[width=60mm]{Images/comparison_x_1.png} 
+	& \includegraphics[width=60mm]{Images/comparison_v_1.png}
+	& \includegraphics[width=60mm]{Images/comparison_E_1.png} \\
+	(d) Position, $\Delta t = 1.00$, $t_{\mathrm{final}} = 10$ 		& (e) Velocity, $\Delta t = 1.00$, $t_{\mathrm{final}} = 10$		& (f) Energy, $\Delta t = 1.00$, $t_{\mathrm{final}} = 100$  \\[6pt]
 \end{tabular}
 \caption{Comparison of our numerical algorithms in the analytical case of the box on a spring: Velocity-Verlet (green) and 4th-order Runge-Kutta (red), with the analytical solution (blue) are shown for two different time steps $\Delta t = 0.10$ and $\Delta t = 1.00$, and for two different durations $t_{\mathrm{final}} = 10$ and $t_{\mathrm{final}} = 100$.}\label{fig:analytical}
 \end{center}
@@ -326,19 +324,21 @@ As seen in Fig.~\ref{fig:2_body}a-d, the orbit -- or lack thereof -- very much d
 \caption{Orbits for our two numerical algorithms in the 2-body case where one body is massive and sitting in the center of the orbit (not plotted): Velocity-Verlet (red) and 4th-order Runge-Kutta (blue) for different time steps $\Delta t$, and two different final times $t_{\mathrm{final}} = 5$ and $t_{\mathrm{final}} = 50$. Axes are in AUs.}\label{fig:2_body}
 \end{center}
 \end{figure*}
-Also of interest is to compare the time used by the two numerical methods to see which one is the most efficient (instead of quoting the time used to compute \textit{one} time step, we here quote the time taken by the calculation as a whole):
+Also of interest is to compare the time used by the two numerical methods to see which one is the most efficient. Instead of quoting the time used to compute \textit{one} time step, we here quote the time taken by the calculation as a whole. See Table~\ref{table:times}. Here we have used $t_{\mathrm{final}} = 1.0$. In the 2-body case (we will get back to the 100-body case later) we see that the time usage is very similar for the two methods, increasing by a factor of 10 when the number of integration points is increased by a factor of 10. The times quoted here does however differ from run to run, where the first digits -- if rewriting to scientific notation -- typically range from 1.5 to 2.6. It also happens that which of the methods is the fastest one changes. In conclusion, the time differences for the two methods are too small for timing to be an issue for choosing one of the methods over the other considering the 2-body case.
 
+\begin{table*}
 \begin{center}
-\begin{tabular}{ l l l l }\hline
-	$\Delta t$ 				& Integration points	 	& Time RK4 (s)		& Time VV (s)		\\ \hline
-	0.0001 				& $10\,000$ 			& 0.168853		& 0.157352		 \\
-	0.001 				& $1\,000$ 			& 0.020674		& 0.021062		 \\
-	0.01 					& $100$ 				& 0.002490		& 0.002334		 \\
-	0.1 					& $10$				& 0.000165		& 0.000147		 \\
+\begin{tabular}{ l l l l l l}\hline
+	$\Delta t$ 				& Integration points	 	& Time: 2-body RK4			& Time: 2-body VV			& Time: 100-body RK4 		& Time: 100-body VV	\\ \hline
+	0.0001 				& $10\,000$ 			& 0.168853				& 0.157352				& 22.0822					& 18.539		 \\
+	0.001 				& $1\,000$ 			& 0.020674				& 0.021062				& 2.10406					& 1.78809		 \\
+	0.01 					& $100$ 				& 0.002490				& 0.002334				& 0.220827				& 0.171404	 \\
+	0.1 					& $10$				& 0.000165				& 0.000147				& 0.02771					& 0.018001		 \\
 	\hline
 \end{tabular}
+\caption{The time (in seconds) spent running the calculations for the two different numerical methods in the 2-body and 100-body cases.}\label{table:times}
 \end{center}
-Here $t_{\mathrm{final}} = 1.0$. We see that the time usage is very similar for the two methods, increasing by a factor of 10 when the number of integration points is increased by a factor of 10. The times quoted here does however differ from run to run, where the first digits -- if rewriting to scientific notation -- typically range from 1.5 to 2.6. It also happens that it varies which of the methods is the fastest one. In conclusion, the time differences for the two methods are too small for timing to be an issue for choosing one of the methods over the other.
+\end{table*}
 
 Finally we want to see whether energy is conserved for our star. This is done calculating
 
@@ -408,6 +408,12 @@ COMMENTS.
 \end{figure*}
 
 
+\subsubsection{Choosing a method}
+COMMENTS.
+
+Time spent running the two methods is also an important factor to consider. Let us revisit Table~\ref{table:times}. In the 100-body case it is now more clear, which it was not in the 2-body case, that VV is the fastest of the two methods, however only by a few seconds. 
+
+
 \subsubsection{The energy of the system}
 
 We calculate the kinetic and potential energy of our system using Eq. (\ref{eq:E_tot}) to study whether the energy is conserved, and see if this is dependent on the number of objects $N$.
@@ -418,12 +424,16 @@ MORE!!!
 
 \subsubsection{Introducing the smoothing function}
 
-After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we introduce a smoothing function to take care of any numerical instability that may arise when two stars come very close. We modify the gravitational force as
+After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we introduce a \textbf{smoothing function} to take care of any numerical instability that may arise when two stars come very close. Because the gravitational force $F \sim 1/r^2$, we see that the force will become very large as $r \rightarrow 0$, ultimately throwing objects out of the system. 
+
+We modify the gravitational force as
 
 \begin{equation}\label{eq:force_mod}
 	F_{G,\mathrm{mod}} = - \frac{G M_1 M_2}{r^2 + \epsilon^2},
 \end{equation}
 where $\epsilon$ is a small real constant. We will try out different values for $\epsilon$ to see which value gives the best energy conservation.
+
+Adding the value of $\epsilon$ can be understood by noting that we are in reality considering extended objects, rather than point sources. These objects will have a radius $R$, thus the centers of two objects can only get as close as $2R$ to each other. (An alternative approach could be to let objects merge when getting too close.) 
 
 MORE!!!
 
@@ -471,9 +481,9 @@ MORE!!!
 
 \section{References}
 
-H. T. Ihle. \textit{On the, not entirely trivial, issue of getting uniformly distributed random coordinates within a sphere.} (2015)
+H. T. Ihle. (2015) \textit{On the, not entirely trivial, issue of getting uniformly distributed random coordinates within a sphere.} \\
 
-...
+\noindent M. Joyce, B. Marcos, and F. Sylos Labini. (2010) \textit{Cold uniform spherical collapse revisited.} AIP Conf. Proc. 1241, 955.
 
 
 
