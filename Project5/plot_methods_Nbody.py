@@ -49,7 +49,7 @@ def read_file(filename,star_number,total_stars):
     vy_star = np.zeros(list_range)
     vz_star = np.zeros(list_range)
     
-    for i in range(len(time)):
+    for i in range(len(time)-1):
             x_star[i] = x[i*total_stars + star_number]
             y_star[i] = y[i*total_stars + star_number]
             z_star[i] = z[i*total_stars + star_number]
@@ -239,6 +239,11 @@ def plot_orbits_VV(total_stars,time_step):
     plt.xlim([-radius,radius])
     plt.ylim([-radius,radius])
     ax.set_zlim(-radius, radius)
+    
+    ax.set_xlabel(r'$x$ $\mathrm{[ly]}$')
+    ax.set_ylabel(r'$y$ $\mathrm{[ly]}$')
+    ax.set_zlabel(r'$z$ $\mathrm{[ly]}$')
+    
     #ax.legend()
     plt.show()
 
@@ -261,9 +266,13 @@ def plot_orbits_RK4(total_stars,time_step):
         t,m,x,y,z,vx,vy,vz = read_file(filename_RK4,i,total_stars)
         ax.plot(x,y,z, label='Star %d, RK4' % i)
     
-    radius = 50
-    #plt.xlim([-radius,radius])
-    #plt.ylim([-radius,radius])
+    radius = 20
+    plt.xlim([-radius,radius])
+    plt.ylim([-radius,radius])
+    
+    ax.set_xlabel(r'$x$ $\mathrm{[ly]}$')
+    ax.set_ylabel(r'$y$ $\mathrm{[ly]}$')
+    ax.set_zlabel(r'$z$ $\mathrm{[ly]}$')
     #ax.legend()
     plt.show()
 
@@ -276,12 +285,13 @@ def main(argv):
     integration_points = 1000
 
     # Plot orbits
-    #plot_orbits_VV(total_stars,time_step)
+    plot_orbits_VV(total_stars,time_step)
+    #plot_orbits_RK4(total_stars,time_step)
     
     # Plot results as a function of time
-    star_number = 0 # Plot for one particular star
-    subset = True # True = Print results as a function of time for different time steps, False = one time step
-    plot_time(total_stars,star_number,time_step,subset)
+    #star_number = 0 # Plot for one particular star
+    #subset = True # True = Print results as a function of time for different time steps, False = one time step
+    #plot_time(total_stars,star_number,time_step,subset)
     
 	
 if __name__ == "__main__":

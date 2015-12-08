@@ -24,10 +24,10 @@ int main()
     bool spring_test = false;
 
     // 2) Two planets in a gravitational field; set binary = true
-    bool binary = true;
+    bool binary = false;
 
     // 3) Compare RK4 and VV in a full star cluster, set RK4vsVV = true
-    bool RK4vsVV = false;
+    bool RK4vsVV = true;
 
     // 4) Full star cluster in a gravitational field for ONE numerical method; set cluster = true
     bool cluster = false;
@@ -42,7 +42,7 @@ int main()
     bool simple;            // true = Sun-Earth-like system with G = 4*pi*pi instead of dimensionless G used for cluster later
 
 
-    // ANALYTIC: Spring force
+    // 1) ANALYTIC: Spring force
     if(spring_test){
         cout << "ANALYTICAL" << endl;
         dimension = 1;
@@ -67,24 +67,21 @@ int main()
         testVV.VelocityVerlet(dimension,integration_points,final_time,force,simple,1);
     }
 
-    // Binary stars
+    // 2) Binary stars
     if(binary){
         cout << "BINARY SYSTEM" << endl;
         dimension = 3;
         force = true;
         simple = true;
 
-        integration_points = 1000;
-        final_time = 5.;
+        integration_points = 10000;
+        final_time = 50.;
 
         double time_step = final_time/((double) integration_points);
         double x[3],v[3];
 
-        star star1(0.000003,1.,1.,1., 5.0 ,0. ,0.); // (mass,x,y,z,vx,vy,vz)
-        star star2(1.,0.,0.,0.,0.,0.,0.); // (mass,x,y,z,vx,vy,vz)
-
-        //star star1(1.,60.,60.,60.,1.0,0.,0.);
-        //star star2(10.,0.,0.,0.,0.,0.,0.);
+        star star1(0.000003,1.,0.0,0.0,0.0,6.3,0.); // Earth: (mass,x,y,z,vx,vy,vz)
+        star star2(1.,0.,0.,0.,0.,0.,0.); // Sun: (mass,x,y,z,vx,vy,vz)
 
         // RK4
         galaxy binary_rk(5.0);
@@ -125,7 +122,7 @@ int main()
 
 
 
-    // GALAXY (STAR CLUSTER) MODEL
+    // 3) N-BODY CASE: COMPARE METHODS
     if(RK4vsVV){
         cout << "CLUSTER" << endl;
         dimension = 3;
@@ -165,11 +162,12 @@ int main()
 
         // run system through RK4/VV, all data is written to file as we go
         cout << "RK4" << endl;
-        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,5);
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,objects);
         cout << "VV" << endl;
-        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,5);
+        MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,objects);
     }
 
+    // 4) GALAXY (STAR CLUSTER) MODEL
     if(cluster){
         cout << "CLUSTER" << endl;
         dimension = 3;
