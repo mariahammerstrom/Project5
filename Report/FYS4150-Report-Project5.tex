@@ -53,11 +53,17 @@ An open cluster is a group of up to a few thousand stars that are gravitationall
 
 Open clusters are usually found in the arms of spiral galaxies or in irregular galaxies. Once an open cluster has formed, it will gradually dissipate as its members gets ejected from the cluster due to random collisions, lasting only a few hundred million years. 
 
-% (Images which shows an open cluster, and a galaxy with visible clusters - HII regions.)
+% (Images which shows an open cluster, and a galaxy with visible clusters - HII regions ??)
 
-In this project we make a simple model for how an open cluster is formed from a gravitational collapse and model the interactions among a large number of stars. We have simulated a "cold collapse", meaning the stars will start at rest. The stars have masses randomly distributed by a Gaussian distribution around 10$M_{\odot}$ with a standard deviation of 1$M_{\odot}$, and uniform randomly distributed positions within a sphere of a given radius $R_0$. 
+We first study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem using two numerical methods: 4th order Runge-Kutta and Velocity-Verlet. We check the stability of these methods and the behavior of the $N$-body system over time. 
 
-We first study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem in three dimensions. The time evolution of the system is described through \textbf{Newton's law}, given by:
+The methods and practicalities concerning the programming aspect of the simulation is discussed in Sec.~\ref{sec:methods}, our findings are presented in Sec.~\ref{sec:results}, and we summarize the results in Sec.~\ref{sec:conclusion}.
+
+
+
+\section{Methods}\label{sec:methods}
+
+The time evolution of the system is governed by \textbf{Newton's law},
 
 \begin{equation}\label{eq:ODE}
 	\frac{\mathrm{d}^2 x}{\mathrm{d}t^2} = \frac{F_{G,x}}{M_1}
@@ -67,7 +73,7 @@ where $M_1$ is the mass of the object we are considering and $F_{G,x}$ is the \t
 \begin{equation}\label{eq:force_comp}
 	F_{G,x} = - \frac{G M_1 M_2}{r^3}x,
 \end{equation}
-where $M_1$ and $M_2$ are the masses of the two objects exerting a gravitational force on each other and $r$ is the distance between them. In three dimensions, $r = \sqrt{x^2 + y^2 + z^2}$. We have similar expressions for the $y$ and $z$ direction.
+where $M_1$ and $M_2$ are the masses of the two objects exerting a gravitational force on each other and $r$ is the distance between them, with $x$ the relative coordinate of the object in the $x$ direction. In three dimensions, $r = \sqrt{x^2 + y^2 + z^2}$. We have expressions similar to Eq. (\ref{eq:force_comp}) for the $y$ and $z$ direction.
 
 Eq. (\ref{eq:ODE}) is a second-order differential equation, which we can rewrite as a set of coupled first-order differential equations:
 
@@ -77,32 +83,26 @@ Eq. (\ref{eq:ODE}) is a second-order differential equation, which we can rewrite
 These equations can be used to determine the position and velocity of an object.
 
 
-
-
-\section{Methods}\label{sec:methods}
-
-The numerical algorithms we wish to implement and compare are the fourth-order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. Both methods are self-starting. 
+The numerical algorithms we wish to implement and compare are the 4th order Runge-Kutta method and the Velocity-Verlet method. Both methods assume a known initial value for the position $(x_i,y_i,z_i)$ and the velocity $(v_{i,x},v_{i,y},v_{i,z})$. Both methods are self-starting. 
 
 
 \subsection{4th order Runge-Kutta method}\label{sec:RK4}
 Using the 4th order Runge-Kutta method (RK4), we can estimate the next value $x_{i+1}$ (and similarly $y_{i+1}$ and $z_{i+1}$) through the formula
 
 \begin{equation}
-	x_{i+1} \approx x_i + \frac{h}{6} (v_{i,x} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}),
+	x_{i+1} \approx x_i + \frac{\Delta t}{6} (v_{i,x} + 2 v_{i + 1/2,x} + 2 v_{i + 1/2,x} + v_{i+1,x}),
 \end{equation}
-where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $h/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $h$ denotes the time step, defined as $h = (t_f - t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!).
-
-The algorithm goes as follows:
+where $v_{i + 1/2,x} $ is the velocity in the $x$ direction at time $t_{i + 1/2}$ and position $x_{i + 1/2}$ after taking a step $\Delta t/2$, which marks the midpoint between $v_{i,x}$ and $v_{i+1,x}$. The midpoint is evaluated two times to get a better estimate of the function value at this point, which in turn will give a better estimate for the final point $v_{i+1,x}$. $\Delta t$ denotes the time step, defined as $\Delta t = (t_f - t_0)/N$ where $t_f$ is the end-time of our simulation, $t_0$ is the start-time (usually chosen as zero), and $N$ is the number of integration points (not to be confused with the number of particles in the simulation!). The algorithm goes as follows:
 
 \begin{itemize}
-	\item Compute $K_1 = h \, v_x(t_i,x_i)$, which gives the slope at $t_i$.
-	\item Compute the slope at the midpoint using Euler's method, which gives $K_2 = h \, v_x(t_i + h/2, x_i + K_1/2)$.
-	\item The estimate of the slope at the midpoint is then further improved by $K_3 = h \, v_x(t_i + h/2, x_i + K_2/2)$.
-	\item Finally compute the end-point through: \\ $x_{i+1} = x_i + \frac{1}{6}(K_1 + 2K_2 + 2K_3 + K4)$.
+	\item Compute $K_1 = \Delta t \, v_x(t_i,x_i)$, which gives the slope at $t_i$.
+	\item Compute the slope at the midpoint using Euler's method, which gives $K_2 = \Delta t \, v_x(t_i + \Delta t/2, x_i + K_1/2)$.
+	\item The estimate of the slope at the midpoint is then further improved by $K_3 = \Delta t \, v_x(t_i + \Delta t/2, x_i + K_2/2)$.
+	\item Finally compute the end-point through \\ $x_{i+1} = x_i + \frac{1}{6}(K_1 + 2K_2 + 2K_3 + K4)$.
 \end{itemize}
-These equations must be deployed for all three dimensions $x,y$ and $z$.
+These equations must be deployed for all three dimensions $x,y$ and $z$, as well as the velocities in each dimension.
 
-Using this method gives a global truncating error which goes like $O(h^4)$. 
+Using this method gives a global truncating error which goes like $O(\Delta t^4)$. 
 
 
 %\subsection{Verlet method}\label{sec:VV}
@@ -156,7 +156,9 @@ where $a_{i+1}$ is the acceleration calculated using $x_{i+1}$. Thus the algorit
 	\item Increase the time step, so that $t = t_0 + \Delta t$. 
 	\item Keep calculating $x_{i+1}$ and $v_{i+1}$, and increasing the time step, until the pre-determined final time is reached.
 \end{itemize}
-Using this method gives a global truncating error which goes like $O(h^3)$ for the positions $(x_i,y_i,z_i)$, and $O(h^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
+Using this method gives a global truncating error which goes like $O(\Delta t^3)$ for the positions $(x_i,y_i,z_i)$, and $O(\Delta t^2)$ for the velocities $(v_{i,x},v_{i,y},v_{i,z})$, thus the velocities are not approximated to the same accuracy as the positions are. 
+
+Verlet integration methods are known to provide numerical stability and conserve energy, which Runge-Kutta methods does not. We will see if this is visible in our simulations.
 
 
 
@@ -246,7 +248,11 @@ Again we rewrite this second-order differential equation as two coupled first-or
 \end{equation}
 
 
-\section{Results}
+
+
+
+
+\section{Results}\label{sec:results}
 
 \subsection{Testing the numerical methods}\label{sec:analytical_test}
 
@@ -347,7 +353,7 @@ In conclusion, based on our study of the stability and time usage of the two met
 \subsection{Evolution of the $N$-body system}
 We go on to study the $N$-body system where we use a dimensionless $G$ as described in Sec.~\ref{sec:nondim} and treat the system in units of light years and $\tau_{\mathrm{crunch}}$. 
 
-For a system with $N = 100$ objects and a radius $R_0$ = 20 ly, we would first like to know how large the time steps are required to be for the methods to produce good results. We run the calculations for both methods in Sec.~\ref{sec:methods} for different time steps to see how a change in time step will change the results. This is visualized in Fig.~\ref{fig:N_body_timestep}a-b where we show the effect of varying the time step on the position for both methods on one star in the system. Comparing the positions in Fig.~\ref{fig:N_body_timestep}a and Fig.~\ref{fig:N_body_timestep}b we see that RK4 suffers more dramatically from the change to a larger time step in this case, as apposed to the 2-body case, while VV keeps its shape impressively well.
+For a system with $N = 100$ objects and a radius $R_0$ = 20 ly, we would first like to know how large the time steps are required to be for the methods to produce good results. First we note that $\tau_{\mathrm{crunch}} = 250$ million years, comparable to the general life time of a non-massive open cluster being only a few hundred million years. We run the calculations for both methods in Sec.~\ref{sec:methods} for different time steps to see how a change in time step will change the results. This is visualized in Fig.~\ref{fig:N_body_timestep}a-b where we show the effect of varying the time step on the position for both methods on one star in the system. Comparing the positions in Fig.~\ref{fig:N_body_timestep}a and Fig.~\ref{fig:N_body_timestep}b we see that RK4 suffers more dramatically from the change to a larger time step in this case, as apposed to the 2-body case, while VV keeps its shape impressively well.
 
 Time spent running the two methods is also something to consider. Let us revisit Table~\ref{table:times}. In the 100-body case it is now more clear, which it was not in the 2-body case, that VV is the fastest of the two methods, however only by a few seconds, making time usage a non-critical issue.
 
@@ -416,7 +422,7 @@ The kinetic energy rises quickly in the beginning of the simulation, as seen in 
 
 The potential energy in Fig.~\ref{fig:Nbody_energy}d-f is steadily increasing as the stars are pulled towards the center. These plots show a maximum at $t \in [2.2, 2.5, 1.5] \tau_{\mathrm{crunch}}$ for $N = 100,200,300$, corresponding to the time at which the stars are closest to collapse. In the case of $N = 300$ both the kinetic and potential energy stabilizes at around $t = 1.5\tau_{\mathrm{crunch}}$, approaching an equilibrium. 
 
-MORE!!!
+We also tried running the calculations for $N = 500$, but is resulted in memory error when plotting the results with Python. We have therefore limited ourselves to $N = 300$. 
 
 \begin{figure*}
 \begin{center}
@@ -434,10 +440,22 @@ MORE!!!
 \caption{The evolution of kinetic energy (top) and potential energy (bottom) over time for $N = 100, 200, 300$ stars and $\Delta t = 0.001$.}\label{fig:Nbody_energy}
 \end{center}
 \end{figure*}
+The fraction of ejected stars as a function of time is shown in Fig.~\ref{fig:Nbody_unbound} for different values of $N$. The shape of the curve closely resembles the curve for the kinetic energy in Fig.~\ref{fig:Nbody_energy}a-c. This is as expected, as the ejected stars are the stars that have large enough velocities to escape, thus contributing the most to the total kinetic energy of the system. 
+
+A thing to note is that the fraction of ejected stars oscillates quite a bit. The fraction of ejected stars peaks around $t = 2\tau_{\mathrm{crunch}}$ in all cases, than in the case of $N = 300$ the fraction decreases quite significantly and then starts increasing again. 
+
+COMMENT. 
+
+\begin{figure*}
+\begin{center}
+  	\includegraphics[width=90mm]{Images/unbound_stars.png}
+	\caption{Fraction of unbound stars as a function of time for $N = 100, 200, 300$.}\label{fig:Nbody_unbound}
+\end{center}
+\end{figure*}
 
 
 
-\subsubsection{Introducing the smoothing function}
+\subsubsection{Introducing the smoothing function and testing the virial theorem}
 
 After running calculations for the gravitational force as expressed in Eq. (\ref{eq:force_comp}), we introduce a \textbf{smoothing function} to take care of any numerical instability that may arise when two stars come very close. Because the gravitational force $F \sim 1/r^2$, we see that the force will become very large as $r \rightarrow 0$, ultimately throwing objects out of the system. 
 
@@ -450,21 +468,16 @@ where $\epsilon$ is a small real constant. We will try out different values for 
 
 Adding the value of $\epsilon$ can be understood by noting that we are in reality considering extended objects, rather than point sources. These objects will have a radius $R$, thus the centers of two objects can only get as close as $2R$ to each other. (An alternative approach could be to let objects merge when getting too close.) 
 
-MORE!!!
-
-
-
-
-\subsubsection{Testing the virial theorem}
-
-The \textbf{virial theorem} says that for a bound gravitational system in equilibrium we have
+We know that for a bound gravitational system in equilibrium the \textbf{virial theorem} should be fulfilled, which states that
 
 \begin{equation}\label{eq:vir}
 	2 \langle K \rangle = - \langle V \rangle,
 \end{equation}
-where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. The virial theorem deploys the ergodic hypothesis, which states that we can take an ensemble average instead of a time average. By calculating the kinetic and potential energy of the stars in our system that are bound (not ejected), we can check if our results are consistent with Eq. (\ref{eq:vir}).
+where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. The virial theorem deploys the ergodic hypothesis, which states that we can take an ensemble average instead of a time average. By calculating the kinetic and potential energy of the stars in our system that are bound (not ejected), we can check if our results are consistent with Eq. (\ref{eq:vir}) and use this as an indicated for which $\epsilon$ is better..
 
-MORE!!
+By trying out different values of $\epsilon$, we find ...
+
+MORE!!!
 
 
 
@@ -475,7 +488,9 @@ Finally we wish to study the \textbf{radial density} of the particles in the equ
 \begin{equation}\label{eq:simple_fit}
 	n(r) = \frac{n_0}{1 + (\frac{r}{r_0})^4}
 \end{equation}
-where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. The result is shown in Fig. XXXX. COMMENTS!
+where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. The result is shown in Fig. XXXX. 
+
+COMMENTS!
 
 %The result can also be compared with the well-known Navarro-Frenk-White profile
 %
@@ -491,16 +506,19 @@ where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (20
 
 
 
-\section{Conclusions}
+\section{Conclusions}\label{sec:conclusion}
 
 ...
 
 
 \section{References}
 
-H. T. Ihle. (2015) \textit{On the, not entirely trivial, issue of getting uniformly distributed random coordinates within a sphere.} \\
-
-\noindent M. Joyce, B. Marcos, and F. Sylos Labini. (2010) \textit{Cold uniform spherical collapse revisited.} AIP Conf. Proc. 1241, 955.
+\begin{enumerate}
+	\item Verlet integration methods. (2015, December 9). \\ \verb@https://en.wikipedia.org/wiki/Verlet_integration@
+	\item Open cluster. (2015, December 9). \\ \verb@https://en.wikipedia.org/wiki/Open_cluster@
+	\item H. T. Ihle. (2015). \textit{On the, not entirely trivial, issue of getting uniformly distributed random coordinates within a sphere.} 
+	\item M. Joyce, B. Marcos, and F. Sylos Labini. (2010). \textit{Cold uniform spherical collapse revisited.} AIP Conf. Proc. 1241, 955.
+\end{enumerate}
 
 
 
@@ -522,10 +540,10 @@ The codes developed and used in this project are:
 
 \begin{itemize}
 	\item \verb@plotting_analytical.py@ -- program to graphically compare the one-dimensional 2-body problem with an analytical solution, described in Sec.~\ref{sec:analytical_test}.
-	\item \verb@plot_method.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV} for the 2-body problem.
-	\item \verb@plot_method_Nbody.py@ -- program to graphically compare the two numerical methods for the $N$-body problem.
+	\item \verb@plot_methods.py@ -- program to graphically compare the two numerical methods described in Sec.~\ref{sec:RK4} and Sec.~\ref{sec:VV} for the 2-body problem.
+	\item \verb@plot_methods_Nbody.py@ -- program to graphically compare the two numerical methods for the $N$-body problem.
 	\item \verb@plotting_scatter.py@ -- plotting program to visualize the 3D distribution of particles in the $N$-body system as a scatter plot, as shown in Fig.~\ref{fig:N_body_simulation}. 
-	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profiles in Eq. (\ref{eq:simple_fit}) and Eq. (\ref{eq:NFW}).
+	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profile in Eq. (\ref{eq:simple_fit}). %and Eq. (\ref{eq:NFW}).
 \end{itemize}
 
 
