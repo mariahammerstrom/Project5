@@ -410,7 +410,21 @@ We calculate the kinetic and potential energy of our system to study whether the
 \end{equation}
 where $M$ is the mass of the star we are considering and $m$ is the mass of another star exerting a gravitational force on our stars. The first term represents the kinetic energy and the second term represents the potential energy due to gravity.
 
+Fig.~\ref{fig:Nbody_energy}a-c shows that the kinetic energy rises quickly in the beginning, then stabilizing around $t = \tau_{\mathrm{crunch}}$. The overall kinetic energy decreases for larger values of $N$. This corresponds to what we saw in the scatter plots in Fig.~\ref{fig:N_body_simulation}a-i where the collection of stars appear to be more tightly bound for higher values of $N$, corresponding with an increasing potential energy.  
+
 MORE!!!
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{ccc}
+  	\includegraphics[width=60mm]{Images/Ek_100stars.png}
+	& \includegraphics[width=60mm]{Images/Ek_200stars.png}
+	& \includegraphics[width=60mm]{Images/Ek_300stars.png} \\
+	(a) $N = 100$		& (b) $N = 200$  	& (c) $N = 300$ \\[6pt]
+\end{tabular}
+\caption{The evolution of kinetic energy (top) and potential energy (bottom) over time for $N = 100, 200, 300$ stars and $\Delta t = 0.001$.}\label{fig:Nbody_energy}
+\end{center}
+\end{figure*}
 
 
 
