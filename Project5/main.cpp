@@ -58,7 +58,7 @@ int main()
         star star1(1.,1.,0,0,0,0,0); // (mass,x,y,z,vx,vy,vz)
         galaxy testRK;
         testRK.add(star1);
-        testRK.RungeKutta4(dimension,integration_points,final_time,force,simple,1);
+        testRK.RungeKutta4(dimension,integration_points,final_time,force,simple,1,0.);
 
         // VV test
         star star2(1.,1.,0,0,0,0,0); // (mass,x,y,z,vx,vy,vz)
@@ -102,7 +102,7 @@ int main()
 
         // Evolution of binary system
         cout << endl << "RK4: " << endl;
-        binary_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,1);
+        binary_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,1,0.);
 
         for(int j=0;j<dimension;j++){
             x[j] = binary_rk.all_stars[0].position[j];
@@ -162,7 +162,7 @@ int main()
 
         // run system through RK4/VV, all data is written to file as we go
         cout << "RK4" << endl;
-        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,objects);
+        MM15_rk.RungeKutta4(dimension,integration_points,final_time,force,simple,objects,0.);
         cout << "VV" << endl;
         MM15_vv.VelocityVerlet(dimension,integration_points,final_time,force,simple,objects,0.);
     }
@@ -173,10 +173,10 @@ int main()
         dimension = 3;
         force = true;
         simple = false;
-        double epsilon = 0.1;
+        double epsilon = 0.0;
 
-        integration_points = 100;
-        final_time = 3.; // in units of t_crunch
+        integration_points = 10000;
+        final_time = 10.; // in units of t_crunch
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -185,7 +185,7 @@ int main()
         default_random_engine generator(seed);
 
         double R0 = 20.;        // Radius of galaxy, in units of lightyears
-        int objects = 100;      // Number of stars to be added in galaxy
+        int objects = 300;      // Number of stars to be added in galaxy
 
         // initialize mass and position, to be randomly distributed
         double m,x,y,z;

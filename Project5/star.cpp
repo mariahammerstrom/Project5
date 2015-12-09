@@ -66,16 +66,16 @@ double star::KineticEnergy()
     return this->mass*total_velocity*total_velocity;
 }
 
-double star::PotentialEnergy(star &otherStar)
+double star::PotentialEnergy(star &otherStar, double epsilon)
 {
-    return -G*this->mass*otherStar.mass/this->distance(otherStar);
+    return -G*this->mass*otherStar.mass/(this->distance(otherStar) + epsilon);
 }
 
-bool star::bound(star &otherStar)
+/*bool star::bound(star &otherStar, double epsilon)
 {   // true if the star is gravitationally bound
 
-    return ((this->KineticEnergy() + this->PotentialEnergy(otherStar)) < 0.0);
-}
+    return ((this->KineticEnergy() + this->PotentialEnergy(otherStar,epsilon)) < 0.0);
+}*/
 
 /*
 void star::merge(star &star2)

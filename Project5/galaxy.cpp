@@ -66,25 +66,33 @@ void galaxy::print_position(std::ofstream &output, int dimension, double time,in
     }
 }
 
-void galaxy::print_energy(std::ofstream &output, double time)
+void galaxy::print_energy(std::ofstream &output, double time,double epsilon)
 {   // Writes energies to a file "output"
-    bool bounded;
+
     this->KineticEnergySystem();
-    this->PotentialEnergySystem();
+    this->PotentialEnergySystem(epsilon);
+
+    /*bool bounded;
     for(int nr=0;nr<total_stars;nr++){
         star &Current = all_stars[nr];
         bounded = this->Bound(Current);
         if(!bounded){
             totalKinetic -= Current.kinetic;
-            totalPotential -= Current.potential;
+            totalPotential -= 0.5*Current.potential;
         }
+    }*/
+
+    for(int nr=0;nr<total_stars;nr++){
+        star &Current = all_stars[nr];
+        output << time << "\t" << nr << "\t";
+        output << Current.kinetic << "\t" << Current.potential << "\t";
+        output << Current.kinetic + Current.potential << std::endl;
     }
-    output << time << "\t";
-    output << totalKinetic << "\t" << 0.5*totalPotential << "\t";
-    output << totalKinetic+0.5*totalPotential << std::endl;
+    //output << totalKinetic << "\t" << totalPotential << "\t";
+    //output << totalKinetic + totalPotential << std::endl;
 }
 
-void galaxy::RungeKutta4(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number)
+void galaxy::RungeKutta4(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number,double epsilon)
 {   // 4th order Runge-Kutta solver for a star cluster / spherical galaxy
 
     if(!simple) GravitationalConstant();
@@ -114,7 +122,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
 
     // Write initial values to file
     print_position(output_file,dimension,time,print_number);
-    print_energy(output_energy,time);
+    print_energy(output_energy,time,epsilon);
 
     // Set up clock to measure the time usage
     clock_t start_RK4,finish_RK4;
@@ -225,7 +233,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         print_position(output_file,dimension,time,print_number);
         time += time_step;
 
-        print_energy(output_energy,time);
+        print_energy(output_energy,time,epsilon);
         loss += EnergyLoss();
     }
     // Stop clock and print out time usage
@@ -254,13 +262,16 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     // Create files for data storage
     char *filename = new char[1000];
     char *filenameE = new char[1000];
+    char *filenameB = new char[1000];
     if(stellar){
         sprintf(filename, "cluster_VV_%d_%.3f.txt",total_stars,time_step); // If N-body cluster
         sprintf(filenameE, "cluster_VV_energy_%d_%.3f.txt",total_stars,time_step);
+        sprintf(filenameB,"cluster_bound_%d_%.3f.txt",total_stars,time_step);
     }
     else sprintf(filename, "analytic_VV_%d_%.3f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
     std::ofstream output_energy(filenameE);
+    std::ofstream output_bound(filenameB);
 
     // Set up arrays
     double **acceleration = setup_matrix(total_stars,3);
@@ -271,7 +282,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
     // Write initial values to file
     print_position(output_file,dimension,time,print_number);
-    print_energy(output_energy,time);
+    print_energy(output_energy,time,epsilon);
 
     // Set up clock to measure the time usage
     clock_t start_VV,finish_VV;
@@ -329,7 +340,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
         // Write current values to file and increase time
         print_position(output_file,dimension,time,print_number);
-        print_energy(output_energy,time);
+        print_energy(output_energy,time,epsilon);
 
         loss += EnergyLoss();
 
@@ -340,15 +351,27 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     std::cout << "Total time = " << "\t" << ((float)(finish_VV - start_VV)/CLOCKS_PER_SEC) << " seconds" << std::endl; // print elapsed time
     std::cout << "One time step = " << "\t" << ((float)(finish_VV - start_VV)/CLOCKS_PER_SEC)/integration_points << " seconds" << std::endl; // print elapsed time
 
+    //loss = EnergyLoss();
+    std::cout << "Total energyloss due to unbound stars: " << loss << std::endl;
+
+    double boundStars = 0;
+    for(int nr=0;nr<total_stars;nr++){
+        star &Current = all_stars[nr];
+        if(this->Bound(Current)){
+            output_bound << nr << std::endl;
+            boundStars += 1;
+        }
+    }
+    std::cout << "There are " << boundStars << " bound stars at the end of the run" << std::endl;
+
     // Close files
     output_file.close();
     output_energy.close();
+    output_bound.close();
 
     // Clear memory
     delete_matrix(acceleration);
     delete_matrix(acceleration_new);
-
-    std::cout << "Total energyloss due to unbound stars: " << loss << std::endl;
 }
 
 double ** galaxy::setup_matrix(int height,int width)
@@ -413,11 +436,12 @@ void galaxy::KineticEnergySystem()
     for(int nr=0;nr<total_stars;nr++){
         star &Current = all_stars[nr];
         Current.kinetic = Current.KineticEnergy();
-        totalKinetic += Current.kinetic;
+        if(this->Bound(Current))
+            totalKinetic += Current.kinetic;
     }
 }
 
-void galaxy::PotentialEnergySystem()
+void galaxy::PotentialEnergySystem(double epsilon)
 {
     totalPotential = 0;
     for(int nr=0;nr<total_stars;nr++){
@@ -428,10 +452,11 @@ void galaxy::PotentialEnergySystem()
         star &Current = all_stars[nr1];
         for(int nr2=nr1+1;nr2<total_stars;nr2++){
             star &Other = all_stars[nr2];
-            Current.potential += Current.PotentialEnergy(Other);
-            Other.potential += Other.PotentialEnergy(Current);
+            Current.potential += Current.PotentialEnergy(Other,epsilon);
+            Other.potential += Other.PotentialEnergy(Current,epsilon);
         }
-        totalPotential += Current.potential;
+        if(this->Bound(Current))
+            totalPotential += 0.5*Current.potential;
     }
 }
 
@@ -453,7 +478,7 @@ double galaxy::EnergyLoss()
             indices.push_back(nr);
         }
     }
-    for(int i=0;i<indices.size();i++) EnergyLoss -= all_stars[indices[i]].KineticEnergy();
+    for(int i=0;i<indices.size();i++) EnergyLoss += all_stars[indices[i]].KineticEnergy();
     return EnergyLoss;
 }
 
