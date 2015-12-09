@@ -55,9 +55,11 @@ Open clusters are usually found in the arms of spiral galaxies or in irregular g
 
 % (Images which shows an open cluster, and a galaxy with visible clusters - HII regions ??)
 
-We first study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem using two numerical methods: 4th order Runge-Kutta and Velocity-Verlet. We check the stability of these methods and the behavior of the $N$-body system over time. 
+We first study the Newtonian two-body problem in three dimensions, then extend this to an $N$-body problem using two numerical methods: 4th order Runge-Kutta and Velocity-Verlet. We check the stability of these methods and the behavior of the $N$-body system over time. Will the system collapse or disippate?
 
-The methods and practicalities concerning the programming aspect of the simulation is discussed in Sec.~\ref{sec:methods}, our findings are presented in Sec.~\ref{sec:results}, and we summarize the results in Sec.~\ref{sec:conclusion}.
+The methods and practicalities concerning the programming aspect of the simulation is discussed in Sec.~\ref{sec:methods}, our findings are presented in Sec.~\ref{sec:results}, and we summarize the results in Sec.~\ref{sec:conclusion}. \\
+
+\noindent \textit{Selected results are collected in a separate file named} \verb@selected_results.txt@.
 
 
 
@@ -407,6 +409,8 @@ The system does not reach an equilibrium where the stars continue in similar orb
 \end{figure*}
 
 
+
+
 \subsubsection{The energy of the system}
 
 We calculate the kinetic and potential energy of our system to study whether the energy is conserved, and see if this is dependent on the number of objects $N$, using
@@ -418,13 +422,15 @@ where $M$ is the mass of the star we are considering and $m$ is the mass of anot
 
 Fig.~\ref{fig:Nbody_energy}a-f shows the kinetic and potential energy for the system of stars, where we have excluded the energy contributions from stars that have been ejected from the system. An ejected star is identified by comparing its kinetic and potential energy. If its kinetic energy is the larger of the two, the star will have a velocity large enough to escape the gravitational field, i.e. a large enough escape velocity.
 
-The kinetic energy rises quickly in the beginning of the simulation, as seen in Fig.~\ref{fig:Nbody_energy}a-c, then stabilizing around $t = \tau_{\mathrm{crunch}}$. The figure resembles Fig. 4 in Joyce \textit{et. al} (2010). The overall kinetic energy decreases for larger values of $N$. This corresponds to what we saw in the scatter plots in Fig.~\ref{fig:N_body_simulation}a-i where the collection of stars appear to be more tightly bound for higher values of $N$ at the end of the simulation, corresponding with an increasing potential energy.  
+The kinetic energy rises quickly in the beginning of the simulation, as seen in Fig.~\ref{fig:Nbody_energy}a-c, then stabilizing around $t = \tau_{\mathrm{crunch}}$. The figure closely resembles Fig. 4 in Joyce \textit{et. al} (2010). The overall kinetic energy decreases for larger values of $N$. This corresponds to what we saw in the scatter plots in Fig.~\ref{fig:N_body_simulation}a-i where the collection of stars appear to be more tightly bound for higher values of $N$ at the end of the simulation, corresponding with an increasing potential energy.  
 
-The potential energy in Fig.~\ref{fig:Nbody_energy}d-f is steadily increasing as the stars are pulled towards the center. These plots show a maximum at $t \in [2.2, 2.5, 1.5] \tau_{\mathrm{crunch}}$ for $N = 100,200,300$, corresponding to the time at which the stars are closest to collapse. In the case of $N = 300$ both the kinetic and potential energy stabilizes at around $t = 1.5\tau_{\mathrm{crunch}}$, approaching an equilibrium. 
+The potential energy in Fig.~\ref{fig:Nbody_energy}d-f is steadily increasing as the stars are pulled towards the center. These plots show a maximum at $t \in [2.2, 2.5, 1.5] \tau_{\mathrm{crunch}}$ for $N = 100,200,300$ respectively, corresponding to the time at which the stars are closest to collapse. The fact that there is a peak in these plots, indicates that they system does not stay nicely bound in the center of the sphere, but that the stars instead crossed the center and keeps moving to the other side, making the system expand again.
+
+In the case of $N = 300$ both the kinetic and potential energy stabilizes at around $t = 1.5\tau_{\mathrm{crunch}}$, approaching an equilibrium situation. 
 
 We also tried running the calculations for $N = 500$, but is resulted in memory error when plotting the results with Python. We have therefore limited ourselves to $N = 300$. 
 
-\begin{figure*}
+\begin{figure*}[t!]
 \begin{center}
 \begin{tabular}{ccc}
   	\includegraphics[width=60mm]{Images/Ek_100stars.png}
@@ -440,18 +446,20 @@ We also tried running the calculations for $N = 500$, but is resulted in memory 
 \caption{The evolution of kinetic energy (top) and potential energy (bottom) over time for $N = 100, 200, 300$ stars and $\Delta t = 0.001$.}\label{fig:Nbody_energy}
 \end{center}
 \end{figure*}
-The fraction of ejected stars as a function of time is shown in Fig.~\ref{fig:Nbody_unbound} for different values of $N$. The shape of the curve closely resembles the curve for the kinetic energy in Fig.~\ref{fig:Nbody_energy}a-c. This is as expected, as the ejected stars are the stars that have large enough velocities to escape, thus contributing the most to the total kinetic energy of the system. 
-
-A thing to note is that the fraction of ejected stars oscillates quite a bit. The fraction of ejected stars peaks around $t = 2\tau_{\mathrm{crunch}}$ in all cases, than in the case of $N = 300$ the fraction decreases quite significantly and then starts increasing again. 
-
-COMMENT. 
+How are the energy plots related to the fraction of stars that are ejected from the system? The fraction of ejected stars as a function of time is shown in Fig.~\ref{fig:Nbody_unbound}a for different values of $N$. The shape of the curve closely resembles the curve for the kinetic energy in Fig.~\ref{fig:Nbody_energy}a-c. This is as expected, as the ejected stars are the stars that have large enough velocities to escape, thus contributing the most to the total kinetic energy of the system. 
 
 \begin{figure*}
 \begin{center}
+\begin{tabular}{cc}
   	\includegraphics[width=90mm]{Images/unbound_stars.png}
-	\caption{Fraction of unbound stars as a function of time for $N = 100, 200, 300$.}\label{fig:Nbody_unbound}
+	& \includegraphics[width=90mm]{Images/unbound_epsilon20.png} \\
+	(a) $\epsilon = 0$		& (b) $\epsilon = 20$  \\[6pt]
+\end{tabular}
+\caption{Fraction of unbound stars as a function of time for different values of $N$ in the un-smoothed (a) and smoothed case (b).}\label{fig:Nbody_unbound}
 \end{center}
 \end{figure*}
+A thing to note is that the fraction of ejected stars oscillates quite a bit. The fraction of ejected stars peaks around $t = 2\tau_{\mathrm{crunch}}$ in all cases. In the case of $N = 300$ the fraction decreases quite significantly after this point and then starts increasing again after $t = 7\tau_{\mathrm{crunch}}$. This is because we at each time step of our calculations give the stars another chance to be a part of the cluster. This means that stars that originally had reached escape velocity and was on their way out of the system, returns to the cluster. This can happen because several stars can be on their way out in the same direction, pulling on each other, and possibly causing some stars to return to the system. For large values of $N$ this is a more likely scenario, as there are more stars available to produce this effect.
+
 
 
 
@@ -468,16 +476,20 @@ where $\epsilon$ is a small real constant. We will try out different values for 
 
 Adding the value of $\epsilon$ can be understood by noting that we are in reality considering extended objects, rather than point sources. These objects will have a radius $R$, thus the centers of two objects can only get as close as $2R$ to each other. (An alternative approach could be to let objects merge when getting too close.) 
 
-We know that for a bound gravitational system in equilibrium the \textbf{virial theorem} should be fulfilled, which states that
+For a bound gravitational system in equilibrium the \textbf{virial theorem} should be fulfilled, which states that
 
 \begin{equation}\label{eq:vir}
 	2 \langle K \rangle = - \langle V \rangle,
 \end{equation}
-where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. The virial theorem deploys the ergodic hypothesis, which states that we can take an ensemble average instead of a time average. By calculating the kinetic and potential energy of the stars in our system that are bound (not ejected), we can check if our results are consistent with Eq. (\ref{eq:vir}) and use this as an indicated for which $\epsilon$ is better..
+where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. By calculating the kinetic and potential energy of the stars in our system that are bound (not ejected), we can check if our results are consistent with the virial theorem and use this as an indication of which value of $\epsilon$ is better.
 
-By trying out different values of $\epsilon$, we find ...
+By trying out different values of $\epsilon$, we find that the fraction of bound stars fluctuate significantly over time. Whether the virial theorem is fulfilled or not also fluctuate. From many trials, $\epsilon = 20$ stands out as a good choice. At first suspicious of this value's resemblance to the radius of the sphere $R$ in which our star cluster lives, we checked that this was not the case by testing out $R = \epsilon = 30$. 
 
-MORE!!!
+It is curious that the value of $\epsilon$ needs to be as large as 20, which will be in units of light years. MORE!!!
+
+In Fig.~\ref{fig:Nbody_unbound}b we see how setting the value of $\epsilon$ to be non-zero affects the evolution of the fraction of unbound stars as a function of time, shown for the 100-body case. Stars are initially thrown out of the system at $t = \tau_{\mathrm{crunch}}$ in large numbers. A very large fraction of these do however return to the system, only to disappear again. The fraction of unbound stars keeps fluctuating, though the amplitude of the fluctuations decrease over time.
+
+If we were only to plot the fraction of unbound stars for times in the range $[0,2.5\tau_{\mathrm{crunch}}]$, Fig.~\ref{fig:Nbody_unbound}b would very much resemble the behavior shown in Fig. 2 in Joyce \textit{et. al} (2010). If we did not allow stars to return to the system, we expect our results to be similar to this figure, which shows a large increase in the fraction of unbound stars at $t = \tau_{\mathrm{crunch}}$, which quickly stabilizes without showing clear fluctuations as our plots do. Here we should also note that Joyce \textit{et. al} (2010) used a system of $N = 10^7$ stars, which is significantly higher than we are capable of.
 
 
 
@@ -491,6 +503,18 @@ Finally we wish to study the \textbf{radial density} of the particles in the equ
 where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. The result is shown in Fig. XXXX. 
 
 COMMENTS!
+
+\begin{figure*}
+\begin{center}
+\begin{tabular}{cc}
+  	\includegraphics[width=90mm]{Images/unbound_stars.png}
+	& \includegraphics[width=90mm]{Images/histogram_300_epsilon20.png} \\
+	(a) $\epsilon = 0$		& (b) $\epsilon = 20$  \\[6pt]
+\end{tabular}
+\caption{Histogram for radial density as a function of radius for a 300-body system in the un-smoothed (a) and smoothed case (b).}\label{fig:Nbody_histogram}
+\end{center}
+\end{figure*}
+
 
 %The result can also be compared with the well-known Navarro-Frenk-White profile
 %
@@ -508,8 +532,13 @@ COMMENTS!
 
 \section{Conclusions}\label{sec:conclusion}
 
+We have run an $N$-body simulation of an open star cluster using the 4th order Runge-Kutta and Velocity Verlet integration methods. The cluster member began their lives with randomly distributed positions within a sphere with a radius of 20 light years consisting of 100 stars with masses randomly distributed by a Gaussian distribution around ten solar masses with a standard deviation of one solar mass.
+
+Already in the analytical case did we see the bad side of Runge-Kutta methods, which is that these methods do not conserve energy. When simulating a gravitational system, conservation of energy is highly important. This fact, in addition to Velocity Verlet's (VV) accuracy even for larger time steps, led us to make VV our method of choice for our simulations. Time usage by the two methods turn out not to be an issue.
+
 ...
 
+An interesting idea for future work would be to include the possibility of stars merging together when sufficiently close to each other.
 
 \section{References}
 
@@ -544,6 +573,7 @@ The codes developed and used in this project are:
 	\item \verb@plot_methods_Nbody.py@ -- program to graphically compare the two numerical methods for the $N$-body problem.
 	\item \verb@plotting_scatter.py@ -- plotting program to visualize the 3D distribution of particles in the $N$-body system as a scatter plot, as shown in Fig.~\ref{fig:N_body_simulation}. 
 	\item \verb@plotting_radialprofile.py@ -- plotting program that calculates the radial profile of the system, fitted with the profile in Eq. (\ref{eq:simple_fit}). %and Eq. (\ref{eq:NFW}).
+	\item \verb@t_crunch.py@ -- Short program to calculate the value of $\tau_{\mathrm{crunch}}$ in units of years for the $N$-body system.
 \end{itemize}
 
 

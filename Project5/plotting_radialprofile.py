@@ -49,13 +49,13 @@ def radial_profile(total_stars,time_step,final,integration_points):
     t,index,m,x,y,z,vx,vy,vz = read_file(filename)
     
     if final == True:
-        title = 'Final configuration'
+        title = 'Final configuration, N = %d, time step = %.3f' % (total_stars,time_step)
         x = x[total_stars*integration_points:-1]
         y = y[total_stars*integration_points:-1]
         z = z[total_stars*integration_points:-1]
         t = t[total_stars*integration_points:-1]
     else:
-        title = 'Intitial configuration'
+        title = 'Intitial configuration, N = %d, time step = %.3f' % (total_stars,time_step)
         x = x[0:total_stars]
         y = y[0:total_stars]
         z = z[0:total_stars]
@@ -79,10 +79,10 @@ def radial_profile(total_stars,time_step,final,integration_points):
     
     #"""
     plt.figure()
-    plt.hist(r,bins=1000,normed=True)
+    plt.hist(r,bins=1000,weights=weights)
     plt.xlabel('Radial distance [ly]')
     plt.ylabel(r'Radial density $[N/$ly$^3]$')
-    plt.xlim(0,400)
+    #plt.xlim(0,20)
     plt.title(title,size=12)
     #"""
      
@@ -103,14 +103,18 @@ def radial_profile(total_stars,time_step,final,integration_points):
     """
     
     # Calculate radial densities
-    radii = np.linspace(0.01,20,30)
+    radii = np.linspace(0.01,20,22)
     radii2 = np.linspace(0.01,20,1000)
     volume = 4*np.pi*radii**3/3.0;
     
     r_rounded = np.around(r, decimals=0)
-    counts = np.bincount(r_rounded.astype(int),weights=None,minlength=None)
+    counts = np.bincount(r_rounded.astype(int))
     counts_limited = counts[0:len(volume)]
+    
+    print len(r),len(counts),len(counts_limited),len(volume)
+    
     no_density = counts_limited/volume
+    
     
     # Calculate simple fit
     n_0 = total_stars**2
@@ -142,9 +146,9 @@ def NFW_profile(rho_0,r_0,r):
 
 def main(argv):
     
-    total_stars = 500
-    time_step = 0.005
-    integration_points = 1000
+    total_stars = 300
+    time_step = 0.001
+    integration_points = 10000
 
     # Radial profile
     final = True # False = intitial distribution, True = final distribution

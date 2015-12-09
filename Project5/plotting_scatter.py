@@ -81,7 +81,7 @@ def scatter_plot_series(total_stars,time_step,integration_points,x,y,z,t,epsilon
     delete_files(total_stars,epsilon)
     
     # Plot scatter plot as time evolves for the system and save plots to file.
-    for i in range(integration_points):
+    for i in range(integration_points-1):
         plot_scatter(total_stars,x[i*total_stars:(i+1)*total_stars],y[i*total_stars:(i+1)*total_stars],z[i*total_stars:(i+1)*total_stars],'t = %.3f' % t[i*total_stars],False)
         if epsilon == 0.0:
             plt.savefig('Movie/Image_%d_%.3f.png' % (total_stars,t[i*total_stars]))
@@ -106,10 +106,10 @@ def delete_files(total_stars,epsilon):
 
 
 def main(argv):
-    total_stars = 100
+    total_stars = 300
     time_step = 0.005
-    integration_points = 1000
-    epsilon = 0.1
+    integration_points = 10000
+    epsilon = 20
     
     # Read data
     filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.3f.txt' % (total_stars,time_step)
