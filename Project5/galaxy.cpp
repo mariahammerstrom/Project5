@@ -258,20 +258,24 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     double time_step = final_time/((double) integration_points);
     double time = 0.0;
     double loss = 0.; // Possible energy loss
+    int lostStars[integration_points];
 
     // Create files for data storage
     char *filename = new char[1000];
     char *filenameE = new char[1000];
     char *filenameB = new char[1000];
+    char *filenameLost = new char[1000];
     if(stellar){
         sprintf(filename, "cluster_VV_%d_%.3f.txt",total_stars,time_step); // If N-body cluster
         sprintf(filenameE, "cluster_VV_energy_%d_%.3f.txt",total_stars,time_step);
         sprintf(filenameB,"cluster_bound_%d_%.3f.txt",total_stars,time_step);
+        sprintf(filenameLost,"cluster_lost_%d_%.3f.txt",total_stars,time_step);
     }
     else sprintf(filename, "analytic_VV_%d_%.3f.txt",integration_points,time_step); // If 1D 2-body analytic case
     std::ofstream output_file(filename);
     std::ofstream output_energy(filenameE);
     std::ofstream output_bound(filenameB);
+    std::ofstream output_lost(filenameLost);
 
     // Set up arrays
     double **acceleration = setup_matrix(total_stars,3);
@@ -284,6 +288,11 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     print_position(output_file,dimension,time,print_number);
     print_energy(output_energy,time);
 
+    int n = 0;
+    lostStars[n] = 0;
+    output_lost << time << "\t" << lostStars[n] << std::endl;
+    n+=1;
+
     // Set up clock to measure the time usage
     clock_t start_VV,finish_VV;
     start_VV = clock();
@@ -292,6 +301,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     // Loop over time
     time += time_step;
     while(time < final_time){
+        lostStars[n] = 0;
 
         // Loop over all stars
         for(int nr1=0; nr1<total_stars; nr1++){
@@ -344,6 +354,14 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
         loss += EnergyLoss();
 
+        for(int nr=0;nr<total_stars;nr++){
+            star &Current = all_stars[nr];
+            if(!(this->Bound(Current))){
+                lostStars[n] += 1;
+            }
+        }
+        output_lost << time << "\t" << lostStars[n] << std::endl;
+        n += 1;
         time += time_step;
     }
     // Stop clock and print out time usage
@@ -368,6 +386,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
     output_file.close();
     output_energy.close();
     output_bound.close();
+    output_lost.close();
 
     // Clear memory
     delete_matrix(acceleration);

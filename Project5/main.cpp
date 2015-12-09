@@ -185,7 +185,7 @@ int main()
         default_random_engine generator(seed);
 
         double R0 = 20.;        // Radius of galaxy, in units of lightyears
-        int objects = 100;      // Number of stars to be added in galaxy
+        int objects = 300;      // Number of stars to be added in galaxy
 
         // initialize mass and position, to be randomly distributed
         double m,x,y,z;

@@ -246,6 +246,7 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         '''
         
         # Plot: Energy
+        '''
         plt.figure()
         plt.title('Kinetic energy, time step = %.3f' % time_step,size=12)
         plt.plot(newTime,-newEk/allEtot[0],label='potential')
@@ -268,6 +269,7 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         #plt.legend(loc=1,prop={'size':12})
         plt.show()
         '''
+        '''
         plt.figure()
         plt.title('Total energy, time step = %.3f' % time_step,size=12)
         plt.plot(allTime,allEk,label='kinetic')
@@ -279,6 +281,23 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         plt.legend(loc=1,prop={'size':12})
         plt.show()
         '''   
+        # Plot distribution of lost stars
+        data_lost1 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_100_%.3f.txt' % (time_step),unpack=True)
+        data_lost2 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_200_%.3f.txt' % (time_step),unpack=True)
+        data_lost3 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_300_%.3f.txt' % (time_step),unpack=True)
+        lost_time1 = data_lost1[0]
+        lost_stars1 = data_lost1[1]
+        lost_time2 = data_lost2[0]
+        lost_stars2 = data_lost2[1]
+        lost_time3 = data_lost3[0]
+        lost_stars3 = data_lost3[1]
+        plt.plot(lost_time1,lost_stars1/100,label='100 stars')
+        plt.plot(lost_time2,lost_stars2/200,label='200 stars')
+        plt.plot(lost_time3,lost_stars3/300,label='300 stars')
+        plt.xlabel('$t$ ($t_{crunch}$)')
+        plt.ylabel('No. of unbound stars / total stars')
+        plt.legend(loc=4)
+        plt.show()
     
     return
 
@@ -345,7 +364,7 @@ def plot_orbits_RK4(total_stars,time_step):
     
     
 def main(argv):
-    total_stars = 300
+    total_stars = 100
     time_step = 0.001
     integration_points = 10000
 
