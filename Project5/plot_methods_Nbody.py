@@ -92,28 +92,37 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
     #EtotRK4 = dataRK4[3]
 	
     # Energies for bound stars
-    newEk = np.zeros(integration_points)
-    newEp = np.zeros(integration_points)
-    newEtot = np.zeros(integration_points)
-    newTime = np.zeros(integration_points)
-    for s in range(integration_points):
-        newTime[s] = s*time_step
+    start = int(4./time_step)
+    newEk = np.zeros(integration_points-start)
+    newEp = np.zeros(integration_points-start)
+    newEtot = np.zeros(integration_points-start)
+    newTime = np.zeros(integration_points-start)
+    for s in range(integration_points-start):
+        newTime[s] = s*time_step + 4.
         for i in index:
-            newEk[s] += EkVV[i + s*total_stars]
-            newEp[s] += EpVV[i + s*total_stars]
-            newEtot[s] += EtotVV[i + s*total_stars]
+            newEk[s] += EkVV[i + (s+start)*total_stars]
+            newEp[s] += EpVV[i + (s+start)*total_stars]
+            newEtot[s] += EtotVV[i + (s+start)*total_stars]
+    print "Only bound stars: "
+    print "<Ek> = ", 2.*np.average(newEk)
+    print "<Ep> = ", -np.average(newEp)
+    print "<Ek>/<Ep> = ",  -2.*np.average(newEk)/np.average(newEp)
 	
     # Energies for all stars
-    allEk = np.zeros(integration_points)
-    allEp = np.zeros(integration_points)
-    allEtot = np.zeros(integration_points)
-    allTime = np.zeros(integration_points)
-    for s in range(integration_points):
-        allTime[s] = s*time_step
+    allEk = np.zeros(integration_points-start)
+    allEp = np.zeros(integration_points-start)
+    allEtot = np.zeros(integration_points-start)
+    allTime = np.zeros(integration_points-start)
+    for s in range(integration_points-start):
+        allTime[s] = s*time_step + 4.
         for i in range(total_stars):
-            allEk[s] += EkVV[i + s*total_stars]
-            allEp[s] += EpVV[i + s*total_stars]
-            allEtot[s] += EtotVV[i + s*total_stars]
+            allEk[s] += EkVV[i + (s+start)*total_stars]
+            allEp[s] += EpVV[i + (s+start)*total_stars]
+            allEtot[s] += EtotVV[i + (s+start)*total_stars]
+    print "All stars: "
+    print "<Ek> = ", 2.*np.average(allEk)
+    print "<Ep> = ", -np.average(allEp)
+    print "<Ek>/<Ep> = ",  -2.*np.average(allEk)/np.average(allEp)
     
     if subset == True:
         # Plot position: VV
@@ -246,30 +255,30 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         '''
         
         # Plot: Energy
-        '''
+        
         plt.figure()
         plt.title('Kinetic energy, time step = %.3f' % time_step,size=12)
         plt.plot(newTime,-newEk/allEtot[0],label='potential')
         plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
-        plt.yscale('log')
-        plt.xlim(0,3)
-        plt.ylim(1e-3,1e2)
+        #plt.yscale('log')
+        #plt.xlim(0,3)
+        #plt.ylim(1e-3,1e2)
         plt.ylabel(r'$E_k/T_{tot,0}$',size=14)
         #plt.legend(loc=1,prop={'size':12})
-        plt.show()
+        #plt.show()
 		
         plt.figure()
         plt.title('Potential energy, time step = %.3f' % time_step,size=12)
         plt.plot(newTime,newEp/allEtot[0],label='potential')
         plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
-        plt.yscale('log')
-        plt.xlim(0,3)
-        plt.ylim(1e-1,1e0)
+        #plt.yscale('log')
+        #plt.xlim(0,3)
+        #plt.ylim(1e-1,1e0)
         plt.ylabel(r'$E_p/T_{tot,0}$',size=14)
         #plt.legend(loc=1,prop={'size':12})
-        plt.show()
-        '''
-        '''
+        #plt.show()
+        
+        
         plt.figure()
         plt.title('Total energy, time step = %.3f' % time_step,size=12)
         plt.plot(allTime,allEk,label='kinetic')
@@ -280,24 +289,26 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=1,prop={'size':12})
         plt.show()
-        '''   
+        
+        
         # Plot distribution of lost stars
         data_lost1 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_100_%.3f.txt' % (time_step),unpack=True)
-        data_lost2 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_200_%.3f.txt' % (time_step),unpack=True)
-        data_lost3 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_300_%.3f.txt' % (time_step),unpack=True)
+        #data_lost2 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_200_%.3f.txt' % (time_step),unpack=True)
+        #data_lost3 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_300_%.3f.txt' % (time_step),unpack=True)
         lost_time1 = data_lost1[0]
         lost_stars1 = data_lost1[1]
-        lost_time2 = data_lost2[0]
-        lost_stars2 = data_lost2[1]
-        lost_time3 = data_lost3[0]
-        lost_stars3 = data_lost3[1]
+        #lost_time2 = data_lost2[0]
+        #lost_stars2 = data_lost2[1]
+        #lost_time3 = data_lost3[0]
+        #lost_stars3 = data_lost3[1]
         plt.plot(lost_time1,lost_stars1/100,label='100 stars')
-        plt.plot(lost_time2,lost_stars2/200,label='200 stars')
-        plt.plot(lost_time3,lost_stars3/300,label='300 stars')
+        #plt.plot(lost_time2,lost_stars2/200,label='200 stars')
+        #plt.plot(lost_time3,lost_stars3/300,label='300 stars')
         plt.xlabel('$t$ ($t_{crunch}$)')
         plt.ylabel('No. of unbound stars / total stars')
         plt.legend(loc=4)
         plt.show()
+        
     
     return
 
@@ -365,7 +376,7 @@ def plot_orbits_RK4(total_stars,time_step):
     
 def main(argv):
     total_stars = 100
-    time_step = 0.001
+    time_step = 0.002
     integration_points = 10000
 
     # Plot orbits

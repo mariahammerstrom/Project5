@@ -81,13 +81,14 @@ void galaxy::print_energy(std::ofstream &output, double time)
             totalPotential -= 0.5*Current.potential;
         }
     }*/
-
-    for(int nr=0;nr<total_stars;nr++){
-        star &Current = all_stars[nr];
-        output << time << "\t" << nr << "\t";
-        output << Current.kinetic << "\t" << Current.potential << "\t";
-        output << Current.kinetic + Current.potential << std::endl;
-    }
+    //if(time>4.0){
+        for(int nr=0;nr<total_stars;nr++){
+            star &Current = all_stars[nr];
+            output << time << "\t" << nr << "\t";
+            output << Current.kinetic << "\t" << Current.potential << "\t";
+            output << Current.kinetic + Current.potential << std::endl;
+        }
+    //}
     //output << totalKinetic << "\t" << totalPotential << "\t";
     //output << totalKinetic + totalPotential << std::endl;
 }
@@ -343,7 +344,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
             acceleration_new[nr1][2] = Fznew/current.mass;
 
             // Calculate new velocity for current star
-             for(int j=0; j<dimension; j++) current.velocity[j] += 0.5*time_step*(acceleration[nr1][j] + acceleration_new[nr1][j]);
+            for(int j=0; j<dimension; j++) current.velocity[j] += 0.5*time_step*(acceleration[nr1][j] + acceleration_new[nr1][j]);
         }
 
         // Energy conservation
@@ -431,7 +432,7 @@ void galaxy::GravitationalForce(star &current,star &other,double &Fx,double &Fy,
     double r = current.distance(other);
     double smoothing = epsilon*epsilon*epsilon;
 
-    // Calculate the forces in each direction    
+    // Calculate the forces in each direction
     Fx -= this->G*current.mass*other.mass*relative_distance[0]/((r*r*r) + smoothing);
     Fy -= this->G*current.mass*other.mass*relative_distance[1]/((r*r*r) + smoothing);
     Fz -= this->G*current.mass*other.mass*relative_distance[2]/((r*r*r) + smoothing);

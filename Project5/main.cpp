@@ -173,19 +173,20 @@ int main()
         dimension = 3;
         force = true;
         simple = false;
-        double epsilon = 0.0;//5;
+        double epsilon = 20.;
 
         integration_points = 10000;
-        final_time = 10.; // in units of t_crunch
+        final_time = 20.; // in units of t_crunch
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
+        cout << "epsilon = " << epsilon << endl;
 
         unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
         default_random_engine generator(seed);
 
         double R0 = 20.;        // Radius of galaxy, in units of lightyears
-        int objects = 300;      // Number of stars to be added in galaxy
+        int objects = 100;      // Number of stars to be added in galaxy
 
         // initialize mass and position, to be randomly distributed
         double m,x,y,z;
@@ -204,6 +205,7 @@ int main()
             MM15.add(stari);
         }
         cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
+        cout << "MM15 has mass of " << MM15.total_mass << " solar masses." << endl;
 
         // run system through VV, all data is written to file as we go
         MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars,epsilon);
