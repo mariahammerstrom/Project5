@@ -40,7 +40,7 @@ def read_file(filename):
     return t,index,m,x,y,z,v_x,v_y,v_z
     
 
-def radial_profile(total_stars,time_step,final):
+def radial_profile(total_stars,time_step,final,integration_points):
     # Input: Total stars, time step, whether to print final (True) or initial (False )distribution
     # Output: Plots and statistics.
     
@@ -50,10 +50,10 @@ def radial_profile(total_stars,time_step,final):
     
     if final == True:
         title = 'Final configuration'
-        x = x[-total_stars:-1]
-        y = y[-total_stars:-1]
-        z = z[-total_stars:-1]
-        t = t[-total_stars:-1]
+        x = x[total_stars*integration_points:-1]
+        y = y[total_stars*integration_points:-1]
+        z = z[total_stars*integration_points:-1]
+        t = t[total_stars*integration_points:-1]
     else:
         title = 'Intitial configuration'
         x = x[0:total_stars]
@@ -65,15 +65,40 @@ def radial_profile(total_stars,time_step,final):
     center = [0,0,0]
     r = np.sqrt((x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2)
     
-    volume = 4*np.pi*r**3/3.0;
-    
     # Calculate radial densities
+    radii = np.linspace(0.01,20,21)
+    radii2 = np.linspace(0.01,20,1000)
+    volume = 4*np.pi*radii**3/3.0;
+    
     r_rounded = np.around(r, decimals=0)
     counts = np.bincount(r_rounded.astype(int),weights=None,minlength=None)
-    print r
-    print r_rounded.astype(int)
-    print counts
+    counts_limited = counts[0:21]
     
+    no_density = counts_limited/volume
+    
+    n_0 = total_stars**2
+    
+    r_0 = total_stars**(-1./3)
+    density_fit_simple = simple_fit(n_0,r_0,radii2)
+    
+    #rho_0 = total_stars**(1.65)
+    #r_0 = total_stars**(-1./5)
+    #density_fit_NRW = NFW_profile(rho_0,r_0,radii2)
+    
+    plt.figure()
+    plt.plot(radii,no_density,label='Simulation')
+    plt.plot(radii2/total_stars**(-1./3),density_fit_simple/(total_stars**2),label='Simple fit')
+    #plt.plot(radii2/total_stars**(-1./3),density_fit_NRW/(total_stars**2),label='NRW fit')
+    plt.xlabel(r'$r/N^{-1/3}$')
+    plt.ylabel(r'$n(r)/N^2$')
+    plt.xlim(0,20)
+    plt.xscale('log')
+    plt.yscale('log')
+    plt.legend(loc=3,prop={'size':12})
+    plt.show()
+    
+    
+    """
     # Print statistics
     mu = np.average(r)
     stdev = np.std(r)
@@ -84,6 +109,8 @@ def radial_profile(total_stars,time_step,final):
     
     # Plot histogram
     bins = 60
+    """
+    
     
     """
     plt.figure()
@@ -107,6 +134,7 @@ def radial_profile(total_stars,time_step,final):
     """
      
 
+    """
     # Make simple fit
     n_0 = total_stars**2
     r_0 = total_stars**(-1./3)
@@ -138,7 +166,7 @@ def radial_profile(total_stars,time_step,final):
     plt.grid(True)
 
     plt.show()
-    
+    """
     
     
     """
@@ -170,11 +198,11 @@ def main(argv):
     
     total_stars = 500
     time_step = 0.005
-    integration_points = 100
+    integration_points = 1000
 
     # Radial profile
-    final = False # False = intitial distribution, True = final distribution
-    radial_profile(total_stars,time_step,final)
+    final = True # False = intitial distribution, True = final distribution
+    radial_profile(total_stars,time_step,final,integration_points)
     
 	
 if __name__ == "__main__":
