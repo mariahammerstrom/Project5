@@ -201,9 +201,9 @@ def plot_orbits2D(stars,N,time_step):
     
 def main(argv):
     # Plot results as a function of time
-    #plot_time(stars=2,N=10,time_step=0.5)
+    plot_time(stars=2,N=10,time_step=0.5)
     #plot_orbits(stars=2,N=10000,time_step=0.005)
-    plot_orbits2D(stars=2,N=10000,time_step=0.005)
+    #plot_orbits2D(stars=2,N=10000,time_step=0.005)
     
     print 6.3*(1.49e8)/(365*24*60*60) # [km/s], should be approx. 29.78 km/s
     

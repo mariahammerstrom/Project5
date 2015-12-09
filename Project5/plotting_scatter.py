@@ -45,7 +45,18 @@ def plot_scatter(total_stars,x,y,z,title,show):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     
-    s = ax.scatter(x,y,z,s=30,color='purple',marker='o')
+    if total_stars == 100:
+        color = 'purple'
+    elif total_stars == 200:
+        color = 'mediumturquoise'
+    elif total_stars == 300:
+        color = 'hotpink'
+    elif total_stars == 400:
+        color = 'darkorange'
+    elif total_stars == 500:
+        color = 'black'
+    
+    s = ax.scatter(x,y,z,s=20,color=color,marker='o')
     s.set_edgecolors = s.set_facecolors = lambda *args:None
 
     ax.set_xlabel(r'$x$',size=14)
@@ -62,49 +73,57 @@ def plot_scatter(total_stars,x,y,z,title,show):
         plt.show()
 
 
-def scatter_plot_series(total_stars,time_step,integration_points,x,y,z,t):
+def scatter_plot_series(total_stars,time_step,integration_points,x,y,z,t,epsilon):
     # Input: total number of stars, time step, integration points, positions (x,y,z), time array
     # Output: scatter plots as a function of time for each integration point.
     
     # Delete previously stored image files
-    delete_files(total_stars)
+    delete_files(total_stars,epsilon)
     
     # Plot scatter plot as time evolves for the system and save plots to file.
     for i in range(integration_points):
-        plot_scatter(total_stars,x[i*total_stars:(i+1)*total_stars],y[i*total_stars:(i+1)*total_stars],z[i*total_stars:(i+1)*total_stars],'t = %.2f' % t[i*total_stars],False)
-        plt.savefig('Movie/Image_%d_%.2f.png' % (total_stars,t[i*total_stars]))
+        plot_scatter(total_stars,x[i*total_stars:(i+1)*total_stars],y[i*total_stars:(i+1)*total_stars],z[i*total_stars:(i+1)*total_stars],'t = %.3f' % t[i*total_stars],False)
+        if epsilon == 0.0:
+            plt.savefig('Movie/Image_%d_%.3f.png' % (total_stars,t[i*total_stars]))
+        else:
+            plt.savefig('Movie_epsilon/Image_%d_%.3f.png' % (total_stars,t[i*total_stars]))
         
     return
 
 
-def delete_files(total_stars):
+def delete_files(total_stars,epsilon):
     # Function to delete previously stored files
     
     import glob,os
-    for f in glob.glob('Movie/Image_%d_*.png' % total_stars):
-        os.remove(f)
+    if epsilon == 0.0:
+        for f in glob.glob('Movie/Image_%d_*.png' % total_stars):
+            os.remove(f)
+    else:
+        for f in glob.glob('Movie_epsilon/Image_%d_*.png' % total_stars):
+            os.remove(f)
     return
 
 
 
 def main(argv):
     total_stars = 100
-    time_step = 0.05
-    integration_points = 100
+    time_step = 0.005
+    integration_points = 1000
+    epsilon = 0.1
     
     # Read data
-    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
-    #filename = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.2f.txt' % (total_stars,time_step)
+    filename = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/cluster_VV_%d_%.3f.txt' % (total_stars,time_step)
+    #filename = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_VV_%d_%.3f.txt' % (total_stars,time_step)
     t,index,m,x,y,z,v_x,v_y,v_z = read_file(filename)
     
     # Initial configuration
-    plot_scatter(total_stars,x[0:total_stars],y[0:total_stars],z[0:total_stars],'Initial condition, t = 0',True)
-
+    #plot_scatter(total_stars,x[0:total_stars],y[0:total_stars],z[0:total_stars],'Initial condition, t = 0',True)
+    
     # Final configuration
     #plot_scatter(total_stars,x[-total_stars:],y[-total_stars:],z[-total_stars:],'Final condition, t = %.2f' % t[-1],True)
     
     # Series of scatter plots as a function of time
-    #scatter_plot_series(total_stars,time_step,integration_points,x,y,z,t)
+    scatter_plot_series(total_stars,time_step,integration_points,x,y,z,t,epsilon)
     
 	
 if __name__ == "__main__":
