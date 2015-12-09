@@ -29,7 +29,7 @@ public:
     void addM(star newstar);
     void GravitationalConstant();
     void print_position(std::ofstream &output, int dimension, double time, int number);
-    void print_energy(std::ofstream &output, double time, double epsilon);
+    void print_energy(std::ofstream &output, double time);
     void RungeKutta4(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number, double epsilon);
     void VelocityVerlet(int dimension, int integration_points, double final_time, bool stellar, bool simple, int print_number, double epsilon);
     double **setup_matrix(int height, int width);
@@ -37,7 +37,7 @@ public:
     void GravitationalForce(star &current, star &other, double &Fx, double &Fy, double &Fz, double epsilon);
     void GravitationalForce_RK(double x_rel, double y_rel, double z_rel, double &Fx, double &Fy, double &Fz, double mass1, double mass2);
     void KineticEnergySystem();
-    void PotentialEnergySystem(double epsilon);
+    void PotentialEnergySystem();
     double EnergyLoss();
     bool Bound(star OneStar);
 

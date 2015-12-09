@@ -30,7 +30,7 @@ public:
     double Acceleration(star otherStar);
     //void merge(star star1,star star2);
     double KineticEnergy();
-    double PotentialEnergy(star &otherStar, double epsilon);
+    double PotentialEnergy(star &otherStar);
     //bool bound(star &otherStar);
 
 };

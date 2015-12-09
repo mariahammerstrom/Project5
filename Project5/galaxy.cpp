@@ -66,11 +66,11 @@ void galaxy::print_position(std::ofstream &output, int dimension, double time,in
     }
 }
 
-void galaxy::print_energy(std::ofstream &output, double time,double epsilon)
+void galaxy::print_energy(std::ofstream &output, double time)
 {   // Writes energies to a file "output"
 
     this->KineticEnergySystem();
-    this->PotentialEnergySystem(epsilon);
+    this->PotentialEnergySystem();
 
     /*bool bounded;
     for(int nr=0;nr<total_stars;nr++){
@@ -122,7 +122,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
 
     // Write initial values to file
     print_position(output_file,dimension,time,print_number);
-    print_energy(output_energy,time,epsilon);
+    print_energy(output_energy,time);
 
     // Set up clock to measure the time usage
     clock_t start_RK4,finish_RK4;
@@ -233,7 +233,7 @@ void galaxy::RungeKutta4(int dimension, int integration_points, double final_tim
         print_position(output_file,dimension,time,print_number);
         time += time_step;
 
-        print_energy(output_energy,time,epsilon);
+        print_energy(output_energy,time);
         loss += EnergyLoss();
     }
     // Stop clock and print out time usage
@@ -282,7 +282,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
     // Write initial values to file
     print_position(output_file,dimension,time,print_number);
-    print_energy(output_energy,time,epsilon);
+    print_energy(output_energy,time);
 
     // Set up clock to measure the time usage
     clock_t start_VV,finish_VV;
@@ -340,7 +340,7 @@ void galaxy::VelocityVerlet(int dimension, int integration_points, double final_
 
         // Write current values to file and increase time
         print_position(output_file,dimension,time,print_number);
-        print_energy(output_energy,time,epsilon);
+        print_energy(output_energy,time);
 
         loss += EnergyLoss();
 
@@ -441,7 +441,7 @@ void galaxy::KineticEnergySystem()
     }
 }
 
-void galaxy::PotentialEnergySystem(double epsilon)
+void galaxy::PotentialEnergySystem()
 {
     totalPotential = 0;
     for(int nr=0;nr<total_stars;nr++){
@@ -452,8 +452,8 @@ void galaxy::PotentialEnergySystem(double epsilon)
         star &Current = all_stars[nr1];
         for(int nr2=nr1+1;nr2<total_stars;nr2++){
             star &Other = all_stars[nr2];
-            Current.potential += Current.PotentialEnergy(Other,epsilon);
-            Other.potential += Other.PotentialEnergy(Current,epsilon);
+            Current.potential += Current.PotentialEnergy(Other);
+            Other.potential += Other.PotentialEnergy(Current);
         }
         if(this->Bound(Current))
             totalPotential += 0.5*Current.potential;

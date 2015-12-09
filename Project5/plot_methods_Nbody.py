@@ -244,18 +244,27 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         plt.legend(loc=1,prop={'size':12})
         plt.show()
         '''
-        '''
+        
         # Plot: Energy
         plt.figure()
-        plt.title('Total energy, time step = %.3f' % time_step,size=12)
-        plt.plot(newTime,-newEk/allEtot[0])#,label='kinetic')
-        plt.plot(newTime,newEp/allEtot[0],label='potential')
-        #plt.plot(newTime,newEtot,label='total')
+        plt.title('Kinetic energy, time step = %.3f' % time_step,size=12)
+        plt.plot(newTime,-newEk/allEtot[0],label='potential')
         plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
         plt.yscale('log')
         plt.xlim(0,3)
         plt.ylim(1e-3,1e2)
         plt.ylabel(r'$E_k/T_{tot,0}$',size=14)
+        #plt.legend(loc=1,prop={'size':12})
+        plt.show()
+		
+        plt.figure()
+        plt.title('Potential energy, time step = %.3f' % time_step,size=12)
+        plt.plot(newTime,newEp/allEtot[0],label='potential')
+        plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
+        plt.yscale('log')
+        plt.xlim(0,3)
+        plt.ylim(1e-1,1e0)
+        plt.ylabel(r'$E_p/T_{tot,0}$',size=14)
         #plt.legend(loc=1,prop={'size':12})
         plt.show()
         '''
@@ -269,7 +278,7 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=1,prop={'size':12})
         plt.show()
-           
+        '''   
     
     return
 
@@ -336,7 +345,7 @@ def plot_orbits_RK4(total_stars,time_step):
     
     
 def main(argv):
-    total_stars = 100
+    total_stars = 300
     time_step = 0.001
     integration_points = 10000
 

@@ -66,9 +66,9 @@ double star::KineticEnergy()
     return this->mass*total_velocity*total_velocity;
 }
 
-double star::PotentialEnergy(star &otherStar, double epsilon)
+double star::PotentialEnergy(star &otherStar)
 {
-    return -G*this->mass*otherStar.mass/(this->distance(otherStar) + epsilon);
+    return -G*this->mass*otherStar.mass/this->distance(otherStar);
 }
 
 /*bool star::bound(star &otherStar, double epsilon)
