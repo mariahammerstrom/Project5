@@ -131,6 +131,7 @@ def plot_time(total_stars,star_number,time_step,subset):
         plt.show()
         
         # Plot energy: VV
+        """
         plt.figure()
         plt.title('Total energy (Velocity-Verlet), time step = %.3f' % time_step,size=12)
         #plt.plot(time,EkVV,'b',label='K')
@@ -148,8 +149,10 @@ def plot_time(total_stars,star_number,time_step,subset):
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=4,prop={'size':12})
         plt.show()
+        """
         
         # Plot energy: RK4
+        """
         plt.figure()
         plt.title('Total energy (RK4), time step = %.3f' % time_step,size=12)
         #plt.plot(time,EkRK4,'b',label='K')
@@ -167,6 +170,7 @@ def plot_time(total_stars,star_number,time_step,subset):
         plt.ylabel(r'$E$',size=14)
         plt.legend(loc=4,prop={'size':12})
         plt.show()
+        """
         
     else:
         # Plot: Position
@@ -238,7 +242,7 @@ def plot_orbits_VV(total_stars,time_step):
     radius = 20
     plt.xlim([-radius,radius])
     plt.ylim([-radius,radius])
-    ax.set_zlim(-radius, radius)
+    ax.set_zlim(-radius,radius)
     
     ax.set_xlabel(r'$x$ $\mathrm{[ly]}$')
     ax.set_ylabel(r'$y$ $\mathrm{[ly]}$')
@@ -269,6 +273,7 @@ def plot_orbits_RK4(total_stars,time_step):
     radius = 20
     plt.xlim([-radius,radius])
     plt.ylim([-radius,radius])
+    ax.set_zlim(-radius,radius)
     
     ax.set_xlabel(r'$x$ $\mathrm{[ly]}$')
     ax.set_ylabel(r'$y$ $\mathrm{[ly]}$')
@@ -281,17 +286,17 @@ def plot_orbits_RK4(total_stars,time_step):
     
 def main(argv):
     total_stars = 100
-    time_step = 0.001
+    time_step = 0.005
     integration_points = 1000
 
     # Plot orbits
-    plot_orbits_VV(total_stars,time_step)
+    #plot_orbits_VV(total_stars,time_step)
     #plot_orbits_RK4(total_stars,time_step)
     
     # Plot results as a function of time
-    #star_number = 0 # Plot for one particular star
-    #subset = True # True = Print results as a function of time for different time steps, False = one time step
-    #plot_time(total_stars,star_number,time_step,subset)
+    star_number = 16 # Plot for one particular star
+    subset = True # True = Print results as a function of time for different time steps, False = one time step
+    plot_time(total_stars,star_number,time_step,subset)
     
 	
 if __name__ == "__main__":
