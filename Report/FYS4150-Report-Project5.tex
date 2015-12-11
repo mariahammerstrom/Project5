@@ -487,7 +487,7 @@ By trying out different values of $\epsilon$, we find that the fraction of bound
 
 It is curious that the value of $\epsilon$ needs to be as large as 20, which will be in units of light years. MORE!!!
 
-In Fig.~\ref{fig:Nbody_unbound}b we see how setting the value of $\epsilon$ to be non-zero affects the evolution of the fraction of unbound stars as a function of time, shown for the 100-body case. Stars are initially thrown out of the system at $t = \tau_{\mathrm{crunch}}$ in large numbers. A very large fraction of these do however return to the system, only to disappear again. The fraction of unbound stars keeps fluctuating, though the amplitude of the fluctuations decrease over time.
+In Fig.~\ref{fig:Nbody_unbound}b we see how setting the value of $\epsilon$ to be non-zero affects the evolution of the fraction of unbound stars as a function of time, shown for the 100-body case. Stars are initially thrown out of the system at $t = \tau_{\mathrm{crunch}}$ in large numbers (about 40 \%). A very large fraction of these do however return to the system, but then 30 \% disappears again. The fraction of unbound stars keeps fluctuating, though the amplitude of the fluctuations decrease somewhat with time.
 
 If we were only to plot the fraction of unbound stars for times in the range $[0,2.5\tau_{\mathrm{crunch}}]$, Fig.~\ref{fig:Nbody_unbound}b would very much resemble the behavior shown in Fig. 2 in Joyce \textit{et. al} (2010). If we did not allow stars to return to the system, we expect our results to be similar to this figure, which shows a large increase in the fraction of unbound stars at $t = \tau_{\mathrm{crunch}}$, which quickly stabilizes without showing clear fluctuations as our plots do. Here we should also note that Joyce \textit{et. al} (2010) used a system of $N = 10^7$ stars, which is significantly higher than we are capable of.
 
@@ -500,7 +500,11 @@ Finally we wish to study the \textbf{radial density} of the particles in the equ
 \begin{equation}\label{eq:simple_fit}
 	n(r) = \frac{n_0}{1 + (\frac{r}{r_0})^4}
 \end{equation}
-where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. The result is shown in Fig. XXXX. 
+where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. 
+
+First we make histograms of the radial density in the equilibrium state, shown in Fig.~\ref{fig:Nbody_histogram}a-b. These histograms counts the occurrences of various radial positions of the star in the system, which are weighted by the volume of the sphere within each radii to get the number density.
+
+The result is shown in Fig. XXXX. 
 
 COMMENTS!
 
@@ -509,9 +513,9 @@ COMMENTS!
 \begin{tabular}{cc}
   	\includegraphics[width=90mm]{Images/unbound_stars.png}
 	& \includegraphics[width=90mm]{Images/histogram_300_epsilon20.png} \\
-	(a) $\epsilon = 0$		& (b) $\epsilon = 20$  \\[6pt]
+	(a) $\epsilon = 0$, $\mu = ?$, $\sigma = ?$		& (b) $\epsilon = 20$, $\mu = ?$, $\sigma = ?$  \\[6pt]
 \end{tabular}
-\caption{Histogram for radial density as a function of radius for a 300-body system in the un-smoothed (a) and smoothed case (b).}\label{fig:Nbody_histogram}
+\caption{Histogram for radial density as a function of radius for a 300-body system in the un-smoothed (a) and smoothed case (b) at a time of equilibrium. The mean value $\mu$ and standard deviation $\sigma$ are quoted in each case.}\label{fig:Nbody_histogram}
 \end{center}
 \end{figure*}
 
