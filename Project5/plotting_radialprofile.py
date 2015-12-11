@@ -48,13 +48,13 @@ def radial_profile(total_stars,time_step,final,integration_points):
     t,index,m,x,y,z,vx,vy,vz = read_file(filename)
     
     if final == True:
-        title = 'Final configuration, N = %d, time step = %.3f' % (total_stars,time_step)
+        title = 'Final configuration, N = %d, time step = %.4f' % (total_stars,time_step)
         x = x[total_stars*integration_points:-1]
         y = y[total_stars*integration_points:-1]
         z = z[total_stars*integration_points:-1]
         t = t[total_stars*integration_points:-1]
     else:
-        title = 'Intitial configuration, N = %d, time step = %.3f' % (total_stars,time_step)
+        title = 'Intitial configuration, N = %d, time step = %.4f' % (total_stars,time_step)
         x = x[0:total_stars]
         y = y[0:total_stars]
         z = z[0:total_stars]
@@ -120,7 +120,7 @@ def radial_profile(total_stars,time_step,final,integration_points):
     radii = np.linspace(0.001,20,len(no_density))
     radii_hires = np.linspace(0.001,20,1000)
     
-    n_0 = no_density[0]
+    n_0 = 5*no_density[0]
     r_0 = np.asarray([2,4,5,6])
     
     # Plot number density 
@@ -131,7 +131,7 @@ def radial_profile(total_stars,time_step,final,integration_points):
     plt.plot(radii_hires/total_stars**(-1./3),simple_fit(n_0,r_0[2],radii_hires)/(total_stars**2),label=r'Simple fit, $r_0 = 5$')
     plt.xlabel(r'$r/N^{-1/3}$')
     plt.ylabel(r'$n(r)/N^2$')
-    plt.title(r'N = %d, time step = %.3f' % (total_stars,time_step),size=12)
+    plt.title(r'N = %d, time step = %.4f' % (total_stars,time_step),size=12)
     plt.xscale('log')
     plt.yscale('log')
     plt.legend(loc=3,prop={'size':12})
@@ -139,22 +139,12 @@ def radial_profile(total_stars,time_step,final,integration_points):
     
     # Plot histogram
     plt.figure()
-    plt.hist(r,bins=20)
+    plt.hist(r,bins=80)
     plt.xlabel('Radial distance [ly]')
-    plt.ylabel(r'Radial density $[N/$ly$^3]$')
+    plt.ylabel(r'Radial distribution $[N]$')
     plt.xlim(0,20)
     plt.title(title,size=12)
     plt.show()
-    
-    # Plot average distance as function of N
-    #N_values = [100,200,300,400]
-    #averages = []
-    
-    #plt.figure()
-    #plt.plot(N_values,averages)
-    #plt.xlabel(r'$N$')
-    #plt.ylabel(r'$\langle r \rangle$')
-    #plt.show()
     
     return
 
@@ -170,16 +160,31 @@ def volume(R):
     # Volume of sphere of radius R
     return 4*np.pi*R**3/3.0
     
-
+def avg_r():
+    # Plot average distance as function of N
+    N_values = [100,200,300,400]
+    averages = [17.5,14.5,8.47,7.64]
+    
+    plt.figure()
+    plt.plot(N_values,averages)
+    plt.xlabel(r'$N$')
+    plt.ylabel(r'$\langle r \rangle$')
+    plt.show()
+    return
+    
+    
 def main(argv):
     
     total_stars = 100
-    time_step = 0.001
+    time_step = 0.0004
     integration_points = 10000
 
     # Radial profile
     final = True # False = intitial distribution, True = final distribution
     radial_profile(total_stars,time_step,final,integration_points)
+    
+    # Plot average radial distance as a function of N
+    #avg_r()
     
 	
 if __name__ == "__main__":
