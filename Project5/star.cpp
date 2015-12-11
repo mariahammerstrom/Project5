@@ -71,27 +71,3 @@ double star::PotentialEnergy(star &otherStar, double Gconst, double epsilon)
     if(epsilon==0.0) return -Gconst*this->mass*otherStar.mass/this->distance(otherStar);
     else return (Gconst*this->mass*otherStar.mass/epsilon)*(atan(this->distance(otherStar)/epsilon) - (0.5*M_PI));
 }
-
-/*
-void star::merge(star &star2)
-{
-    double m,vx,vy,vz;
-    m = this->mass+star2.mass;
-    vx = this->velocity[0]-star2.velocity[0];
-    vy = this->velocity[1]-star2.velocity[1];
-    vz = this->velocity[2]-star2.velocity[2];
-
-    this->mass = m;
-    this->velocity[0] = vx;
-    this->velocity[1] = vy;
-    this->velocity[2] = vz;
-
-    star2.mass = 0;
-    star2.position[0] = 0;
-    star2.position[1] = 0;
-    star2.position[2] = 0;
-    star2.velocity[0] = 0;
-    star2.velocity[1] = 0;
-    star2.velocity[2] = 0;
-}
-*/

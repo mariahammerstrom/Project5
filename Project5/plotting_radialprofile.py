@@ -71,7 +71,6 @@ def radial_profile(total_stars,time_step,final,integration_points):
     print "Average radius = \t", mu
     print "Standard deviation = \t", stdev
     
-    
     radial_distance = np.zeros(10)
     
     # Calculate the number of objects within given radii, in steps of 2 ly
@@ -106,7 +105,6 @@ def radial_profile(total_stars,time_step,final,integration_points):
         elif r[i] > 18 and r[i] <=20:
             radial_distance[9] += 1
 
-    
     # Calculate volume of shells, thickness 2 ly each
     shells = np.zeros(10)
     
@@ -151,10 +149,6 @@ def radial_profile(total_stars,time_step,final,integration_points):
 
 def simple_fit(n_0,r_0,r):
     return n_0/(1 + (r/r_0)**4)
-
-
-def NFW_profile(rho_0,r_0,r):
-    return rho_0/(r/r_0)/(1 + r/r_0)**2
 
 def volume(R):
     # Volume of sphere of radius R

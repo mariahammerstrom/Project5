@@ -1,4 +1,5 @@
 """
+PLOT ANALYTICAL CASE: BOX ON A SPRING (1 DIMENSION)
 A program that plots the position x and velocity v as a function of time t for a box on a spring
 solved with 4th order Runge-Kutta (RK4) and Velocity-Verlet (VV), compared with the analytical solution.
 
@@ -30,10 +31,8 @@ def plot_time(N,time_step):
     # compared with the analytical solution.
     
     # Get data
-    #filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_VV_%d_%.2f.txt' % (N,time_step)
-    #filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_RK4_%d_%.2f.txt' % (N,time_step)
-    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_VV_%d_%.2f.txt' % (N,time_step)
-    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/analytic_RK4_%d_%.2f.txt' % (N,time_step)
+    filename_verlet = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_VV_%d_%.2f.txt' % (N,time_step)
+    filename_RK4 = '../build-Project5-Desktop_Qt_5_5_0_clang_64bit-Debug/a_analytic_RK4_%d_%.2f.txt' % (N,time_step)
 
     t_verlet,x_verlet,v_verlet = read_file(filename_verlet)
     t_RK4,x_RK4,v_RK4 = read_file(filename_RK4)
@@ -59,7 +58,6 @@ def plot_time(N,time_step):
     plt.legend(loc=2,prop={'size':12})
     plt.show()
     
-    #"""
     # Calculate energies
     E_verlet = 0.5*np.array(v_verlet)**2 + 0.5*np.array(x_verlet)**2
     E_RK4 = 0.5*np.array(v_RK4)**2 + 0.5*np.array(x_RK4)**2
@@ -74,7 +72,6 @@ def plot_time(N,time_step):
     plt.ylabel(r'$E$',size=14)
     plt.legend(loc=3,prop={'size':12})
     plt.show()
-    #"""
     
     return
 
@@ -82,7 +79,6 @@ def plot_time(N,time_step):
 def main(argv):
     # Plot results as a function of time
     plot_time(N=100,time_step=1.0)
-    #plot_time(N=1000,time_step=0.01)
     
 	
 if __name__ == "__main__":

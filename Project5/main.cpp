@@ -49,7 +49,7 @@ int main()
         dimension = 1;
 
         force = false; // false = run program with analytical spring force
-        simple = true;
+        simple = true; // true = Sun-Earth-like system with G = 4*pi*pi
 
         integration_points = 100;
         final_time = 100;
@@ -72,8 +72,8 @@ int main()
     if(binary){
         cout << "BINARY SYSTEM" << endl;
         dimension = 3;
-        force = true;
-        simple = true;
+        force = true; // true = run program with gravitational potential
+        simple = true; // true = Sun-Earth-like system with G = 4*pi*pi
 
         integration_points = 10000;
         final_time = 50.;
@@ -82,7 +82,7 @@ int main()
         double x[3],v[3];
 
         star star1(0.000003,1.,0.0,0.0,0.0,6.3,0.); // Earth: (mass,x,y,z,vx,vy,vz)
-        star star2(1.,0.,0.,0.,0.,0.,0.); // Sun: (mass,x,y,z,vx,vy,vz)
+        star star2(1.,0.,0.,0.,0.,0.,0.);           // Sun: (mass,x,y,z,vx,vy,vz)
 
         // RK4
         galaxy binary_rk(5.0);
@@ -125,11 +125,11 @@ int main()
     if(RK4vsVV){
         cout << "CLUSTER" << endl;
         dimension = 3;
-        force = true;
-        simple = false;
+        force = true;           // true = run program with gravitational potential
+        simple = false;         // false = use dimensionless G
 
         integration_points = 1000;
-        final_time = 1.; // in units of t_crunch
+        final_time = 1.;        // in units of t_crunch
         double R0 = 20.;        // Radius of galaxy, in units of lightyears
         int objects = 100;      // Number of stars to be added in galaxy
 
@@ -147,9 +147,10 @@ int main()
         double mean = 10.;
         double deviation = 1.;
 
-        galaxy MM15_rk(R0);
-        galaxy MM15_vv(R0);
+        galaxy MM15_rk(R0); // set up cluster for RK4
+        galaxy MM15_vv(R0); // set up cluster for VV
 
+        // add stars to the two systems
         for(int i=0;i<objects;i++){
             Gaussian_distribution(mean,deviation,m,&generator);
             randomUniformSphere(R0,x,y,z,&generator);
@@ -170,13 +171,13 @@ int main()
     if(cluster){
         cout << "CLUSTER" << endl;
         dimension = 3;
-        force = true;
-        simple = false;
+        force = true;   // true = run program with gravitational potential
+        simple = false; // false = use dimensionless G
 
         integration_points = 10000;
-        final_time = 20.; // In units of t_crunch
+        final_time = 20.; // in units of t_crunch
 
-        double epsilon = 0.1; // Smoothing
+        double epsilon = 0.1; // Smoothing factor
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -196,8 +197,9 @@ int main()
         double mean = 10.;
         double deviation = 1.;
 
-        galaxy MM15(R0);
+        galaxy MM15(R0); // set up cluster with radius R0
 
+        // add stars to the two systems
         for(int i=0;i<objects;i++){
             Gaussian_distribution(mean,deviation,m,&generator);
             randomUniformSphere(R0,x,y,z,&generator);
@@ -206,6 +208,7 @@ int main()
         }
         cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
 
+        // if-test to keep the mass of the system constant for changing values of N
         if(constant){
             double const_mass = 1000.;
             double total = MM15.total_mass;
