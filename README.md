@@ -1,4 +1,4 @@
-##Project5: N-body simulation of an open galactic cluster
+##Project 5: N-body simulation of an open galactic cluster
 
 ####Project 5
 
