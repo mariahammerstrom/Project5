@@ -31,6 +31,7 @@ int main()
 
     // 4) Full star cluster in a gravitational field for ONE numerical method; set cluster = true
     bool cluster = true;
+    bool constant = false; // The system has constant mass
 
 
     // Numerical setup
@@ -173,10 +174,10 @@ int main()
         dimension = 3;
         force = true;
         simple = false;
-        double epsilon = 20.;
+        double epsilon = 0.1;
 
         integration_points = 10000;
-        final_time = 20.; // in units of t_crunch
+        final_time = 10.; // in units of t_crunch
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -205,31 +206,25 @@ int main()
             MM15.add(stari);
         }
         cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
-        cout << "MM15 has mass of " << MM15.total_mass << " solar masses." << endl;
+        if(constant){
+            double const_mass = 1000.;
+            double total = MM15.total_mass;
+            double current_mass = 0.;
+            for(int nr=0;nr<MM15.total_stars;nr++){
+                star &Current = MM15.all_stars[nr];
+                Current.mass *= const_mass/total;
+                current_mass += Current.mass;
+            }
+            cout << "MM15 has mass of " << current_mass << " solar masses." << endl;
+        }
+        else cout << "MM15 has mass of " << MM15.total_mass << " solar masses." << endl;
+
+
+
 
         // run system through VV, all data is written to file as we go
         MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars,epsilon);
     }
-
-    /*
-    // last part of project
-    double total_mass, mean_mass; int objects;
-    mean_mass = total_mass/((double) objects);
-    double mass_deviation = 1.;
-    double m,x,y,z;
-    m = x = y = z = 0.0;
-    unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-    default_random_engine generator(seed);
-
-    galaxy MM15(20,total_mass);
-
-    for(int i=0;i<objects;i++){
-        Gaussian_distribution(mean_mass,mass_deviation,m,&generator);
-        randomUniformSphere(R0,x,y,z,&generator);
-        star stari(m,x,y,z,0,0,0);
-        MM15.addM(stari);
-    }
-    */
 
 
     return 0;
