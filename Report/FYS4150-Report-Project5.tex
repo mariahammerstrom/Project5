@@ -270,7 +270,7 @@ which has the known analytical solution $x(t) = A \, \mathrm{cos}(\omega_0 t + \
 \end{equation}
 where we can set $k = m = 1$ for simplicity when checking the validity of our numerical methods. Then the analytical solution is simply $x(t) = \mathrm{cos}(t)$, with $v(t) = - \mathrm{sin}(t)$.
 
-A visualization of our test is shown in Fig.~\ref{fig:analytical}a-d, here for time steps of $\Delta t = 0.10$ and $\Delta t = 1.0$. We see that the numerical algorithms reproduce the result of the analytical expression extremely well for small time steps -- it's impossible to tell the methods apart. The result is less impressive for larger time step.\\
+A visualization of our test is shown in Fig.~\ref{fig:analytical}a-b and Fig.~\ref{fig:analytical}d-e, for time steps of $\Delta t = 0.10$ and $\Delta t = 1.0$ respectively. We see that the numerical algorithms reproduce the result of the analytical expression extremely well for small time steps -- it is impossible to tell the methods apart. The result is less impressive for larger time step. VV is close to the analytical solution, while RK4 clearly decays with time. \\
 
 \noindent Another test we can make is to check for \textbf{energy conservation}. With initial conditions $x_0$ and $v_0$, we can calculate
 
@@ -280,7 +280,7 @@ A visualization of our test is shown in Fig.~\ref{fig:analytical}a-d, here for t
 		E(t = t_i) = E_i &= \frac{1}{2}mv_i^2 + \frac{1}{2}kx_i^2,
 	\end{aligned}
 \end{equation}
-and check that $E_0 = E_i$ for every period $T$. It is however easier to just plot $E_i$ as a function of time for the different methods and inspect the result. If the energy is conserved, the plot should be a straight line, as the energy should not change over time. As shown in Fig.~\ref{fig:analytical}e-f this is indeed the case in the analytical case. If we look closely at the $y$-axis we see that this really is the case for all the methods, with the numerical methods deviating from the expected result in the fourth decimal place. For RK4 with large time steps, the energy is not conserved at all, but declines rapidly.\\
+and check that $E_0 = E_i$ for every period $T$. It is however easier to just plot $E_i$ as a function of time for the different methods and inspect the result. If the energy is conserved, the plot should be a straight line, as the energy should not change over time. As shown in Fig.~\ref{fig:analytical}c this is indeed the case in the analytical case. If we look closely at the $y$-axis we see that this really is the case for both methods. For RK4 with large time steps, the energy is not conserved at all, but declines rapidly. \\
 
 
 \begin{figure*}
@@ -500,24 +500,34 @@ Finally we wish to study the \textbf{radial density} of the particles in the equ
 \begin{equation}\label{eq:simple_fit}
 	n(r) = \frac{n_0}{1 + (\frac{r}{r_0})^4}
 \end{equation}
-where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. 
+where $n_0$ and $r_0$ are scaling constants. We follow Joyce \textit{et. al} (2010) and approximate these scaling constants with $r_0 \propto N^{-1/3}$ and $n_0 \propto N^2$. For the proportionality constants we use the first number density in our data set for $n_0$ and try out different numbers to scale $r_0$ to fit our data.
 
-First we make histograms of the radial density in the equilibrium state, shown in Fig.~\ref{fig:Nbody_histogram}a-b. These histograms counts the occurrences of various radial positions of the star in the system, which are weighted by the volume of the sphere within each radii to get the number density.
-
-The result is shown in Fig. XXXX. 
+We calculate the radial density of our stars by a rather simple method: We count the number of stars within a spherical shell with a thickness 2 light years (for better accuracy we should use thinner shells). Then we divide by the volume of that spherical shell. The result is shown in Fig.~\ref{fig:Nbody_radial_dist}. 
 
 COMMENTS!
 
 \begin{figure*}
 \begin{center}
+  	\includegraphics[width=90mm]{Images/radial_distribution_temp.png}
+\caption{Radial density of particles, fitted with Eq. (\ref{eq:simple_fit}).}\label{fig:Nbody_radial_dist}
+\end{center}
+\end{figure*}
+Histograms of the \textbf{radial distribution} in the equilibrium state is shown in Fig.~\ref{fig:Nbody_histogram}a-b. These histograms counts the occurrences of various radial positions of the star in the system. We see that COMMENT.
+
+\begin{figure*}
+\begin{center}
 \begin{tabular}{cc}
-  	\includegraphics[width=90mm]{Images/unbound_stars.png}
+  	\includegraphics[width=90mm]{Images/histogram_temp.png}
 	& \includegraphics[width=90mm]{Images/histogram_300_epsilon20.png} \\
 	(a) $\epsilon = 0$, $\mu = ?$, $\sigma = ?$		& (b) $\epsilon = 20$, $\mu = ?$, $\sigma = ?$  \\[6pt]
 \end{tabular}
 \caption{Histogram for radial density as a function of radius for a 300-body system in the un-smoothed (a) and smoothed case (b) at a time of equilibrium. The mean value $\mu$ and standard deviation $\sigma$ are quoted in each case.}\label{fig:Nbody_histogram}
 \end{center}
 \end{figure*}
+Finally we calculate the \textbf{average radial distance} of the system for different values of $N$. FIG + COMMENTS.
+
+
+
 
 
 %The result can also be compared with the well-known Navarro-Frenk-White profile
