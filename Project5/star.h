@@ -9,10 +9,6 @@ using std::vector;
 class star
 {
 public:
-    // Astrophysical constants in units of solar masses, years, and lightyears
-    double G = 4*M_PI*M_PI;
-    //double G = 1.5608*1e-13; // in units of lightyears,years, and solar masses
-
     // Properties
     double mass;
     double position[3];
@@ -26,12 +22,11 @@ public:
 
     // Functions
     double distance(star otherStar);
-    double GravitationalForce(star otherStar);
-    double Acceleration(star otherStar);
+    double GravitationalForce(star otherStar, double Gconst);
+    double Acceleration(star otherStar, double Gconst);
     //void merge(star star1,star star2);
     double KineticEnergy();
-    double PotentialEnergy(star &otherStar);
-    //bool bound(star &otherStar);
+    double PotentialEnergy(star &otherStar, double Gconst, double epsilon);
 
 };
 

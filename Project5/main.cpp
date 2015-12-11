@@ -121,8 +121,6 @@ int main()
         print_final(dimension,x,v);
     }
 
-
-
     // 3) N-BODY CASE: COMPARE METHODS
     if(RK4vsVV){
         cout << "CLUSTER" << endl;
@@ -174,10 +172,11 @@ int main()
         dimension = 3;
         force = true;
         simple = false;
-        double epsilon = 0.1;
 
         integration_points = 10000;
-        final_time = 10.; // in units of t_crunch
+        final_time = 20.; // In units of t_crunch
+
+        double epsilon = 0.1; // Smoothing
 
         cout << "Time step: " << final_time/((double) integration_points) << endl;
         cout << "Integration points: " << integration_points << endl;
@@ -187,7 +186,7 @@ int main()
         default_random_engine generator(seed);
 
         double R0 = 20.;        // Radius of galaxy, in units of lightyears
-        int objects = 100;      // Number of stars to be added in galaxy
+        int objects = 200;      // Number of stars to be added in galaxy
 
         // initialize mass and position, to be randomly distributed
         double m,x,y,z;
@@ -206,6 +205,7 @@ int main()
             MM15.add(stari);
         }
         cout << "The star cluster MM15 contains " << MM15.total_stars << " star(s)." << endl;
+
         if(constant){
             double const_mass = 1000.;
             double total = MM15.total_mass;
@@ -219,13 +219,9 @@ int main()
         }
         else cout << "MM15 has mass of " << MM15.total_mass << " solar masses." << endl;
 
-
-
-
         // run system through VV, all data is written to file as we go
         MM15.VelocityVerlet(dimension,integration_points,final_time,force,simple,MM15.total_stars,epsilon);
     }
-
 
     return 0;
 }

@@ -13,6 +13,7 @@ rc('font',**{'family':'serif'})
 
 import matplotlib as mpl
 from mpl_toolkits.mplot3d import Axes3D
+from math import fabs
 
 
 def read_file(filename,star_number,total_stars):
@@ -86,27 +87,32 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
     time = dataVV[0]
     EkVV = dataVV[2]
     EpVV = dataVV[3]
-    EtotVV = dataVV[4]
     #EkRK4 = dataRK4[1]
     #EpRK4 = dataRK4[2]
     #EtotRK4 = dataRK4[3]
 	
     # Energies for bound stars
-    start = int(4./time_step)
+    start = 0#int(4./time_step)
     newEk = np.zeros(integration_points-start)
     newEp = np.zeros(integration_points-start)
     newEtot = np.zeros(integration_points-start)
     newTime = np.zeros(integration_points-start)
+    avg_E = np.zeros(integration_points-start)
     for s in range(integration_points-start):
-        newTime[s] = s*time_step + 4.
+        newTime[s] = s*time_step# + 4.
         for i in index:
             newEk[s] += EkVV[i + (s+start)*total_stars]
             newEp[s] += EpVV[i + (s+start)*total_stars]
-            newEtot[s] += EtotVV[i + (s+start)*total_stars]
-    print "Only bound stars: "
-    print "<Ek> = ", 2.*np.average(newEk)
-    print "<Ep> = ", -np.average(newEp)
-    print "<Ek>/<Ep> = ",  -2.*np.average(newEk)/np.average(newEp)
+            newEtot[s] += EkVV[i + (s+start)*total_stars] + 0.5*EpVV[i + (s+start)*total_stars]
+        avg_E[s] = (2.*newEk[s] + 0.5*newEp[s])/len(index)	
+    #print "Only bound stars: "
+    #print "<Ek> = ", 2.*np.average(newEk)
+    #print "<Ep> = ", -np.average(newEp)
+    #print "<Ek>/<Ep> = ",  -2.*np.average(newEk)/np.average(newEp)
+    plt.plot(newTime,avg_E)
+    plt.title('Virial Theorem')
+    plt.xlabel('$t$')
+    plt.ylabel('$2K + U$')
 	
     # Energies for all stars
     allEk = np.zeros(integration_points-start)
@@ -114,15 +120,15 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
     allEtot = np.zeros(integration_points-start)
     allTime = np.zeros(integration_points-start)
     for s in range(integration_points-start):
-        allTime[s] = s*time_step + 4.
+        allTime[s] = s*time_step #+ 4.
         for i in range(total_stars):
             allEk[s] += EkVV[i + (s+start)*total_stars]
             allEp[s] += EpVV[i + (s+start)*total_stars]
-            allEtot[s] += EtotVV[i + (s+start)*total_stars]
-    print "All stars: "
-    print "<Ek> = ", 2.*np.average(allEk)
-    print "<Ep> = ", -np.average(allEp)
-    print "<Ek>/<Ep> = ",  -2.*np.average(allEk)/np.average(allEp)
+            allEtot[s] += EkVV[i + (s+start)*total_stars] + 0.5*EpVV[i + (s+start)*total_stars]
+    #print "All stars: "
+    #print "<Ek> = ", 2.*np.average(allEk)
+    #print "<Ep> = ", -np.average(allEp)
+    #print "<Ek>/<Ep> = ",  -2.*np.average(allEk)/np.average(allEp)
     
     if subset == True:
         # Plot position: VV
@@ -265,7 +271,6 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         #plt.ylim(1e-3,1e2)
         plt.ylabel(r'$E_k/T_{tot,0}$',size=14)
         #plt.legend(loc=1,prop={'size':12})
-        #plt.show()
 		
         plt.figure()
         plt.title('Potential energy, time step = %.3f' % time_step,size=12)
@@ -276,22 +281,32 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         #plt.ylim(1e-1,1e0)
         plt.ylabel(r'$E_p/T_{tot,0}$',size=14)
         #plt.legend(loc=1,prop={'size':12})
-        #plt.show()
+        
+        
+        plt.figure()
+        plt.title('Total bound energy, time step = %.3f' % time_step,size=12)
+        plt.plot(newTime,newEtot/allEtot[0])
+        plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
+        #plt.yscale('log')
+        #plt.xlim(0,3)
+        #plt.ylim(1e-1,1e0)
+        plt.ylabel(r'$E/E_{tot,0}$',size=14)
+        #plt.legend(loc=1,prop={'size':12})
         
         
         plt.figure()
         plt.title('Total energy, time step = %.3f' % time_step,size=12)
-        plt.plot(allTime,allEk,label='kinetic')
-        plt.plot(allTime,allEp,label='potential')
-        plt.plot(allTime,allEtot,label='total')
+        #plt.plot(allTime,allEk,label='kinetic')
+        #plt.plot(allTime,allEp,label='potential')
+        plt.plot(allTime,allEtot/allEtot[0])
         plt.xlabel(r'$t$ ($t_{crunch}$)',size=14)
         #plt.yscale('log')
         plt.ylabel(r'$E$',size=14)
-        plt.legend(loc=1,prop={'size':12})
-        plt.show()
+        #plt.legend(loc=1,prop={'size':12})
         
-        
+        '''
         # Plot distribution of lost stars
+        plt.figure()
         data_lost1 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_100_%.3f.txt' % (time_step),unpack=True)
         #data_lost2 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_200_%.3f.txt' % (time_step),unpack=True)
         #data_lost3 = np.loadtxt('../build-Project5-Desktop_Qt_5_5_0_MinGW_32bit-Debug/cluster_lost_300_%.3f.txt' % (time_step),unpack=True)
@@ -307,6 +322,7 @@ def plot_time(total_stars,star_number,time_step,subset,integration_points):
         plt.xlabel('$t$ ($t_{crunch}$)')
         plt.ylabel('No. of unbound stars / total stars')
         plt.legend(loc=4)
+        '''
         plt.show()
         
     
@@ -375,7 +391,7 @@ def plot_orbits_RK4(total_stars,time_step):
     
     
 def main(argv):
-    total_stars = 100
+    total_stars = 200
     time_step = 0.002
     integration_points = 10000
 
@@ -384,7 +400,7 @@ def main(argv):
     #plot_orbits_RK4(total_stars,time_step)
     
     # Plot results as a function of time
-    star_number = 16 # Plot for one particular star
+    star_number = 1 # Plot for one particular star
     subset = False # True = Print results as a function of time for different time steps, False = one time step
     plot_time(total_stars,star_number,time_step,subset,integration_points)
     

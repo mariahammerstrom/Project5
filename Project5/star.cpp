@@ -2,15 +2,15 @@
 
 star::star()
 {
-    mass = 1;
-    position[0] = 1;
-    position[1] = 0;
-    position[2] = 0;
-    velocity[0] = 0;
-    velocity[1] = 0;
-    velocity[2] = 0;
-    potential = 0;
-    kinetic = 0;
+    mass = 1.;
+    position[0] = 1.;
+    position[1] = 0.;
+    position[2] = 0.;
+    velocity[0] = 0.;
+    velocity[1] = 0.;
+    velocity[2] = 0.;
+    potential = 0.;
+    kinetic = 0.;
 }
 
 star::star(double M, double x, double y, double z, double vx, double vy, double vz)
@@ -22,8 +22,8 @@ star::star(double M, double x, double y, double z, double vx, double vy, double 
     velocity[0] = vx;
     velocity[1] = vy;
     velocity[2] = vz;
-    potential = 0;
-    kinetic = 0;
+    potential = 0.;
+    kinetic = 0.;
 }
 
 
@@ -46,36 +46,31 @@ double star::distance(star otherStar)
     return sqrt(xx*xx + yy*yy + zz*zz);
 }
 
-double star::GravitationalForce(star otherStar)
+double star::GravitationalForce(star otherStar,double Gconst)
 {
     double r = this->distance(otherStar);
-    if(r!=0) return G*this->mass*otherStar.mass/(r*r);
+    if(r!=0) return Gconst*this->mass*otherStar.mass/(r*r);
     else return 0;
 }
 
-double star::Acceleration(star otherStar)
+double star::Acceleration(star otherStar, double Gconst)
 {
     double r = this->distance(otherStar);
-    if(r!=0) return this->GravitationalForce(otherStar)/this->mass/r;
+    if(r!=0) return this->GravitationalForce(otherStar,Gconst)/(this->mass*r);
     else return 0;
 }
 
 double star::KineticEnergy()
 {
-    double total_velocity = this->velocity[0]*this->velocity[0] + this->velocity[1]*this->velocity[1] + this->velocity[2]*this->velocity[2];
-    return this->mass*total_velocity*total_velocity;
+    double velocity2 = (this->velocity[0]*this->velocity[0]) + (this->velocity[1]*this->velocity[1]) + (this->velocity[2]*this->velocity[2]);
+    return 0.5*this->mass*velocity2;
 }
 
-double star::PotentialEnergy(star &otherStar)
+double star::PotentialEnergy(star &otherStar, double Gconst, double epsilon)
 {
-    return -G*this->mass*otherStar.mass/this->distance(otherStar);
+    if(epsilon==0.0) return -Gconst*this->mass*otherStar.mass/this->distance(otherStar);
+    else return (Gconst*this->mass*otherStar.mass/epsilon)*(atan(this->distance(otherStar)/epsilon) - (0.5*M_PI));
 }
-
-/*bool star::bound(star &otherStar, double epsilon)
-{   // true if the star is gravitationally bound
-
-    return ((this->KineticEnergy() + this->PotentialEnergy(otherStar,epsilon)) < 0.0);
-}*/
 
 /*
 void star::merge(star &star2)
