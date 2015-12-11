@@ -3,7 +3,7 @@
 import numpy as np
 
 # Units
-ly = 9.46e16 # m
+ly = 9.46e15 # m
 M_sun = 2e30 # kg
 
 
@@ -17,4 +17,4 @@ t_crunch = np.sqrt(3*np.pi/(32*G*rho))
 
 sec_to_years = 1./(365*24*60*60)
 print "t_crunch = %e years" % (t_crunch*sec_to_years)
-print "t_crunch = %d million years" % (t_crunch*sec_to_years*1e-6)
+print "t_crunch = %.2f million years" % (t_crunch*sec_to_years*1e-6)
