@@ -1,0 +1,47 @@
+Selected results
+
+----------------------------------------------------------------------
+BINARY SYSTEM
+Time step = 0.1; final time = 1000; integration points = 10000
+Initial position = 60 60 60 
+Initial velocity = 1 0 0 
+
+RK4: 
+Total time = 	0.364 seconds
+One time step = 	3.64e-005 seconds
+Final position = 28.7593 52.2517 52.2517 
+Final velocity = 1.53699 0.70621 0.70621 
+
+VV:
+Total time = 	0.432 seconds
+One time step = 	4.32e-005 seconds
+Final position = 28.1406 52.4221 52.4221 
+Final velocity = 1.5285 0.715242 0.715242 
+----------------------------------------------------------------------
+CLUSTER
+Time step: 0.001
+Integration points: 10000
+The star cluster MM15 contains 100 star(s).
+Total time = 	84.463 seconds
+One time step = 	0.0084463 seconds
+Total energyloss due to unbound stars: 4.78535e+020
+There are 20 bound stars at the end of the run
+----------------------------------------------------------------------
+CLUSTER
+Time step: 0.001
+Integration points: 10000
+The star cluster MM15 contains 200 star(s).
+Total time = 	183.494 seconds
+One time step = 	0.0183494 seconds
+Total energyloss due to unbound stars: 1.41673e+019
+There are 59 bound stars at the end of the run
+----------------------------------------------------------------------
+CLUSTER
+Time step: 0.001
+Integration points: 10000
+The star cluster MM15 contains 300 star(s).
+Total time = 	376.228 seconds
+One time step = 	0.0376228 seconds
+Total energyloss due to unbound stars: 5.10041e+016
+There are 113 bound stars at the end of the run
+----------------------------------------------------------------------
