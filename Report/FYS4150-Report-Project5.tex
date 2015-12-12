@@ -36,7 +36,8 @@
 \maketitle
 
 \begin{abstract}
-	\noindent \lipsum[1]
+	\noindent We have run an $N$-body simulation of an open star cluster using the 4th order Runge-Kutta (RK4) and Velocity Verlet (VV) integration methods, finding that VV is preferred due to energy conservation and precision. The results were good for a time step of maximum $\Delta t = 0.001$. We find that the structure decreases in size as $N$ increases, taking us closer to a perfect collapse in the center of the system. We introduce a smoothing factor $\epsilon$, which prevents the gravitational force from becoming too large when stars gets too close to each other. We find that more stars are thrown out of the system before we introduce the smoothing factor, $\epsilon$. This still happens even after the system has reached an equilibrium at around $t = 2 \tau_{\mathrm{crunch}}$, but the fraction then begins to stabilize. Due to problems with our energy calculations, we were not able to make an estimate on $\epsilon$. This also calls into questions our results when discussing energy and whether an equilibrium has been reached.
+	%\lipsum[1]
 	\vspace*{2ex}
 	
 	\noindent \textbf{Github:} \textit{https://github.com/mariahammerstrom/Project5}
@@ -483,13 +484,10 @@ For a bound gravitational system in equilibrium the \textbf{virial theorem} shou
 \end{equation}
 where $\langle K \rangle$ is the time-averaged kinetic energy of the system and $\langle V \rangle$ is the time-averaged potential energy of the system. By calculating the kinetic and potential energy of the stars in our system that are bound (not ejected), we can check if our results are consistent with the virial theorem and use this as an indication of which value of $\epsilon$ is better.
 
-By trying out different values of $\epsilon$, we find that COMMENT!!
+By trying out different values of $\epsilon$, we find that the fraction of bound stars fluctuate significantly over time. Whether the virial theorem is fulfilled or not also fluctuate. From many trials, $\epsilon = 20$ stands out as a good choice. At first suspicious of this value's resemblance to the radius of the sphere $R$ in which our star cluster lives, we checked that this was not the case by testing out $R = \epsilon = 30$. 
+It is curious that the value of $\epsilon$ needs to be as large as 20, which will be in units of light years. As we tried to find a more appropriate $\epsilon$, we discovered that there was something wrong in our energy calculations. The kinetic energy was way too high, causing many particles to escape. We tried to fix it, but in the current version, almost no stars are ejected from the system, as the potential energy is too high compared to the kinetic energy. Unfortunately, we did not have time to take a closer look into this problem. Our latest results are not consistent with the virial theorem, nor energy conservation.
 
-%the fraction of bound stars fluctuate significantly over time. Whether the virial theorem is fulfilled or not also fluctuate. From many trials, $\epsilon = 20$ stands out as a good choice. At first suspicious of this value's resemblance to the radius of the sphere $R$ in which our star cluster lives, we checked that this was not the case by testing out $R = \epsilon = 30$. 
-
-%It is curious that the value of $\epsilon$ needs to be as large as 20, which will be in units of light years. MORE!!!
-
-In Fig.~\ref{fig:Nbody_unbound}b we see how setting the value of $\epsilon$ to be non-zero affects the evolution of the fraction of unbound stars as a function of time, shown for the 100-body case. Stars are initially thrown out of the system at $t = \tau_{\mathrm{crunch}}$ in large numbers (about 40 \%). A very large fraction of these do however return to the system, but then 30 \% disappears again. The fraction of unbound stars keeps fluctuating, though the amplitude of the fluctuations decrease somewhat with time.
+In Fig.~\ref{fig:Nbody_unbound}b we see how setting the value of $\epsilon$ to be non-zero (in this case $\epsilon$ was 20) affects the evolution of the fraction of unbound stars as a function of time, shown for the 100-body case. Stars are initially thrown out of the system at $t = \tau_{\mathrm{crunch}}$ in large numbers (about 40 \%). A very large fraction of these do however return to the system, but then 30 \% disappears again. The fraction of unbound stars keeps fluctuating, though the amplitude of the fluctuations decrease somewhat with time.
 
 If we were only to plot the fraction of unbound stars for times in the range $[0,2.5\tau_{\mathrm{crunch}}]$, Fig.~\ref{fig:Nbody_unbound}b would very much resemble the behavior shown in Fig. 2 in Joyce \textit{et. al} (2010). If we did not allow stars to return to the system, we expect our results to be similar to this figure, which shows a large increase in the fraction of unbound stars at $t = \tau_{\mathrm{crunch}}$, which quickly stabilizes without showing clear fluctuations as our plots do. Here we should also note that Joyce \textit{et. al} (2010) used a system of $N = 10^7$ stars, which is significantly higher than we are capable of.
 
@@ -555,13 +553,17 @@ Finally we calculate the \textbf{average radial distance} of the system for diff
 
 We have run an $N$-body simulation of an open star cluster using the 4th order Runge-Kutta and Velocity Verlet integration methods. The cluster member began their lives with randomly distributed positions within a sphere with a radius of 20 light years consisting of 100 stars with masses randomly distributed by a Gaussian distribution around ten solar masses with a standard deviation of one solar mass.
 
-Already in the analytical case did we see the bad side of Runge-Kutta methods, which is that these methods do not conserve energy. When simulating a gravitational system, conservation of energy is highly important. This fact, in addition to Velocity Verlet's (VV) accuracy even for larger time steps, led us to make VV our method of choice for our simulations. Time usage by the two methods turn out not to be an issue.
+Already in the analytical case did we see the bad side of Runge-Kutta methods, which is that these methods do not conserve energy. When simulating a gravitational system, conservation of energy is highly important. This fact, in addition to Velocity Verlet's (VV) accuracy even for larger time steps, led us to make VV our method of choice for our simulations. Time usage by the two methods turn out not to be an issue. The largest time step we should use was found to be $\Delta t = 0.001$, which gave very nice results.
 
-...
+The growth in kinetic energy closely follows the fraction of stars that are unbound from the system. More stars are thrown out of the system before we introduce the smoothing factor, $\epsilon$. This still happens even after the system has reached an equilibrium, but the fraction starts to stabilize. Due to difficulties with our energy calculations, we were unable to determine an appropriate value for $\epsilon$.
 
-We do, just as Joyce \textit{et. al} (2010), find that the structure decreases in size as $N$ decreases, seen in our plot of the average radial distance as a function of $N$ in Fig.~\ref{fig:Nbody_avg_dist}.
+For higher values of $N$, the potential energy increases as the stars are more tightly bound in the center of the system. Because we were unable to estime $\epsilon$, we were unable to make the system fulfill the virial theorem, as it should do. 
 
-An interesting idea for future work would be to include the possibility of stars merging together when sufficiently close to each other.
+Our earlier calculations showed that the system reached an equilibrium state around $t = 2 \tau_{\mathrm{crunch}}$, but this was before we discovered the problem with the energy, which will alter this result.
+
+We do, just as Joyce \textit{et. al} (2010), find that the structure decreases in size as $N$ increases, seen in our plot of the average radial distance as a function of $N$ in Fig.~\ref{fig:Nbody_avg_dist}.
+
+An interesting idea for future work would be to include the possibility of stars merging together when sufficiently close to each other in addition to -- or instead of -- the smoothing factor. But we did not have time to pursue this at this time.
 
 \section{References}
 
